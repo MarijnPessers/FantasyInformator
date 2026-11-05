@@ -5,6 +5,17 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+    <UserSecretsId>7afc1e63-7f59-4441-9d9f-72b7b436a890</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TimeWarp.State" Version="11.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FantasyInformator.Database\FantasyInformator.Database.csproj" />
+    <ProjectReference Include="..\FantasyInformator.Models\FantasyInformator.Models.csproj" />
+    <ProjectReference Include="..\FantasyInformator.Sleeper\FantasyInformator.Sleeper.csproj" />
+  </ItemGroup>
 
 </Project>

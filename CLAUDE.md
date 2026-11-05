@@ -1,0 +1,49 @@
+# Claude Instructions
+
+## Context from the READMEs
+
+When a question or request is not clear on its own, or you feel that more context about the application would help, read `README.md` in the solution folder first. Then read every README it links to. Do this before guessing or asking the user. When the request is clear, do not read them.
+
+Example: "write this in the Sleeper service" names a project without saying what it does, so read the READMEs first.
+
+## Images in the READMEs
+
+Visual Studio caches images in the README preview. Every image link in a README ends with `?t=` and a UTC timestamp, for example `models.drawio.svg?t=20261105003433`. Each time you change a README that holds such a link, or the image file it points to, set the timestamp to the current UTC time in the format `yyyyMMddHHmmss`. Do not use a version number.
+
+## Transition between sessions
+
+This section is the to-do list that carries work from one session to the next.
+
+- At the start of a session, in the first reply, report the open next steps below and ask where the user wants to continue.
+- When a step is done, remove it from the list. When new work comes up, add it. Keep the list short.
+- The design decisions are in `specs/SPEC-1.md`. The READMEs describe the projects.
+
+### State
+
+The solution structure is set up, the NuGet packages are added and the solution builds. The application models (with their diagram in the Models README) and the settings classes per project are built. The Sleeper client, the database, the state model and the screens are not built yet. The design session (grilling) is finished.
+
+### Next steps
+
+1. The developer finishes the Azure SQL free-tier database and puts `Database:ConnectionStringApp`, `Database:ConnectionStringEF`, `Sleeper:Username` and `Database:FailedSaveQueueFolder` in .NET user secrets. Claude never reads them.
+2. Sleeper project: the user-leagues call, its own Sleeper models and the hand-written mappers, with tests (MSTest, AutoFixture).
+3. Database project: database models, mappers and the first migration. Only when the developer asks for the migration.
+4. Overview screen in the Blazor project. Start with the state model that holds the current and pending values (see "Change tracking" and "Open" in the spec). Then: season tabs, the update and save buttons, the report modal, a constant warning while a position has no slot link, using TimeWarp.State.
+
+Open points to settle on the way:
+
+- Whether TimeWarp.State actions and handlers can live in a project other than the Blazor app (not verified).
+- Whether a State project or a slot-logic project is needed.
+- Whether the league-users endpoint is the right call for owners (not verified).
+- The spelling of the name: `FantasyInformator` is used everywhere, the developer once wrote "Fantasy Informator".
+
+### Suggested tools
+
+Matt Pocock's skills that fit this project. Mention them when the matching step starts.
+
+- `grill-with-docs`: grilling that also updates a glossary and decision records.
+- `domain-modeling`: record the terms (update, save, season, pending value) and the big choices (no AutoMapper, own change tracking).
+- `tdd`: for the change tracking and the mappers.
+- `prototype`: to try the overview screen and the state model first.
+- `research`: to check TimeWarp.State across projects.
+- `to-spec` and `to-tickets`: need an issue tracker, which the project does not have yet.
+- `implement`, `wayfinder`, `handoff` and `retro`: for building, planning large work, passing on a session and improving the setup.

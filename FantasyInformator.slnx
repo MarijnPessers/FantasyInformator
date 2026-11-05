@@ -1,3 +1,10 @@
 <Solution>
+  <Project Path="FantasyInformator.Database/FantasyInformator.Database.csproj" />
+  <Project Path="FantasyInformator.DatabaseTests/FantasyInformator.DatabaseTests.csproj" />
+  <Project Path="FantasyInformator.Models/FantasyInformator.Models.csproj" />
+  <Project Path="FantasyInformator.ModelsTests/FantasyInformator.ModelsTests.csproj" />
+  <Project Path="FantasyInformator.Sleeper/FantasyInformator.Sleeper.csproj" />
+  <Project Path="FantasyInformator.SleeperTests/FantasyInformator.SleeperTests.csproj" />
   <Project Path="FantasyInformator/FantasyInformator.csproj" />
+  <Project Path="FantasyInformatorTests/FantasyInformatorTests.csproj" />
 </Solution>
