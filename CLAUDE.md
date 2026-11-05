@@ -37,12 +37,12 @@ This section is the to-do list that carries work from one session to the next.
 
 ### State
 
-The solution structure is set up, the NuGet packages are added and the solution builds. The application models (with their diagram in the Models README) and the settings classes per project are built. The Sleeper client, the database, the state model and the screens are not built yet. The design session (grilling) is finished.
+The solution structure is set up, the NuGet packages are added and the solution builds. The application models (with their diagram in the Models README) and the settings classes per project are built. The Sleeper service interfaces and their Sleeper models are in place (see the Sleeper README), without implementations. The database, the state model and the screens are not built yet. The design session (grilling) is finished.
 
 ### Next steps
 
 1. The developer finishes the Azure SQL free-tier database and puts `Database:ConnectionStringApp`, `Database:ConnectionStringEF`, `Sleeper:Username` and `Database:FailedSaveQueueFolder` in .NET user secrets. Claude never reads them.
-2. Sleeper project: the user-leagues call, its own Sleeper models and the hand-written mappers, with tests (MSTest, AutoFixture).
+2. Sleeper project: implement the service interfaces, starting with the user-leagues call, and write the hand-written mappers, with tests (MSTest, AutoFixture).
 3. Database project: database models, mappers and the first migration. Only when the developer asks for the migration.
 4. Overview screen in the Blazor project. Start with the state model that holds the current and pending values (see "Change tracking" and "Open" in the spec). Then: season tabs, the update and save buttons, the report modal, a constant warning while a position has no slot link, using TimeWarp.State.
 
@@ -50,11 +50,12 @@ Open points to settle on the way:
 
 - Whether TimeWarp.State actions and handlers can live in a project other than the Blazor app (not verified).
 - Whether a State project or a slot-logic project is needed.
-- Whether the league-users endpoint is the right call for owners (not verified).
-- How the same league is matched across seasons. Sleeper gives no id for it, so matching on the league name is only an assumption.
+- How the same league is matched across seasons. The Sleeper docs list `previous_league_id` on a league without describing it. Check that it links a league to the previous season, then drop the name matching.
+- Gaps in what Sleeper gives: `NflTeam.Name` (only an abbreviation, to be seeded). The kickoff time of a `Game` comes from the nflverse schedule (`FantasyInformator.Nflverse`).
+- The per-player points in the matchups call (`players_points`) are not in the Sleeper docs. Check them in a live response.
 - Two lines in the diagram are not connected to a table. Connect or delete them in draw.io.
 - Whether the database users `ef`, `app` and `claude` exist yet (the developer creates them).
-- The new code (models and settings classes) has not been built or tested yet. Build and run the tests first.
+- The new code (models, settings classes and Sleeper service interfaces) has not been built or tested yet. Build and run the tests first.
 - The spelling of the name: `FantasyInformator` is used everywhere, the developer once wrote "Fantasy Informator".
 
 ### Suggested tools
