@@ -37,13 +37,13 @@ This section is the to-do list that carries work from one session to the next.
 
 ### State
 
-The solution structure is set up, the NuGet packages are added and the solution builds. The application models (with their diagram in the Models README) and the settings classes per project are built. The Sleeper service interfaces and their Sleeper models are in place (see the Sleeper README), without implementations. The database, the state model and the screens are not built yet. The design session (grilling) is finished.
+The solution structure is set up, the NuGet packages are added and the solution builds. The application models (with their diagram in the Models README) and the settings classes per project are built. The Sleeper and Nflverse projects (Nflverse gives the kickoff times) have service interfaces, their own models and hand-written mappers to the application models, with tests, but no HTTP implementations yet (see their READMEs). The Database project has database models (a copy of the application models), mappers from them to the application models with tests, and the EF context with its table settings. The first migration is not created yet. The state model and the screens are not built yet. The design session (grilling) is finished.
 
 ### Next steps
 
 1. The developer finishes the Azure SQL free-tier database and puts `Database:ConnectionStringApp`, `Database:ConnectionStringEF`, `Sleeper:Username` and `Database:FailedSaveQueueFolder` in .NET user secrets. Claude never reads them.
-2. Sleeper project: implement the service interfaces, starting with the user-leagues call, and write the hand-written mappers, with tests (MSTest, AutoFixture).
-3. Database project: database models, mappers and the first migration. Only when the developer asks for the migration.
+2. Sleeper and Nflverse projects: implement the service interfaces (HTTP clients), starting with the user-leagues call, with tests (MSTest, AutoFixture).
+3. Database project: the developer creates the first migration with the EF commands in the Database README, only when asked. After that: the services that read and save, the mappers from the application models to the database models (not written yet), and the seed data (slots, positions, slot eligibility and NFL team names, which the developer gives).
 4. Overview screen in the Blazor project. Start with the state model that holds the current and pending values (see "Change tracking" and "Open" in the spec). Then: season tabs, the update and save buttons, the report modal, a constant warning while a position has no slot link, using TimeWarp.State.
 
 Open points to settle on the way:
@@ -55,7 +55,9 @@ Open points to settle on the way:
 - The per-player points in the matchups call (`players_points`) are not in the Sleeper docs. Check them in a live response.
 - Two lines in the diagram are not connected to a table. Connect or delete them in draw.io.
 - Whether the database users `ef`, `app` and `claude` exist yet (the developer creates them).
-- The new code (models, settings classes and Sleeper service interfaces) has not been built or tested yet. Build and run the tests first.
+- The mappers return stubs for links to other records (only the key is filled). A later step must swap the stubs for the real records.
+- `specs/SPEC-1.md` does not list the Nflverse project, the matchups call or the EF context yet.
+- The new code (mappers, Nflverse project, Database models, mappers and EF context) has not been built or tested yet. Build and run the tests first.
 - The spelling of the name: `FantasyInformator` is used everywhere, the developer once wrote "Fantasy Informator".
 
 ### Suggested tools

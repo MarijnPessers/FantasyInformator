@@ -1,6 +1,7 @@
 <Solution>
   <Project Path="FantasyInformator.Database/FantasyInformator.Database.csproj" />
   <Project Path="FantasyInformator.DatabaseTests/FantasyInformator.DatabaseTests.csproj" />
+  <Project Path="FantasyInformator.Migrator/FantasyInformator.Migrator.csproj" />
   <Project Path="FantasyInformator.Models/FantasyInformator.Models.csproj" />
   <Project Path="FantasyInformator.ModelsTests/FantasyInformator.ModelsTests.csproj" />
   <Project Path="FantasyInformator.Nflverse/FantasyInformator.Nflverse.csproj" />
