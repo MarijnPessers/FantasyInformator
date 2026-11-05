@@ -10,6 +10,23 @@ Example: "write this in the Sleeper service" names a project without saying what
 
 Visual Studio caches images in the README preview. Every image link in a README ends with `?t=` and a UTC timestamp, for example `models.drawio.svg?t=20261105003433`. Each time you change a README that holds such a link, or the image file it points to, set the timestamp to the current UTC time in the format `yyyyMMddHHmmss`. Do not use a version number.
 
+## Diagram
+
+The models diagram is `FantasyInformator.Models/models.drawio.svg`, shown in the Models README.
+
+- Every box lists `Id` first and, when the model has one, `ExternalId` second.
+- Every line has only 90-degree corners. The exception is a line between two tables directly above and below each other: it is one straight line.
+- The ends of a line are crow's feet (draw.io ER arrows), not arrows and not text. Two bars mean exactly one, a circle and a fork mean none or many, a bar and a fork mean at least one, a circle and a bar mean none or one.
+- `League` and `Nfl` are at the top of the diagram, always.
+- The groups (folders) have the same order in the table and in the description below the diagram: League, FantasyTeam, Player, Nfl, Lineup, Scoring, Administration. A new group goes at the end of both.
+- The file has an editable part (the `content` attribute) and a drawn part. In the drawn part draw.io stores the text of each box as a picture, which cannot be edited by hand. After a change, the user opens the file in draw.io and saves it once so the drawn part is complete.
+- The description below the diagram is plain English, without jargon.
+
+## Preferences
+
+- No Python on the PC. Use PowerShell or Bash for scratch scripts.
+- Explain in plain English. Do not explain how a file format works unless asked.
+
 ## Transition between sessions
 
 This section is the to-do list that carries work from one session to the next.
@@ -34,6 +51,10 @@ Open points to settle on the way:
 - Whether TimeWarp.State actions and handlers can live in a project other than the Blazor app (not verified).
 - Whether a State project or a slot-logic project is needed.
 - Whether the league-users endpoint is the right call for owners (not verified).
+- How the same league is matched across seasons. Sleeper gives no id for it, so matching on the league name is only an assumption.
+- Two lines in the diagram are not connected to a table. Connect or delete them in draw.io.
+- Whether the database users `ef`, `app` and `claude` exist yet (the developer creates them).
+- The new code (models and settings classes) has not been built or tested yet. Build and run the tests first.
 - The spelling of the name: `FantasyInformator` is used everywhere, the developer once wrote "Fantasy Informator".
 
 ### Suggested tools
