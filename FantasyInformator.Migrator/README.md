@@ -1,32 +1,30 @@
 # FantasyInformator.Migrator
 
-A small console program that applies the database migrations of `FantasyInformator.Database` to the database. It makes the tables, or brings them up to date. It does not create the migrations: that is `dotnet ef migrations add`, see the Database README.
+A console program with a menu to manage the database migrations of `FantasyInformator.Database`.
 
-## Technical notes
+## What it does
 
-- References `FantasyInformator.Database` and uses its `FantasyInformatorDbContext`.
-- It has its own .NET user secrets, separate from the Blazor app. The Database project has the same secrets id as the Blazor app, this program does not.
-- It connects as the `ef` user (the one that may create and change tables) with `Database:ConnectionStringEF`.
-- `appsettings.json` holds the default, with a `{your_password}` placeholder, and is copied next to the program. The user secrets are read after it, so they override it. `appsettings.example.json` shows every key with `<...>` placeholders and is not copied.
-- It retries when the database is paused and wakes up.
-- It applies only the migrations that are not applied yet, so it is safe to run again.
-- It does not catch errors. If something fails, the error is shown and the program ends with a failure code.
-- It is run by hand, only when the developer wants to change the database. Claude does not run it.
+- **Create a migration:** asks for a name and creates it. If the model has no changes, nothing is created.
+- **Apply all migrations:** applies every migration that is not applied yet.
+- **Apply or roll back to a migration:** pick a migration from a list (9 at a time) to go to it.
+- **Exit.**
 
-## Use
+If something fails, the error is shown and the menu appears again.
 
-One time, set the connection string (use your own, never write it in a file in the solution):
+## What it needs
 
-```
-dotnet user-secrets set "Database:ConnectionStringEF" "<connection string of the ef user>" --project FantasyInformator.Migrator
-```
+- The `dotnet-ef` tool: `dotnet tool install --global dotnet-ef`.
+- The connection string of the `ef` user (the one that may create and change tables), in `Database:ConnectionStringEF`. `appsettings.json` has it with a `{your_password}` placeholder. Do not put the real password there, because the file is in git. Use user secrets (`secrets.json`), which override `appsettings.json`:
 
-Then run it from the solution folder:
+  ```
+  dotnet user-secrets set "Database:ConnectionStringEF" "<connection string of the ef user>" --project FantasyInformator.Migrator
+  ```
+
+- The setting `Migrator:DatabaseProjectPath` in `appsettings.json`, the folder of the Database project. The default works. `appsettings.example.json` shows every key.
+- An IP address that the firewall of the Azure SQL server allows.
+
+## Run
 
 ```
 dotnet run --project FantasyInformator.Migrator
 ```
-
-It prints one of three things: that there are no migrations yet (create `InitialCreate` first), that the database is up to date, or the list of migrations it applied.
-
-No tests: the program only calls the database.

@@ -1,4 +1,5 @@
 using FantasyInformator.Database;
+using FantasyInformator.Migrator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -10,6 +11,7 @@ var configuration = new ConfigurationBuilder()
     .Build();
 
 var databaseOptions = configuration.GetSection(DatabaseOptions.SectionName).Get<DatabaseOptions>() ?? new DatabaseOptions();
+var migratorOptions = configuration.GetSection(MigratorOptions.SectionName).Get<MigratorOptions>() ?? new MigratorOptions();
 
 // The serverless database pauses itself, so the first connection can fail while it wakes up.
 var contextOptions = new DbContextOptionsBuilder<FantasyInformatorDbContext>()
@@ -18,25 +20,6 @@ var contextOptions = new DbContextOptionsBuilder<FantasyInformatorDbContext>()
 
 await using var context = new FantasyInformatorDbContext(contextOptions);
 
-if (!context.Database.GetMigrations().Any())
-{
-    Console.WriteLine("There are no migrations. Create InitialCreate first, see the Database README.");
-    return;
-}
+var menu = new MigratorMenu(context, new DotnetEfRunner(migratorOptions.DatabaseProjectPath, databaseOptions.ConnectionStringEF));
 
-var pendingMigrations = (await context.Database.GetPendingMigrationsAsync()).ToList();
-
-if (pendingMigrations.Count == 0)
-{
-    Console.WriteLine("The database is up to date.");
-    return;
-}
-
-await context.Database.MigrateAsync();
-
-Console.WriteLine($"Applied {pendingMigrations.Count} migration(s):");
-
-foreach (var migrationName in pendingMigrations)
-{
-    Console.WriteLine($"  {migrationName}");
-}
+await menu.RunAsync();
