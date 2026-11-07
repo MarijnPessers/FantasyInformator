@@ -61,7 +61,7 @@ Every functionality is a separate project. Each project has a sibling test proje
 - Items with a pending value get a slightly different color. A report icon button on a league or a player compares current with pending.
 - After a save, the pending value becomes the current value and is cleared.
 - Save writes only New, Pending and Deleted objects, one statement per changed object. A parent update does not update unchanged children. Unchanged objects are never sent to the database. Absence from a save never deletes anything. Only an object marked Deleted is deleted, and a delete cascades. A New complex object inserts records in all its tables.
-- Every object has an updated time. When a child changes, its updated time and those of all its parents are set, bottom-up. An update that finds no differences changes nothing, and Save stays disabled.
+- Every object has an updated time, set when that object itself changes. An update that finds no differences changes nothing, and Save stays disabled.
 - Exception: the global lists (the players list, and later games) always get a new update time on an update. The players list is saved at once ("Rules for the whole application").
 
 ## Overview screen
