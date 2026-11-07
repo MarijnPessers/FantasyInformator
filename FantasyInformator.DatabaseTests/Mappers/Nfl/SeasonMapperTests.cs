@@ -1,7 +1,8 @@
-using FantasyInformator.Database.Mappers;
-using DatabaseModels = FantasyInformator.Database.Models;
+using FantasyInformator.Database.Mappers.Nfl;
+using DatabaseLeague = FantasyInformator.Database.Models.League;
+using DatabaseNfl = FantasyInformator.Database.Models.Nfl;
 
-namespace FantasyInformator.DatabaseTests.Mappers;
+namespace FantasyInformator.DatabaseTests.Mappers.Nfl;
 
 [TestClass]
 public class SeasonMapperTests
@@ -9,7 +10,7 @@ public class SeasonMapperTests
     [TestMethod]
     public void ToModel_MapsAllFieldsAndLinks()
     {
-        var season = SourceFactory.Create<DatabaseModels.Season>();
+        var season = SourceFactory.Create<DatabaseNfl.Season>();
 
         var result = SeasonMapper.ToModel(season);
 
@@ -28,9 +29,9 @@ public class SeasonMapperTests
     [TestMethod]
     public void ToModel_TwoLeagueInstancesShareTheSeason_MapsTheSeasonOnce()
     {
-        var season = new DatabaseModels.Season();
-        var firstInstance = new DatabaseModels.LeagueInstance { Season = season };
-        var secondInstance = new DatabaseModels.LeagueInstance { Season = season };
+        var season = new DatabaseNfl.Season();
+        var firstInstance = new DatabaseLeague.LeagueInstance { Season = season };
+        var secondInstance = new DatabaseLeague.LeagueInstance { Season = season };
         season.LeagueInstances.AddRange([firstInstance, secondInstance]);
 
         var result = SeasonMapper.ToModel(season);

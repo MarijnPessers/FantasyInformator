@@ -1,4 +1,5 @@
-using AppModels = FantasyInformator.Models;
+using FantasyInformator.Models.Player;
+using FantasyInformator.Models.Scoring;
 using SleeperModels = FantasyInformator.Sleeper.Services.Models;
 
 namespace FantasyInformator.Sleeper.Mappers;
@@ -12,16 +13,14 @@ public static class ScoringMapper
     /// One <c>FantasyScore</c> per player in the matchup. Null points stay null (the player did not play).
     /// The <c>GameAppearance</c> is a stub that holds only the player; the caller finds the game of that week.
     /// </summary>
-    public static List<AppModels.FantasyScore> ToFantasyScores(SleeperModels.Matchup matchup)
-    {
-        return [.. matchup.PlayersPoints
-            .Select(playerPoints => new AppModels.FantasyScore
+    public static List<FantasyScore> ToFantasyScores(SleeperModels.Matchup matchup) =>
+        [.. matchup.PlayersPoints
+            .Select(x => new FantasyScore
             {
-                GameAppearance = new AppModels.GameAppearance
+                GameAppearance = new GameAppearance
                 {
-                    Player = new AppModels.Player { ExternalId = playerPoints.Key },
+                    Player = new Player { ExternalId = x.Key },
                 },
-                Points = (decimal?)playerPoints.Value,
+                Points = (decimal?)x.Value,
             })];
-    }
 }

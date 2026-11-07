@@ -1,7 +1,7 @@
-using FantasyInformator.Database.Mappers;
-using DatabaseModels = FantasyInformator.Database.Models;
+using FantasyInformator.Database.Mappers.Nfl;
+using DatabaseNfl = FantasyInformator.Database.Models.Nfl;
 
-namespace FantasyInformator.DatabaseTests.Mappers;
+namespace FantasyInformator.DatabaseTests.Mappers.Nfl;
 
 [TestClass]
 public class NflTeamMapperTests
@@ -9,7 +9,7 @@ public class NflTeamMapperTests
     [TestMethod]
     public void ToModel_MapsAllFieldsAndLinks()
     {
-        var nflTeam = SourceFactory.Create<DatabaseModels.NflTeam>();
+        var nflTeam = SourceFactory.Create<DatabaseNfl.NflTeam>();
 
         var result = NflTeamMapper.ToModel(nflTeam);
 

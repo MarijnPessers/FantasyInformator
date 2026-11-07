@@ -1,20 +1,29 @@
 using System.Diagnostics;
+using System.Globalization;
+using System.Runtime.InteropServices;
+using System.Text;
+using FantasyInformator.Migrator.Resources;
 
 namespace FantasyInformator.Migrator;
 
 /// <summary>The exit code and the combined text output of one <c>dotnet ef</c> run.</summary>
-public sealed record DotnetEfResult(int ExitCode, string Output);
+public record DotnetEfResult(int ExitCode, string Output);
 
 /// <summary>
 /// Runs the <c>dotnet ef</c> command line tool against the Database project. Migrations are created through the
 /// tool, because it builds the project first, so the new migration files match the current models.
 /// </summary>
-public sealed class DotnetEfRunner(string databaseProjectPath, string connectionString)
+public class DotnetEfRunner(string databaseProjectPath, string connectionString)
 {
     public const string AddMigrationCommand = "add";
     public const string HasPendingModelChangesCommand = "has-pending-model-changes";
 
     private const string DotnetProgram = "dotnet";
+    private const string DotnetWindowsFileName = "dotnet.exe";
+
+    // The runtime folder is <dotnet>/shared/Microsoft.NETCore.App/<version>, so the dotnet program is three folders up.
+    private const string RuntimeToDotnetFolder = "../../..";
+
     private const string EfTool = "ef";
     private const string MigrationsGroup = "migrations";
     private const string DatabaseGroup = "database";
@@ -24,6 +33,9 @@ public sealed class DotnetEfRunner(string databaseProjectPath, string connection
     // The Migrator already holds the connection string in its own user secrets, so the tool gets it here instead of
     // needing the same secret in the Database project.
     private const string ConnectionOption = "--connection";
+
+    private static readonly CompositeFormat FolderNotFoundFormat =
+        CompositeFormat.Parse(Texts.DatabaseProjectFolderNotFound);
 
     public Task<DotnetEfResult> RunMigrationsCommandAsync(string command, params string[] commandArguments) =>
         RunAsync([MigrationsGroup, command, .. commandArguments]);
@@ -36,7 +48,7 @@ public sealed class DotnetEfRunner(string databaseProjectPath, string connection
 
     private async Task<DotnetEfResult> RunAsync(string[] efArguments)
     {
-        var startInfo = new ProcessStartInfo(DotnetProgram)
+        var startInfo = new ProcessStartInfo(ResolveDotnetPath())
         {
             RedirectStandardOutput = true,
             RedirectStandardError = true,
@@ -54,7 +66,7 @@ public sealed class DotnetEfRunner(string databaseProjectPath, string connection
         startInfo.ArgumentList.Add(ResolveDatabaseProjectPath());
 
         using var process = Process.Start(startInfo)
-            ?? throw new InvalidOperationException("The dotnet program could not be started.");
+            ?? throw new InvalidOperationException(Texts.DotnetNotStarted);
 
         // Both streams are read at the same time, because the tool blocks when one of them is full and nobody reads it.
         var outputTask = process.StandardOutput.ReadToEndAsync();
@@ -87,7 +99,21 @@ public sealed class DotnetEfRunner(string databaseProjectPath, string connection
         }
 
         throw new DirectoryNotFoundException(
-            $"The Database project folder '{databaseProjectPath}' was not found above {AppContext.BaseDirectory}. " +
-            "Set Migrator:DatabaseProjectPath to the full path of the folder.");
+            string.Format(
+                CultureInfo.CurrentCulture,
+                FolderNotFoundFormat,
+                databaseProjectPath,
+                AppContext.BaseDirectory));
+    }
+
+    private static string ResolveDotnetPath()
+    {
+        var dotnetFolder = Path.GetFullPath(
+            Path.Combine(RuntimeEnvironment.GetRuntimeDirectory(), RuntimeToDotnetFolder));
+        var fileName = OperatingSystem.IsWindows()
+            ? DotnetWindowsFileName
+            : DotnetProgram;
+
+        return Path.Combine(dotnetFolder, fileName);
     }
 }

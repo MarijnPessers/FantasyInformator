@@ -1,26 +1,29 @@
-using AppModels = FantasyInformator.Models;
-using DatabaseModels = FantasyInformator.Database.Models;
+using FantasyInformator.Database.Mappers.League;
+using FantasyInformator.Database.Mappers.Player;
+using FantasyInformator.Database.Mappers.Tracking;
+using AppScoring = FantasyInformator.Models.Scoring;
+using DatabaseScoring = FantasyInformator.Database.Models.Scoring;
 
-namespace FantasyInformator.Database.Mappers;
+namespace FantasyInformator.Database.Mappers.Scoring;
 
 public static class FantasyScoreMapper
 {
-    public static AppModels.FantasyScore? ToModel(DatabaseModels.FantasyScore? fantasyScore) =>
+    public static AppScoring.FantasyScore? ToModel(DatabaseScoring.FantasyScore? fantasyScore) =>
         ToModel(fantasyScore, new MappingContext());
 
-    public static AppModels.FantasyScore? ToModel(DatabaseModels.FantasyScore? fantasyScore, MappingContext context)
+    public static AppScoring.FantasyScore? ToModel(DatabaseScoring.FantasyScore? fantasyScore, MappingContext context)
     {
         if (fantasyScore is null)
         {
             return null;
         }
 
-        if (context.TryGetMapped(fantasyScore, out AppModels.FantasyScore? mapped))
+        if (context.TryGetMapped(fantasyScore, out AppScoring.FantasyScore? mapped))
         {
             return mapped;
         }
 
-        mapped = TrackedModelMapper.Fill(fantasyScore, new AppModels.FantasyScore
+        mapped = TrackedModelMapper.Fill(fantasyScore, new AppScoring.FantasyScore
         {
             GameAppearanceId = fantasyScore.GameAppearanceId,
             LeagueInstanceId = fantasyScore.LeagueInstanceId,

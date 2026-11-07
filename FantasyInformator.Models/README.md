@@ -19,7 +19,7 @@ A roster holds its player ids and its owner id as plain values, with no foreign 
 
 Every model except `LastSleeperCall` inherits `TrackedModel`: a Guid `Id`, a `State` (`TrackingState`) and `UpdatedUtc`. Models that come from Sleeper have an `ExternalId`, the Sleeper id used to match Sleeper data to the own records. Every id has a navigation property, and the "one" side has a list. Sleeper data that has no field here is dropped.
 
-The folders group the models. The namespace of every model is `FantasyInformator.Models`. The groups are in the same order in the table and in the description below the diagram: League, FantasyTeam, Player, Nfl, Lineup, Scoring, Administration.
+The folders group the models. The namespace of a model is `FantasyInformator.Models` plus its folder, for example `FantasyInformator.Models.League`. Some models have the same name as their folder (`League`, `Player`, `FantasyTeam`). The analyzer rule CA1724, which warns about this, is switched off. Outside its own folder such a model is written with the folder name (`Player.Player`) or through an alias. The groups are in the same order in the table and in the description below the diagram: League, FantasyTeam, Player, Nfl, Lineup, Scoring, Administration.
 
 | Folder | Model | Fields |
 |--------|-------|--------|
@@ -44,7 +44,7 @@ The folders group the models. The namespace of every model is `FantasyInformator
 
 The diagram is `models.drawio.svg`. Open it in draw.io to change it by hand and save it in the same file. Every model except `LastSleeperCall` also has the fields `State` and `UpdatedUtc`, which are not drawn.
 
-![Models](models.drawio.svg?t=20261107132241)
+![Models](models.drawio.svg?t=20261107153307)
 
 ## What the diagram shows
 

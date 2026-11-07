@@ -1,4 +1,8 @@
-namespace FantasyInformator.Database.Models;
+
+using FantasyInformator.Database.Models.Player;
+using FantasyInformator.Database.Models.Tracking;
+
+namespace FantasyInformator.Database.Models.Lineup;
 
 /// <summary>A slot a position can start in. A position has one or more.</summary>
 public class SlotEligibility : TrackedModel

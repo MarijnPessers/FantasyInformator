@@ -1,4 +1,8 @@
-namespace FantasyInformator.Database.Models;
+
+using FantasyInformator.Database.Models.League;
+using FantasyInformator.Database.Models.Tracking;
+
+namespace FantasyInformator.Database.Models.FantasyTeam;
 
 public class FantasyTeam : TrackedModel
 {
@@ -14,5 +18,5 @@ public class FantasyTeam : TrackedModel
 
     public string Name { get; set; } = string.Empty;
 
-    public List<RosteredPlayer> RosteredPlayers { get; set; } = [];
+    public List<RosteredPlayer> RosteredPlayers { get; init; } = [];
 }

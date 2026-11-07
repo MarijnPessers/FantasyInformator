@@ -1,4 +1,4 @@
-using FantasyInformator.Database.Models;
+using FantasyInformator.Database.Models.FantasyTeam;
 using Microsoft.EntityFrameworkCore;
 
 namespace FantasyInformator.Database.Configurations;
@@ -7,43 +7,43 @@ namespace FantasyInformator.Database.Configurations;
 /// The tables of the FantasyTeam group. The owner of a team and the player on a roster are plain ids without a
 /// foreign key, because they can point to an owner or player that is not known, so those navigations are not mapped.
 /// </summary>
-internal static class FantasyTeamConfiguration
+public static class FantasyTeamConfiguration
 {
     public static void Configure(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Owner>(owner =>
+        _ = modelBuilder.Entity<Owner>(owner =>
         {
-            owner.Property(o => o.ExternalId).HasMaxLength(ColumnSizes.ExternalId);
-            owner.Property(o => o.Name).HasMaxLength(ColumnSizes.Name);
-            owner.HasIndex(o => o.ExternalId).IsUnique();
-            owner.Ignore(o => o.FantasyTeams);
+            _ = owner.Property(x => x.ExternalId).HasMaxLength(ColumnSizes.ExternalId);
+            _ = owner.Property(x => x.Name).HasMaxLength(ColumnSizes.Name);
+            _ = owner.HasIndex(x => x.ExternalId).IsUnique();
+            _ = owner.Ignore(x => x.FantasyTeams);
         });
 
-        modelBuilder.Entity<FantasyTeam>(fantasyTeam =>
+        _ = modelBuilder.Entity<FantasyTeam>(fantasyTeam =>
         {
-            fantasyTeam.Property(t => t.ExternalId).HasMaxLength(ColumnSizes.ExternalId);
-            fantasyTeam.Property(t => t.Name).HasMaxLength(ColumnSizes.Name);
-            fantasyTeam.HasIndex(t => new { t.LeagueInstanceId, t.ExternalId }).IsUnique();
-            fantasyTeam.HasIndex(t => t.OwnerId);
-            fantasyTeam.Ignore(t => t.Owner);
+            _ = fantasyTeam.Property(x => x.ExternalId).HasMaxLength(ColumnSizes.ExternalId);
+            _ = fantasyTeam.Property(x => x.Name).HasMaxLength(ColumnSizes.Name);
+            _ = fantasyTeam.HasIndex(x => new { x.LeagueInstanceId, x.ExternalId }).IsUnique();
+            _ = fantasyTeam.HasIndex(x => x.OwnerId);
+            _ = fantasyTeam.Ignore(x => x.Owner);
 
-            fantasyTeam.HasOne(t => t.LeagueInstance)
+            _ = fantasyTeam.HasOne(t => t.LeagueInstance)
                 .WithMany(li => li.FantasyTeams)
                 .HasForeignKey(t => t.LeagueInstanceId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        modelBuilder.Entity<RosteredPlayer>(rosteredPlayer =>
+        _ = modelBuilder.Entity<RosteredPlayer>(rosteredPlayer =>
         {
-            rosteredPlayer.HasIndex(rp => new { rp.FantasyTeamId, rp.PlayerId }).IsUnique();
-            rosteredPlayer.Ignore(rp => rp.Player);
+            _ = rosteredPlayer.HasIndex(x => new { x.FantasyTeamId, x.PlayerId }).IsUnique();
+            _ = rosteredPlayer.Ignore(x => x.Player);
 
-            rosteredPlayer.HasOne(rp => rp.FantasyTeam)
+            _ = rosteredPlayer.HasOne(rp => rp.FantasyTeam)
                 .WithMany(t => t.RosteredPlayers)
                 .HasForeignKey(rp => rp.FantasyTeamId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            rosteredPlayer.HasOne(rp => rp.Slot)
+            _ = rosteredPlayer.HasOne(rp => rp.Slot)
                 .WithMany(s => s.RosteredPlayers)
                 .HasForeignKey(rp => rp.SlotId)
                 .OnDelete(DeleteBehavior.Restrict);

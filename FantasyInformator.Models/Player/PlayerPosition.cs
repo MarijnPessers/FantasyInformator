@@ -1,4 +1,7 @@
-namespace FantasyInformator.Models;
+
+using FantasyInformator.Models.Tracking;
+
+namespace FantasyInformator.Models.Player;
 
 /// <summary>A position a player plays. A player has one or more.</summary>
 public class PlayerPosition : TrackedModel

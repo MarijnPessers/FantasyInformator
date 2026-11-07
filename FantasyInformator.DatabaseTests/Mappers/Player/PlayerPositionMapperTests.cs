@@ -1,7 +1,7 @@
-using FantasyInformator.Database.Mappers;
-using DatabaseModels = FantasyInformator.Database.Models;
+using FantasyInformator.Database.Mappers.Player;
+using DatabasePlayer = FantasyInformator.Database.Models.Player;
 
-namespace FantasyInformator.DatabaseTests.Mappers;
+namespace FantasyInformator.DatabaseTests.Mappers.Player;
 
 [TestClass]
 public class PlayerPositionMapperTests
@@ -9,7 +9,7 @@ public class PlayerPositionMapperTests
     [TestMethod]
     public void ToModel_MapsAllFieldsAndLinks()
     {
-        var playerPosition = SourceFactory.Create<DatabaseModels.PlayerPosition>();
+        var playerPosition = SourceFactory.Create<DatabasePlayer.PlayerPosition>();
 
         var result = PlayerPositionMapper.ToModel(playerPosition);
 

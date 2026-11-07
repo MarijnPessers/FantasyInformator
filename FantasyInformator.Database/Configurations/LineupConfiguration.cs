@@ -1,46 +1,46 @@
-using FantasyInformator.Database.Models;
+using FantasyInformator.Database.Models.Lineup;
 using Microsoft.EntityFrameworkCore;
 
 namespace FantasyInformator.Database.Configurations;
 
 /// <summary>The tables of the Lineup group.</summary>
-internal static class LineupConfiguration
+public static class LineupConfiguration
 {
     public static void Configure(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Slot>(slot =>
+        _ = modelBuilder.Entity<Slot>(slot =>
         {
-            slot.Property(s => s.ExternalId).HasMaxLength(ColumnSizes.ExternalId);
-            slot.Property(s => s.Name).HasMaxLength(ColumnSizes.Name);
-            slot.Property(s => s.Abbreviation).HasMaxLength(ColumnSizes.Abbreviation);
-            slot.HasIndex(s => s.ExternalId).IsUnique();
+            _ = slot.Property(x => x.ExternalId).HasMaxLength(ColumnSizes.ExternalId);
+            _ = slot.Property(x => x.Name).HasMaxLength(ColumnSizes.Name);
+            _ = slot.Property(x => x.Abbreviation).HasMaxLength(ColumnSizes.Abbreviation);
+            _ = slot.HasIndex(x => x.ExternalId).IsUnique();
         });
 
-        modelBuilder.Entity<LeagueSlot>(leagueSlot =>
+        _ = modelBuilder.Entity<LeagueSlot>(leagueSlot =>
         {
-            leagueSlot.HasIndex(ls => new { ls.LeagueInstanceId, ls.SlotId }).IsUnique();
+            _ = leagueSlot.HasIndex(x => new { x.LeagueInstanceId, x.SlotId }).IsUnique();
 
-            leagueSlot.HasOne(ls => ls.LeagueInstance)
+            _ = leagueSlot.HasOne(ls => ls.LeagueInstance)
                 .WithMany(li => li.LeagueSlots)
                 .HasForeignKey(ls => ls.LeagueInstanceId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            leagueSlot.HasOne(ls => ls.Slot)
+            _ = leagueSlot.HasOne(ls => ls.Slot)
                 .WithMany(s => s.LeagueSlots)
                 .HasForeignKey(ls => ls.SlotId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        modelBuilder.Entity<SlotEligibility>(slotEligibility =>
+        _ = modelBuilder.Entity<SlotEligibility>(slotEligibility =>
         {
-            slotEligibility.HasIndex(se => new { se.PositionId, se.SlotId }).IsUnique();
+            _ = slotEligibility.HasIndex(x => new { x.PositionId, x.SlotId }).IsUnique();
 
-            slotEligibility.HasOne(se => se.Position)
+            _ = slotEligibility.HasOne(se => se.Position)
                 .WithMany(p => p.SlotEligibilities)
                 .HasForeignKey(se => se.PositionId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            slotEligibility.HasOne(se => se.Slot)
+            _ = slotEligibility.HasOne(se => se.Slot)
                 .WithMany(s => s.SlotEligibilities)
                 .HasForeignKey(se => se.SlotId)
                 .OnDelete(DeleteBehavior.Restrict);

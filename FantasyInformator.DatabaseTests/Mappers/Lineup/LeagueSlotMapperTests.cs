@@ -1,7 +1,7 @@
-using FantasyInformator.Database.Mappers;
-using DatabaseModels = FantasyInformator.Database.Models;
+using FantasyInformator.Database.Mappers.Lineup;
+using DatabaseLineup = FantasyInformator.Database.Models.Lineup;
 
-namespace FantasyInformator.DatabaseTests.Mappers;
+namespace FantasyInformator.DatabaseTests.Mappers.Lineup;
 
 [TestClass]
 public class LeagueSlotMapperTests
@@ -9,7 +9,7 @@ public class LeagueSlotMapperTests
     [TestMethod]
     public void ToModel_MapsAllFieldsAndLinks()
     {
-        var leagueSlot = SourceFactory.Create<DatabaseModels.LeagueSlot>();
+        var leagueSlot = SourceFactory.Create<DatabaseLineup.LeagueSlot>();
 
         var result = LeagueSlotMapper.ToModel(leagueSlot);
 

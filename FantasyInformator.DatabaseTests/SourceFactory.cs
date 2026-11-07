@@ -6,11 +6,11 @@ using AutoFixture.Kernel;
 namespace FantasyInformator.DatabaseTests;
 
 /// <summary>
-/// Builds a database model one level deep: the own fields get random values, every link to another database model gets an
-/// object with random own fields, and every list gets <see cref="ListElementCount"/> such objects. The links of those objects
-/// stay empty, so the source never has loops and stays small.
+/// Builds a database model one level deep: the own fields get random values, every link to another database model
+/// gets an object with random own fields, and every list gets <see cref="ListElementCount"/> such objects.
+/// The links of those objects stay empty, so the source never has loops and stays small.
 /// </summary>
-internal static class SourceFactory
+public static class SourceFactory
 {
     public const int ListElementCount = 3;
 
@@ -35,7 +35,7 @@ internal static class SourceFactory
         modelType.GetProperties().Where(IsLink);
 
     public static IEnumerable<PropertyInfo> GetOwnFields(Type modelType) =>
-        modelType.GetProperties().Where(property => !IsLink(property));
+        modelType.GetProperties().Where(x => !IsLink(x));
 
     private static bool IsLink(PropertyInfo property) =>
         IsDatabaseModel(property.PropertyType)
@@ -44,7 +44,10 @@ internal static class SourceFactory
     private static bool IsList(Type type) =>
         type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
 
-    private static bool IsDatabaseModel(Type type) => type.Namespace == DatabaseModelsNamespace && type.IsClass;
+    private static bool IsDatabaseModel(Type type) =>
+        type.Namespace is not null
+        && type.Namespace.StartsWith(DatabaseModelsNamespace, StringComparison.Ordinal)
+        && type.IsClass;
 
     private static object CreateLink(Type linkType)
     {
@@ -57,7 +60,7 @@ internal static class SourceFactory
 
         for (var elementNumber = 0; elementNumber < ListElementCount; elementNumber++)
         {
-            list.Add(CreateWithOwnFields(linkType.GetGenericArguments()[0]));
+            _ = list.Add(CreateWithOwnFields(linkType.GetGenericArguments()[0]));
         }
 
         return list;

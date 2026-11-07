@@ -1,4 +1,8 @@
-namespace FantasyInformator.Models;
+
+using FantasyInformator.Models.League;
+using FantasyInformator.Models.Tracking;
+
+namespace FantasyInformator.Models.Lineup;
 
 /// <summary>How many slots of one kind a league instance has.</summary>
 public class LeagueSlot : TrackedModel

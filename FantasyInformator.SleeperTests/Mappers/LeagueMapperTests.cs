@@ -1,4 +1,5 @@
 using AutoFixture;
+using FantasyInformator.Models.Lineup;
 using FantasyInformator.Sleeper.Mappers;
 using SleeperModels = FantasyInformator.Sleeper.Services.Models;
 
@@ -43,15 +44,17 @@ public class LeagueMapperTests
         var league = _fixture.Create<SleeperModels.League>();
         league.Season = _fixture.Create<string>();
 
-        Assert.ThrowsExactly<FormatException>(() => LeagueMapper.ToLeagueInstance(league));
+        _ = Assert.ThrowsExactly<FormatException>(() => LeagueMapper.ToLeagueInstance(league));
     }
 
     [TestMethod]
     public void ToLeagueSlots_CountsEachRosterPosition()
     {
-        var league = _fixture.Create<SleeperModels.League>();
-        league.RosterPositions = [QuarterbackCode, QuarterbackCode, FlexCode, BenchCode, BenchCode, BenchCode];
-        league.Settings = new SleeperModels.LeagueSettings { ReserveSlots = 0, TaxiSlots = 0 };
+        var league = new SleeperModels.League
+        {
+            RosterPositions = [QuarterbackCode, QuarterbackCode, FlexCode, BenchCode, BenchCode, BenchCode],
+            Settings = new SleeperModels.LeagueSettings { ReserveSlots = 0, TaxiSlots = 0 },
+        };
 
         var result = LeagueMapper.ToLeagueSlots(league);
 
@@ -64,9 +67,11 @@ public class LeagueMapperTests
     [TestMethod]
     public void ToLeagueSlots_ReserveAndTaxiSlots_AreAdded()
     {
-        var league = _fixture.Create<SleeperModels.League>();
-        league.RosterPositions = [QuarterbackCode];
-        league.Settings = new SleeperModels.LeagueSettings { ReserveSlots = 2, TaxiSlots = 3 };
+        var league = new SleeperModels.League
+        {
+            RosterPositions = [QuarterbackCode],
+            Settings = new SleeperModels.LeagueSettings { ReserveSlots = 2, TaxiSlots = 3 },
+        };
 
         var result = LeagueMapper.ToLeagueSlots(league);
 
@@ -78,15 +83,17 @@ public class LeagueMapperTests
     [TestMethod]
     public void ToLeagueSlots_NoReserveAndNoTaxi_AreNotReturned()
     {
-        var league = _fixture.Create<SleeperModels.League>();
-        league.RosterPositions = [QuarterbackCode];
-        league.Settings = new SleeperModels.LeagueSettings { ReserveSlots = 0, TaxiSlots = 0 };
+        var league = new SleeperModels.League
+        {
+            RosterPositions = [QuarterbackCode],
+            Settings = new SleeperModels.LeagueSettings { ReserveSlots = 0, TaxiSlots = 0 },
+        };
 
         var result = LeagueMapper.ToLeagueSlots(league);
 
         Assert.HasCount(1, result);
     }
 
-    private static int CountOf(List<FantasyInformator.Models.LeagueSlot> leagueSlots, string slotCode) =>
-        leagueSlots.Single(leagueSlot => leagueSlot.Slot!.ExternalId == slotCode).Count;
+    private static int CountOf(List<LeagueSlot> leagueSlots, string slotCode) =>
+        leagueSlots.Single(x => x.Slot!.ExternalId == slotCode).Count;
 }

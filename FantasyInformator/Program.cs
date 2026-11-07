@@ -1,31 +1,13 @@
-using FantasyInformator.Components;
-using FantasyInformator.Database;
-using FantasyInformator.Sleeper;
+using FantasyInformator.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
-builder.Services.AddDatabaseOptions(builder.Configuration);
-builder.Services.AddSleeperOptions(builder.Configuration);
+builder.AddBlazor();
+builder.LoadConfiguration();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
-app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
-app.UseHttpsRedirection();
+app.UseHttpPipeline();
+app.MapBlazor();
 
-app.UseAntiforgery();
-
-app.MapStaticAssets();
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
-
-app.Run();
+await app.RunAsync();

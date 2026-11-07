@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Reflection;
 
 namespace FantasyInformator.DatabaseTests;
 
@@ -7,7 +8,7 @@ namespace FantasyInformator.DatabaseTests;
 /// forgets makes the test fail. It checks every own field of the model and of each linked model (one level deep, like
 /// <see cref="SourceFactory"/>). Enums are compared by name.
 /// </summary>
-internal static class MappedAssert
+public static class MappedAssert
 {
     public static void Equal(object databaseModel, object model)
     {
@@ -21,7 +22,7 @@ internal static class MappedAssert
             if (databaseLink is IList databaseList)
             {
                 var modelList = (IList)modelLink!;
-                Assert.AreEqual(databaseList.Count, modelList.Count, $"Number of elements in {link.Name}");
+                Assert.HasCount(databaseList.Count, modelList, $"Number of elements in {link.Name}");
 
                 for (var elementNumber = 0; elementNumber < databaseList.Count; elementNumber++)
                 {
@@ -38,7 +39,7 @@ internal static class MappedAssert
 
     private static void OwnFieldsEqual(object databaseModel, object model)
     {
-        var ownFields = SourceFactory.GetOwnFields(model.GetType()).ToList();
+        List<PropertyInfo> ownFields = [.. SourceFactory.GetOwnFields(model.GetType())];
         Assert.IsNotEmpty(ownFields);
 
         foreach (var ownField in ownFields)

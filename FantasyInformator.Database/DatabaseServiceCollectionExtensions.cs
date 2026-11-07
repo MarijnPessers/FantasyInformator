@@ -11,7 +11,7 @@ public static class DatabaseServiceCollectionExtensions
     /// </summary>
     public static IServiceCollection AddDatabaseOptions(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddOptions<DatabaseOptions>()
+        _ = services.AddOptions<DatabaseOptions>()
             .Bind(configuration.GetSection(DatabaseOptions.SectionName))
             .ValidateDataAnnotations()
             .ValidateOnStart();

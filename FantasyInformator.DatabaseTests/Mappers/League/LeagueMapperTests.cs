@@ -1,7 +1,7 @@
-using FantasyInformator.Database.Mappers;
-using DatabaseModels = FantasyInformator.Database.Models;
+using FantasyInformator.Database.Mappers.League;
+using DatabaseLeague = FantasyInformator.Database.Models.League;
 
-namespace FantasyInformator.DatabaseTests.Mappers;
+namespace FantasyInformator.DatabaseTests.Mappers.League;
 
 [TestClass]
 public class LeagueMapperTests
@@ -9,7 +9,7 @@ public class LeagueMapperTests
     [TestMethod]
     public void ToModel_MapsAllFieldsAndLinks()
     {
-        var league = SourceFactory.Create<DatabaseModels.League>();
+        var league = SourceFactory.Create<DatabaseLeague.League>();
 
         var result = LeagueMapper.ToModel(league);
 
@@ -28,8 +28,8 @@ public class LeagueMapperTests
     [TestMethod]
     public void ToModel_LeagueAndInstanceLinkToEachOther_MappingEndsAndKeepsTheLoop()
     {
-        var league = new DatabaseModels.League();
-        var leagueInstance = new DatabaseModels.LeagueInstance { League = league };
+        var league = new DatabaseLeague.League();
+        var leagueInstance = new DatabaseLeague.LeagueInstance { League = league };
         league.LeagueInstances.Add(leagueInstance);
 
         var result = LeagueMapper.ToModel(league);

@@ -9,7 +9,9 @@ public class DatabaseOptions
 {
     public const string SectionName = "Database";
 
-    /// <summary>The connection string of the user that reads and writes data while the application runs. Required.</summary>
+    /// <summary>
+    /// The connection string of the user that reads and writes data while the application runs. Required.
+    /// </summary>
     [Required]
     public string ConnectionStringApp { get; set; } = string.Empty;
 

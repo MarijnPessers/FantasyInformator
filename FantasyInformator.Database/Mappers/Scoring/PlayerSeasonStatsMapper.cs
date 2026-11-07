@@ -1,26 +1,31 @@
-using AppModels = FantasyInformator.Models;
-using DatabaseModels = FantasyInformator.Database.Models;
+using FantasyInformator.Database.Mappers.League;
+using FantasyInformator.Database.Mappers.Player;
+using FantasyInformator.Database.Mappers.Tracking;
+using AppScoring = FantasyInformator.Models.Scoring;
+using DatabaseScoring = FantasyInformator.Database.Models.Scoring;
 
-namespace FantasyInformator.Database.Mappers;
+namespace FantasyInformator.Database.Mappers.Scoring;
 
 public static class PlayerSeasonStatsMapper
 {
-    public static AppModels.PlayerSeasonStats? ToModel(DatabaseModels.PlayerSeasonStats? playerSeasonStats) =>
+    public static AppScoring.PlayerSeasonStats? ToModel(DatabaseScoring.PlayerSeasonStats? playerSeasonStats) =>
         ToModel(playerSeasonStats, new MappingContext());
 
-    public static AppModels.PlayerSeasonStats? ToModel(DatabaseModels.PlayerSeasonStats? playerSeasonStats, MappingContext context)
+    public static AppScoring.PlayerSeasonStats? ToModel(
+        DatabaseScoring.PlayerSeasonStats? playerSeasonStats,
+        MappingContext context)
     {
         if (playerSeasonStats is null)
         {
             return null;
         }
 
-        if (context.TryGetMapped(playerSeasonStats, out AppModels.PlayerSeasonStats? mapped))
+        if (context.TryGetMapped(playerSeasonStats, out AppScoring.PlayerSeasonStats? mapped))
         {
             return mapped;
         }
 
-        mapped = TrackedModelMapper.Fill(playerSeasonStats, new AppModels.PlayerSeasonStats
+        mapped = TrackedModelMapper.Fill(playerSeasonStats, new AppScoring.PlayerSeasonStats
         {
             PlayerId = playerSeasonStats.PlayerId,
             LeagueInstanceId = playerSeasonStats.LeagueInstanceId,

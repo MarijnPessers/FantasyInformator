@@ -12,7 +12,7 @@ public class ScoringMapperTests
     [TestMethod]
     public void ToFantasyScores_KeepsPointsNullAndZeroApart()
     {
-        var playerIds = _fixture.CreateMany<string>(3).ToList();
+        List<string> playerIds = [.. _fixture.CreateMany<string>(3)];
         var matchup = new SleeperModels.Matchup
         {
             PlayersPoints = new Dictionary<string, double?>
@@ -26,8 +26,8 @@ public class ScoringMapperTests
         var result = ScoringMapper.ToFantasyScores(matchup);
 
         var pointsByPlayer = result.ToDictionary(
-            fantasyScore => fantasyScore.GameAppearance!.Player!.ExternalId,
-            fantasyScore => fantasyScore.Points);
+            f => f.GameAppearance!.Player!.ExternalId,
+            f => f.Points);
         Assert.AreEqual(12.5m, pointsByPlayer[playerIds[0]]);
         Assert.IsNull(pointsByPlayer[playerIds[1]]);
         Assert.AreEqual(0m, pointsByPlayer[playerIds[2]]);

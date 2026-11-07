@@ -1,7 +1,7 @@
-using FantasyInformator.Database.Mappers;
-using DatabaseModels = FantasyInformator.Database.Models;
+using FantasyInformator.Database.Mappers.Lineup;
+using DatabaseLineup = FantasyInformator.Database.Models.Lineup;
 
-namespace FantasyInformator.DatabaseTests.Mappers;
+namespace FantasyInformator.DatabaseTests.Mappers.Lineup;
 
 [TestClass]
 public class SlotMapperTests
@@ -9,7 +9,7 @@ public class SlotMapperTests
     [TestMethod]
     public void ToModel_MapsAllFieldsAndLinks()
     {
-        var slot = SourceFactory.Create<DatabaseModels.Slot>();
+        var slot = SourceFactory.Create<DatabaseLineup.Slot>();
 
         var result = SlotMapper.ToModel(slot);
 

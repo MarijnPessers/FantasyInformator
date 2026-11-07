@@ -152,7 +152,7 @@ erDiagram
 
 ## Database models and mappers
 
-- `Models` holds a copy of every application model, in the same group folders and with the same fields and navigation properties (namespace `FantasyInformator.Database.Models`). They are the same for now. They have no `DbContext` and no migration yet.
+- `Models` holds a copy of every application model, in the same group folders and with the same fields and navigation properties (namespace `FantasyInformator.Database.Models` plus the folder, in the same way as the application models). They are the same for now. They have no `DbContext` and no migration yet.
 - `Mappers` maps a database model to the application model, one static class per model, with `ToModel(model)` and `ToModel(model, context)`. A null model gives null.
 - A mapper maps only its own fields, and calls the mappers of the models it links to. `TrackedModelMapper` maps `Id`, `State` and `UpdatedUtc` for all of them, with the state mapped by name.
 - The models link to each other in both directions, so a `MappingContext` remembers what was already mapped. That ends the mapping and gives one application object for one database object.

@@ -1,4 +1,4 @@
-namespace FantasyInformator.Models;
+namespace FantasyInformator.Models.Enums;
 
 public enum TrackingState
 {

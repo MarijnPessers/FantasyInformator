@@ -1,4 +1,4 @@
-using AppModels = FantasyInformator.Models;
+using FantasyInformator.Models.Nfl;
 using NflverseModels = FantasyInformator.Nflverse.Services.Models;
 
 namespace FantasyInformator.Nflverse.Mappers;
@@ -15,13 +15,15 @@ public static class NflScheduleMapper
     /// <summary>
     /// The kickoff in the file is Eastern time, so it is converted to UTC. The teams are stubs that hold only the
     /// <c>ExternalId</c>, written as Sleeper writes the code. The caller matches the game to the Sleeper game by
-    /// week and teams. Throws when the time does not exist in Eastern time (the hour skipped when the clocks go forward).
+    /// week and teams. Throws when the time does not exist in Eastern time
+    /// (the hour skipped when the clocks go forward).
     /// </summary>
-    public static AppModels.Game ToGame(NflverseModels.Game game) => new()
-    {
-        Week = game.Week,
-        KickoffUtc = TimeZoneInfo.ConvertTimeToUtc(game.Gameday.ToDateTime(game.Gametime), EasternTimeZone),
-        HomeNflTeam = new AppModels.NflTeam { ExternalId = TeamCodes.ToSleeperCode(game.HomeTeam) },
-        AwayNflTeam = new AppModels.NflTeam { ExternalId = TeamCodes.ToSleeperCode(game.AwayTeam) },
-    };
+    public static Game ToGame(NflverseModels.Game game) =>
+        new()
+        {
+            Week = game.Week,
+            KickoffUtc = TimeZoneInfo.ConvertTimeToUtc(game.Gameday.ToDateTime(game.Gametime), EasternTimeZone),
+            HomeNflTeam = new NflTeam { ExternalId = TeamCodes.ToSleeperCode(game.HomeTeam) },
+            AwayNflTeam = new NflTeam { ExternalId = TeamCodes.ToSleeperCode(game.AwayTeam) },
+        };
 }

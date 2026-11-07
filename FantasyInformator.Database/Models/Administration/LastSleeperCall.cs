@@ -1,4 +1,4 @@
-namespace FantasyInformator.Database.Models;
+namespace FantasyInformator.Database.Models.Administration;
 
 /// <summary>
 /// The last time a call to Sleeper was made. One row per call, so a call that Sleeper

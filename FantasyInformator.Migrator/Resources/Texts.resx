@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AlreadyAt" xml:space="preserve">
+    <value>The database is already at {0}.</value>
+    <comment>Console line when the chosen migration is the one the database is at. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="AppliedMigrationCount" xml:space="preserve">
+    <value>Applied {0} migration(s) correctly:</value>
+    <comment>Console line before the list of applied migrations. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="AppliedMigrationLine" xml:space="preserve">
+    <value>  {0}</value>
+    <comment>Console line with one applied migration. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="AppliedUpTo" xml:space="preserve">
+    <value>Applied up to {0} correctly.</value>
+    <comment>Console line after the database moved forward to a migration. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="BackToMenu" xml:space="preserve">
+    <value>  {0}. Back to the menu</value>
+    <comment>Option that leaves the list of migrations. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="DatabaseProjectFolderNotFound" xml:space="preserve">
+    <value>The Database project folder '{0}' was not found above {1}. Set Migrator:DatabaseProjectPath to the full path of the folder.</value>
+    <comment>Error when the folder of the Database project cannot be found. --- DotnetEfRunner.cs</comment>
+  </data>
+  <data name="DatabaseUpdateFailed" xml:space="preserve">
+    <value>Could not update the database:{0}{1}</value>
+    <comment>Error when the dotnet ef database update fails. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="DatabaseUpToDate" xml:space="preserve">
+    <value>The database is up to date.</value>
+    <comment>Console line when no migration is waiting. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="DotnetNotStarted" xml:space="preserve">
+    <value>The dotnet program could not be started.</value>
+    <comment>Error when the dotnet program does not start. --- DotnetEfRunner.cs</comment>
+  </data>
+  <data name="EmptyDatabase" xml:space="preserve">
+    <value>Empty database (before the first migration)</value>
+    <comment>Name of the state before the first migration. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="Failed" xml:space="preserve">
+    <value>Failed: {0}</value>
+    <comment>Console line when a menu action fails. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="MenuApplyAllMigrations" xml:space="preserve">
+    <value>  {0}. Apply all migrations</value>
+    <comment>Main menu option. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="MenuCreateMigration" xml:space="preserve">
+    <value>  {0}. Create a migration</value>
+    <comment>Main menu option. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="MenuExit" xml:space="preserve">
+    <value>  {0}. Exit</value>
+    <comment>Main menu option. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="MenuMoveToMigration" xml:space="preserve">
+    <value>  {0}. Apply or roll back to a migration</value>
+    <comment>Main menu option. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="MenuPrompt" xml:space="preserve">
+    <value>Choice: </value>
+    <comment>Prompt after the main menu. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="MenuQuestion" xml:space="preserve">
+    <value>What do you want to do?</value>
+    <comment>Title of the main menu. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="MigrationCreated" xml:space="preserve">
+    <value>Migration {0} was created.</value>
+    <comment>Console line after a migration was created. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="MigrationCreateFailed" xml:space="preserve">
+    <value>Could not create the migration:{0}{1}</value>
+    <comment>Error when dotnet ef cannot add the migration. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="MigrationDescription" xml:space="preserve">
+    <value>{0} | {1} | {2} | {3}</value>
+    <comment>One migration in the list: created time, name, file name and status. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="MigrationNamePrompt" xml:space="preserve">
+    <value>Name of the new migration (empty to cancel): </value>
+    <comment>Prompt for the name of a new migration. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="MigrationNumberPrompt" xml:space="preserve">
+    <value>Number of the migration to go to: </value>
+    <comment>Prompt below the list of migrations. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="ModelCheckFailed" xml:space="preserve">
+    <value>Could not check the model for changes:{0}{1}</value>
+    <comment>Error when dotnet ef cannot check the model. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="ModelHasNoChanges" xml:space="preserve">
+    <value>The model has no changes since the last migration. No migration was created.</value>
+    <comment>Console line when there is nothing to migrate. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="NextPage" xml:space="preserve">
+    <value>  {0}. Next (newer migrations)</value>
+    <comment>Option that shows the newer page of migrations. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="NoChoiceAction" xml:space="preserve">
+    <value>There is no action for this choice.</value>
+    <comment>Error for a menu choice without an action. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="NoMigrations" xml:space="preserve">
+    <value>There are no migrations. Create one first.</value>
+    <comment>Console line when no migration exists. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="NoNameGiven" xml:space="preserve">
+    <value>No name given. No migration was created.</value>
+    <comment>Console line when the name was left empty. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="NothingChanged" xml:space="preserve">
+    <value>Nothing was changed.</value>
+    <comment>Console line when a rollback was not confirmed. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="OptionNotValid" xml:space="preserve">
+    <value>That is not one of the options.</value>
+    <comment>Console line after an answer that is not an option. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="PageLine" xml:space="preserve">
+    <value>  {0}. {1}</value>
+    <comment>One numbered migration in the list. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="PreviousPage" xml:space="preserve">
+    <value>  {0}. Previous (older migrations)</value>
+    <comment>Option that shows the older page of migrations. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="RollbackConfirmPrompt" xml:space="preserve">
+    <value>Type {0} to continue: </value>
+    <comment>Prompt to confirm a rollback. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="RolledBackTo" xml:space="preserve">
+    <value>Rolled back to {0} correctly.</value>
+    <comment>Console line after the database moved back to a migration. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="RollbackWarning" xml:space="preserve">
+    <value>This undoes {0} migration(s) and can delete data.</value>
+    <comment>Warning before a rollback. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="StatusApplied" xml:space="preserve">
+    <value>applied</value>
+    <comment>Status of a migration in the list. --- MigratorMenu.cs</comment>
+  </data>
+  <data name="StatusPending" xml:space="preserve">
+    <value>pending</value>
+    <comment>Status of a migration in the list. --- MigratorMenu.cs</comment>
+  </data>
+</root>

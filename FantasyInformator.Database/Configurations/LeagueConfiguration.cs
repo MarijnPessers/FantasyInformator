@@ -1,29 +1,29 @@
-using FantasyInformator.Database.Models;
+using FantasyInformator.Database.Models.League;
 using Microsoft.EntityFrameworkCore;
 
 namespace FantasyInformator.Database.Configurations;
 
 /// <summary>The tables of the League group.</summary>
-internal static class LeagueConfiguration
+public static class LeagueConfiguration
 {
     public static void Configure(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<League>(league =>
+        _ = modelBuilder.Entity<League>(league =>
         {
-            league.Property(l => l.Name).HasMaxLength(ColumnSizes.Name);
+            _ = league.Property(x => x.Name).HasMaxLength(ColumnSizes.Name);
         });
 
-        modelBuilder.Entity<LeagueInstance>(leagueInstance =>
+        _ = modelBuilder.Entity<LeagueInstance>(leagueInstance =>
         {
-            leagueInstance.Property(li => li.ExternalId).HasMaxLength(ColumnSizes.ExternalId);
-            leagueInstance.HasIndex(li => li.ExternalId).IsUnique();
+            _ = leagueInstance.Property(x => x.ExternalId).HasMaxLength(ColumnSizes.ExternalId);
+            _ = leagueInstance.HasIndex(x => x.ExternalId).IsUnique();
 
-            leagueInstance.HasOne(li => li.League)
+            _ = leagueInstance.HasOne(li => li.League)
                 .WithMany(l => l.LeagueInstances)
                 .HasForeignKey(li => li.LeagueId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            leagueInstance.HasOne(li => li.Season)
+            _ = leagueInstance.HasOne(li => li.Season)
                 .WithMany(s => s.LeagueInstances)
                 .HasForeignKey(li => li.SeasonId)
                 .OnDelete(DeleteBehavior.Restrict);

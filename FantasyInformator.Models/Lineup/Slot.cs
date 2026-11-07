@@ -1,4 +1,8 @@
-namespace FantasyInformator.Models;
+
+using FantasyInformator.Models.FantasyTeam;
+using FantasyInformator.Models.Tracking;
+
+namespace FantasyInformator.Models.Lineup;
 
 /// <summary>A place in a lineup that a player can fill, such as QB, Flex or Bench.</summary>
 public class Slot : TrackedModel
@@ -10,9 +14,9 @@ public class Slot : TrackedModel
 
     public string Abbreviation { get; set; } = string.Empty;
 
-    public List<LeagueSlot> LeagueSlots { get; set; } = [];
+    public List<LeagueSlot> LeagueSlots { get; init; } = [];
 
-    public List<SlotEligibility> SlotEligibilities { get; set; } = [];
+    public List<SlotEligibility> SlotEligibilities { get; init; } = [];
 
-    public List<RosteredPlayer> RosteredPlayers { get; set; } = [];
+    public List<RosteredPlayer> RosteredPlayers { get; init; } = [];
 }

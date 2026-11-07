@@ -1,4 +1,5 @@
-using AppModels = FantasyInformator.Models;
+using FantasyInformator.Models.Nfl;
+using FantasyInformator.Models.Player;
 using SleeperModels = FantasyInformator.Sleeper.Services.Models;
 
 namespace FantasyInformator.Sleeper.Mappers;
@@ -9,18 +10,21 @@ namespace FantasyInformator.Sleeper.Mappers;
 /// </summary>
 public static class PlayerMapper
 {
-    public static AppModels.Player ToPlayer(SleeperModels.Player player) => new()
-    {
-        ExternalId = player.PlayerId,
-        Name = $"{player.FirstName} {player.LastName}".Trim(),
-        CurrentNflTeam = player.Team is null ? null : new AppModels.NflTeam { ExternalId = player.Team },
-    };
+    public static Player ToPlayer(SleeperModels.Player player) =>
+        new()
+        {
+            ExternalId = player.PlayerId,
+            Name = $"{player.FirstName} {player.LastName}".Trim(),
+            CurrentNflTeam = player.Team is null
+            ? null
+            : new NflTeam { ExternalId = player.Team },
+        };
 
     /// <summary>
     /// One <c>PlayerPosition</c> per different position among <c>position</c> and <c>fantasy_positions</c>.
     /// The caller adds them to the player.
     /// </summary>
-    public static List<AppModels.PlayerPosition> ToPlayerPositions(SleeperModels.Player player)
+    public static List<PlayerPosition> ToPlayerPositions(SleeperModels.Player player)
     {
         var positionCodes = player.FantasyPositions.AsEnumerable();
 
@@ -31,9 +35,9 @@ public static class PlayerMapper
 
         return [.. positionCodes
             .Distinct()
-            .Select(positionCode => new AppModels.PlayerPosition
+            .Select(x => new PlayerPosition
             {
-                Position = new AppModels.Position { Abbreviation = positionCode },
+                Position = new Position { Abbreviation = x },
             })];
     }
 
@@ -41,10 +45,13 @@ public static class PlayerMapper
     /// <c>IsHome</c> is true when the team of the stat line is the home team of the game. The stat line
     /// holds the team of that game, so a traded player is handled.
     /// </summary>
-    public static AppModels.GameAppearance ToGameAppearance(SleeperModels.StatLine statLine, SleeperModels.Game game) => new()
-    {
-        Player = new AppModels.Player { ExternalId = statLine.PlayerId },
-        Game = new AppModels.Game { ExternalId = statLine.GameId },
-        IsHome = statLine.Team == game.Home,
-    };
+    public static GameAppearance ToGameAppearance(
+        SleeperModels.StatLine statLine,
+        SleeperModels.Game game) =>
+        new()
+        {
+            Player = new Player { ExternalId = statLine.PlayerId },
+            Game = new Game { ExternalId = statLine.GameId },
+            IsHome = statLine.Team == game.Home,
+        };
 }

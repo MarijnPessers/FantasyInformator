@@ -1,26 +1,31 @@
-using AppModels = FantasyInformator.Models;
-using DatabaseModels = FantasyInformator.Database.Models;
+using FantasyInformator.Database.Mappers.Lineup;
+using FantasyInformator.Database.Mappers.Player;
+using FantasyInformator.Database.Mappers.Tracking;
+using AppFantasyTeam = FantasyInformator.Models.FantasyTeam;
+using DatabaseFantasyTeam = FantasyInformator.Database.Models.FantasyTeam;
 
-namespace FantasyInformator.Database.Mappers;
+namespace FantasyInformator.Database.Mappers.FantasyTeam;
 
 public static class RosteredPlayerMapper
 {
-    public static AppModels.RosteredPlayer? ToModel(DatabaseModels.RosteredPlayer? rosteredPlayer) =>
+    public static AppFantasyTeam.RosteredPlayer? ToModel(DatabaseFantasyTeam.RosteredPlayer? rosteredPlayer) =>
         ToModel(rosteredPlayer, new MappingContext());
 
-    public static AppModels.RosteredPlayer? ToModel(DatabaseModels.RosteredPlayer? rosteredPlayer, MappingContext context)
+    public static AppFantasyTeam.RosteredPlayer? ToModel(
+        DatabaseFantasyTeam.RosteredPlayer? rosteredPlayer,
+        MappingContext context)
     {
         if (rosteredPlayer is null)
         {
             return null;
         }
 
-        if (context.TryGetMapped(rosteredPlayer, out AppModels.RosteredPlayer? mapped))
+        if (context.TryGetMapped(rosteredPlayer, out AppFantasyTeam.RosteredPlayer? mapped))
         {
             return mapped;
         }
 
-        mapped = TrackedModelMapper.Fill(rosteredPlayer, new AppModels.RosteredPlayer
+        mapped = TrackedModelMapper.Fill(rosteredPlayer, new AppFantasyTeam.RosteredPlayer
         {
             FantasyTeamId = rosteredPlayer.FantasyTeamId,
             PlayerId = rosteredPlayer.PlayerId,

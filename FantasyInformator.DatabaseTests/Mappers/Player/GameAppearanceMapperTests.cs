@@ -1,7 +1,7 @@
-using FantasyInformator.Database.Mappers;
-using DatabaseModels = FantasyInformator.Database.Models;
+using FantasyInformator.Database.Mappers.Player;
+using DatabasePlayer = FantasyInformator.Database.Models.Player;
 
-namespace FantasyInformator.DatabaseTests.Mappers;
+namespace FantasyInformator.DatabaseTests.Mappers.Player;
 
 [TestClass]
 public class GameAppearanceMapperTests
@@ -9,7 +9,7 @@ public class GameAppearanceMapperTests
     [TestMethod]
     public void ToModel_MapsAllFieldsAndLinks()
     {
-        var gameAppearance = SourceFactory.Create<DatabaseModels.GameAppearance>();
+        var gameAppearance = SourceFactory.Create<DatabasePlayer.GameAppearance>();
 
         var result = GameAppearanceMapper.ToModel(gameAppearance);
 

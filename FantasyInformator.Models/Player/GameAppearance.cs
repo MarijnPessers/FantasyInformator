@@ -1,4 +1,9 @@
-namespace FantasyInformator.Models;
+
+using FantasyInformator.Models.Nfl;
+using FantasyInformator.Models.Scoring;
+using FantasyInformator.Models.Tracking;
+
+namespace FantasyInformator.Models.Player;
 
 /// <summary>A player taking part in a game.</summary>
 public class GameAppearance : TrackedModel
@@ -14,5 +19,5 @@ public class GameAppearance : TrackedModel
     /// <summary>True when the player played for the home team of the game.</summary>
     public bool IsHome { get; set; }
 
-    public List<FantasyScore> FantasyScores { get; set; } = [];
+    public List<FantasyScore> FantasyScores { get; init; } = [];
 }

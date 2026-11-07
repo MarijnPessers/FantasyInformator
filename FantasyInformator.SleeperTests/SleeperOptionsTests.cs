@@ -29,13 +29,13 @@ public class SleeperOptionsTests
         var results = Validate(options);
 
         Assert.HasCount(1, results);
-        CollectionAssert.Contains(results[0].MemberNames.ToList(), nameof(SleeperOptions.Username));
+        Assert.Contains(nameof(SleeperOptions.Username), results[0].MemberNames.ToList());
     }
 
     private static List<ValidationResult> Validate(SleeperOptions options)
     {
         var results = new List<ValidationResult>();
-        Validator.TryValidateObject(options, new ValidationContext(options), results, validateAllProperties: true);
+        _ = Validator.TryValidateObject(options, new ValidationContext(options), results, true);
         return results;
     }
 }

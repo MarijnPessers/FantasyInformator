@@ -38,23 +38,26 @@ public class PlayerMapperTests
     [TestMethod]
     public void ToPlayerPositions_PositionAlsoInFantasyPositions_ReturnsEachOnce()
     {
-        var player = _fixture.Create<SleeperModels.Player>();
-        player.Position = RunningBackCode;
-        player.FantasyPositions = [RunningBackCode, WideReceiverCode];
+        var player = new SleeperModels.Player
+        {
+            Position = RunningBackCode,
+            FantasyPositions = [RunningBackCode, WideReceiverCode],
+        };
 
         var result = PlayerMapper.ToPlayerPositions(player);
 
-        CollectionAssert.AreEquivalent(
-            new[] { RunningBackCode, WideReceiverCode },
-            result.Select(playerPosition => playerPosition.Position!.Abbreviation).ToList());
+        Assert.AreSequenceEqual(
+            [RunningBackCode, WideReceiverCode], result.Select(x => x.Position!.Abbreviation).ToList(), SequenceOrder.InAnyOrder);
     }
 
     [TestMethod]
     public void ToPlayerPositions_NoPosition_UsesFantasyPositions()
     {
-        var player = _fixture.Create<SleeperModels.Player>();
-        player.Position = null;
-        player.FantasyPositions = [WideReceiverCode];
+        var player = new SleeperModels.Player
+        {
+            Position = null,
+            FantasyPositions = [WideReceiverCode],
+        };
 
         var result = PlayerMapper.ToPlayerPositions(player);
 
@@ -88,10 +91,11 @@ public class PlayerMapperTests
         Assert.IsFalse(result.IsHome);
     }
 
-    private SleeperModels.Game CreateGame() => new()
-    {
-        GameId = _fixture.Create<string>(),
-        Home = _fixture.Create<string>(),
-        Away = _fixture.Create<string>(),
-    };
+    private SleeperModels.Game CreateGame() =>
+        new()
+        {
+            GameId = _fixture.Create<string>(),
+            Home = _fixture.Create<string>(),
+            Away = _fixture.Create<string>(),
+        };
 }

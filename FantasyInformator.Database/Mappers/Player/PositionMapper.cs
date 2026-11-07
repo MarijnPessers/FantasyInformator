@@ -1,33 +1,36 @@
-using AppModels = FantasyInformator.Models;
-using DatabaseModels = FantasyInformator.Database.Models;
+using FantasyInformator.Database.Mappers.Lineup;
+using FantasyInformator.Database.Mappers.Tracking;
+using AppPlayer = FantasyInformator.Models.Player;
+using DatabasePlayer = FantasyInformator.Database.Models.Player;
 
-namespace FantasyInformator.Database.Mappers;
+namespace FantasyInformator.Database.Mappers.Player;
 
 public static class PositionMapper
 {
-    public static AppModels.Position? ToModel(DatabaseModels.Position? position) => ToModel(position, new MappingContext());
+    public static AppPlayer.Position? ToModel(DatabasePlayer.Position? position) =>
+        ToModel(position, new MappingContext());
 
-    public static AppModels.Position? ToModel(DatabaseModels.Position? position, MappingContext context)
+    public static AppPlayer.Position? ToModel(DatabasePlayer.Position? position, MappingContext context)
     {
         if (position is null)
         {
             return null;
         }
 
-        if (context.TryGetMapped(position, out AppModels.Position? mapped))
+        if (context.TryGetMapped(position, out AppPlayer.Position? mapped))
         {
             return mapped;
         }
 
-        mapped = TrackedModelMapper.Fill(position, new AppModels.Position
+        mapped = TrackedModelMapper.Fill(position, new AppPlayer.Position
         {
             Name = position.Name,
             Abbreviation = position.Abbreviation,
         });
         context.Register(position, mapped);
 
-        mapped.PlayerPositions = context.MapList(position.PlayerPositions, PlayerPositionMapper.ToModel);
-        mapped.SlotEligibilities = context.MapList(position.SlotEligibilities, SlotEligibilityMapper.ToModel);
+        mapped.PlayerPositions.AddRange(context.MapList(position.PlayerPositions, PlayerPositionMapper.ToModel));
+        mapped.SlotEligibilities.AddRange(context.MapList(position.SlotEligibilities, SlotEligibilityMapper.ToModel));
 
         return mapped;
     }

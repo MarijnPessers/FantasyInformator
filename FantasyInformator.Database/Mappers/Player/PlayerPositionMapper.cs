@@ -1,26 +1,29 @@
-using AppModels = FantasyInformator.Models;
-using DatabaseModels = FantasyInformator.Database.Models;
+using FantasyInformator.Database.Mappers.Tracking;
+using AppPlayer = FantasyInformator.Models.Player;
+using DatabasePlayer = FantasyInformator.Database.Models.Player;
 
-namespace FantasyInformator.Database.Mappers;
+namespace FantasyInformator.Database.Mappers.Player;
 
 public static class PlayerPositionMapper
 {
-    public static AppModels.PlayerPosition? ToModel(DatabaseModels.PlayerPosition? playerPosition) =>
+    public static AppPlayer.PlayerPosition? ToModel(DatabasePlayer.PlayerPosition? playerPosition) =>
         ToModel(playerPosition, new MappingContext());
 
-    public static AppModels.PlayerPosition? ToModel(DatabaseModels.PlayerPosition? playerPosition, MappingContext context)
+    public static AppPlayer.PlayerPosition? ToModel(
+        DatabasePlayer.PlayerPosition? playerPosition,
+        MappingContext context)
     {
         if (playerPosition is null)
         {
             return null;
         }
 
-        if (context.TryGetMapped(playerPosition, out AppModels.PlayerPosition? mapped))
+        if (context.TryGetMapped(playerPosition, out AppPlayer.PlayerPosition? mapped))
         {
             return mapped;
         }
 
-        mapped = TrackedModelMapper.Fill(playerPosition, new AppModels.PlayerPosition
+        mapped = TrackedModelMapper.Fill(playerPosition, new AppPlayer.PlayerPosition
         {
             PlayerId = playerPosition.PlayerId,
             PositionId = playerPosition.PositionId,

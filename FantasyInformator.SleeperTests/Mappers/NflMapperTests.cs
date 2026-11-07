@@ -24,7 +24,7 @@ public class NflMapperTests
     {
         var state = new SleeperModels.State { Season = _fixture.Create<string>() };
 
-        Assert.ThrowsExactly<FormatException>(() => NflMapper.ToSeason(state));
+        _ = Assert.ThrowsExactly<FormatException>(() => NflMapper.ToSeason(state));
     }
 
     [TestMethod]

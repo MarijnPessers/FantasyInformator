@@ -1,32 +1,34 @@
-using AppModels = FantasyInformator.Models;
-using DatabaseModels = FantasyInformator.Database.Models;
+using FantasyInformator.Database.Mappers.Tracking;
+using AppFantasyTeam = FantasyInformator.Models.FantasyTeam;
+using DatabaseFantasyTeam = FantasyInformator.Database.Models.FantasyTeam;
 
-namespace FantasyInformator.Database.Mappers;
+namespace FantasyInformator.Database.Mappers.FantasyTeam;
 
 public static class OwnerMapper
 {
-    public static AppModels.Owner? ToModel(DatabaseModels.Owner? owner) => ToModel(owner, new MappingContext());
+    public static AppFantasyTeam.Owner? ToModel(DatabaseFantasyTeam.Owner? owner) =>
+        ToModel(owner, new MappingContext());
 
-    public static AppModels.Owner? ToModel(DatabaseModels.Owner? owner, MappingContext context)
+    public static AppFantasyTeam.Owner? ToModel(DatabaseFantasyTeam.Owner? owner, MappingContext context)
     {
         if (owner is null)
         {
             return null;
         }
 
-        if (context.TryGetMapped(owner, out AppModels.Owner? mapped))
+        if (context.TryGetMapped(owner, out AppFantasyTeam.Owner? mapped))
         {
             return mapped;
         }
 
-        mapped = TrackedModelMapper.Fill(owner, new AppModels.Owner
+        mapped = TrackedModelMapper.Fill(owner, new AppFantasyTeam.Owner
         {
             ExternalId = owner.ExternalId,
             Name = owner.Name,
         });
         context.Register(owner, mapped);
 
-        mapped.FantasyTeams = context.MapList(owner.FantasyTeams, FantasyTeamMapper.ToModel);
+        mapped.FantasyTeams.AddRange(context.MapList(owner.FantasyTeams, FantasyTeamMapper.ToModel));
 
         return mapped;
     }

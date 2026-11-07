@@ -1,7 +1,7 @@
-using FantasyInformator.Database.Mappers;
-using DatabaseModels = FantasyInformator.Database.Models;
+using FantasyInformator.Database.Mappers.FantasyTeam;
+using DatabaseFantasyTeam = FantasyInformator.Database.Models.FantasyTeam;
 
-namespace FantasyInformator.DatabaseTests.Mappers;
+namespace FantasyInformator.DatabaseTests.Mappers.FantasyTeam;
 
 [TestClass]
 public class RosteredPlayerMapperTests
@@ -9,7 +9,7 @@ public class RosteredPlayerMapperTests
     [TestMethod]
     public void ToModel_MapsAllFieldsAndLinks()
     {
-        var rosteredPlayer = SourceFactory.Create<DatabaseModels.RosteredPlayer>();
+        var rosteredPlayer = SourceFactory.Create<DatabaseFantasyTeam.RosteredPlayer>();
 
         var result = RosteredPlayerMapper.ToModel(rosteredPlayer);
 

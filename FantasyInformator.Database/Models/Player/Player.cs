@@ -1,4 +1,10 @@
-namespace FantasyInformator.Database.Models;
+
+using FantasyInformator.Database.Models.FantasyTeam;
+using FantasyInformator.Database.Models.Nfl;
+using FantasyInformator.Database.Models.Scoring;
+using FantasyInformator.Database.Models.Tracking;
+
+namespace FantasyInformator.Database.Models.Player;
 
 public class Player : TrackedModel
 {
@@ -11,11 +17,11 @@ public class Player : TrackedModel
 
     public NflTeam? CurrentNflTeam { get; set; }
 
-    public List<PlayerPosition> PlayerPositions { get; set; } = [];
+    public List<PlayerPosition> PlayerPositions { get; init; } = [];
 
-    public List<GameAppearance> GameAppearances { get; set; } = [];
+    public List<GameAppearance> GameAppearances { get; init; } = [];
 
-    public List<RosteredPlayer> RosteredPlayers { get; set; } = [];
+    public List<RosteredPlayer> RosteredPlayers { get; init; } = [];
 
-    public List<PlayerSeasonStats> PlayerSeasonStats { get; set; } = [];
+    public List<PlayerSeasonStats> PlayerSeasonStats { get; init; } = [];
 }

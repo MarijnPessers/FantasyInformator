@@ -1,26 +1,33 @@
-using AppModels = FantasyInformator.Models;
-using DatabaseModels = FantasyInformator.Database.Models;
+using FantasyInformator.Database.Mappers.FantasyTeam;
+using FantasyInformator.Database.Mappers.Lineup;
+using FantasyInformator.Database.Mappers.Nfl;
+using FantasyInformator.Database.Mappers.Scoring;
+using FantasyInformator.Database.Mappers.Tracking;
+using AppLeague = FantasyInformator.Models.League;
+using DatabaseLeague = FantasyInformator.Database.Models.League;
 
-namespace FantasyInformator.Database.Mappers;
+namespace FantasyInformator.Database.Mappers.League;
 
 public static class LeagueInstanceMapper
 {
-    public static AppModels.LeagueInstance? ToModel(DatabaseModels.LeagueInstance? leagueInstance) =>
+    public static AppLeague.LeagueInstance? ToModel(DatabaseLeague.LeagueInstance? leagueInstance) =>
         ToModel(leagueInstance, new MappingContext());
 
-    public static AppModels.LeagueInstance? ToModel(DatabaseModels.LeagueInstance? leagueInstance, MappingContext context)
+    public static AppLeague.LeagueInstance? ToModel(
+        DatabaseLeague.LeagueInstance? leagueInstance,
+        MappingContext context)
     {
         if (leagueInstance is null)
         {
             return null;
         }
 
-        if (context.TryGetMapped(leagueInstance, out AppModels.LeagueInstance? mapped))
+        if (context.TryGetMapped(leagueInstance, out AppLeague.LeagueInstance? mapped))
         {
             return mapped;
         }
 
-        mapped = TrackedModelMapper.Fill(leagueInstance, new AppModels.LeagueInstance
+        mapped = TrackedModelMapper.Fill(leagueInstance, new AppLeague.LeagueInstance
         {
             ExternalId = leagueInstance.ExternalId,
             LeagueId = leagueInstance.LeagueId,
@@ -30,10 +37,12 @@ public static class LeagueInstanceMapper
 
         mapped.League = LeagueMapper.ToModel(leagueInstance.League, context);
         mapped.Season = SeasonMapper.ToModel(leagueInstance.Season, context);
-        mapped.LeagueSlots = context.MapList(leagueInstance.LeagueSlots, LeagueSlotMapper.ToModel);
-        mapped.FantasyTeams = context.MapList(leagueInstance.FantasyTeams, FantasyTeamMapper.ToModel);
-        mapped.FantasyScores = context.MapList(leagueInstance.FantasyScores, FantasyScoreMapper.ToModel);
-        mapped.PlayerSeasonStats = context.MapList(leagueInstance.PlayerSeasonStats, PlayerSeasonStatsMapper.ToModel);
+        mapped.LeagueSlots.AddRange(context.MapList(leagueInstance.LeagueSlots, LeagueSlotMapper.ToModel));
+        mapped.FantasyTeams.AddRange(context.MapList(leagueInstance.FantasyTeams, FantasyTeamMapper.ToModel));
+        mapped.FantasyScores.AddRange(context.MapList(leagueInstance.FantasyScores, FantasyScoreMapper.ToModel));
+        mapped.PlayerSeasonStats.AddRange(context.MapList(
+            leagueInstance.PlayerSeasonStats,
+            PlayerSeasonStatsMapper.ToModel));
 
         return mapped;
     }

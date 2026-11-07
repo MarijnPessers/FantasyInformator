@@ -1,5 +1,7 @@
 using System.Globalization;
-using AppModels = FantasyInformator.Models;
+using FantasyInformator.Models.League;
+using FantasyInformator.Models.Lineup;
+using FantasyInformator.Models.Nfl;
 using SleeperModels = FantasyInformator.Sleeper.Services.Models;
 
 namespace FantasyInformator.Sleeper.Mappers;
@@ -10,28 +12,29 @@ namespace FantasyInformator.Sleeper.Mappers;
 /// </summary>
 public static class LeagueMapper
 {
-    public static AppModels.League ToLeague(SleeperModels.League league) => new()
-    {
-        Name = league.Name,
-    };
+    public static League ToLeague(SleeperModels.League league) =>
+        new()
+        {
+            Name = league.Name,
+        };
 
     /// <summary>Throws when the season of the league is not a number.</summary>
-    public static AppModels.LeagueInstance ToLeagueInstance(SleeperModels.League league) => new()
-    {
-        ExternalId = league.LeagueId,
-        Season = new AppModels.Season { Year = int.Parse(league.Season, CultureInfo.InvariantCulture) },
-    };
+    public static LeagueInstance ToLeagueInstance(SleeperModels.League league) =>
+        new()
+        {
+            ExternalId = league.LeagueId,
+            Season = new Season { Year = int.Parse(league.Season, CultureInfo.InvariantCulture) },
+        };
 
     /// <summary>
     /// Counts how often each slot occurs in <c>roster_positions</c>, and adds IR and taxi from the settings.
     /// A slot the league does not have is not returned.
     /// </summary>
-    public static List<AppModels.LeagueSlot> ToLeagueSlots(SleeperModels.League league)
+    public static List<LeagueSlot> ToLeagueSlots(SleeperModels.League league)
     {
-        var slotCounts = league.RosterPositions
-            .GroupBy(code => code)
-            .Select(positionGroup => (Code: positionGroup.Key, Count: positionGroup.Count()))
-            .ToList();
+        List<(string Code, int Count)> slotCounts = [.. league.RosterPositions
+            .GroupBy(s => s)
+            .Select(g => (Code: g.Key, Count: g.Count()))];
 
         if (league.Settings.ReserveSlots > 0)
         {
@@ -44,10 +47,10 @@ public static class LeagueMapper
         }
 
         return [.. slotCounts
-            .Select(slotCount => new AppModels.LeagueSlot
+            .Select(x => new LeagueSlot
             {
-                Slot = new AppModels.Slot { ExternalId = slotCount.Code },
-                Count = slotCount.Count,
+                Slot = new Slot { ExternalId = x.Code },
+                Count = x.Count,
             })];
     }
 }

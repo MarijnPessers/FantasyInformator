@@ -19,7 +19,11 @@ public interface IFantasyTeamService
     /// </list>
     /// <para>Not used: <c>username</c> (it can change, so the user id is the key), <c>avatar</c>.</para>
     /// </remarks>
-    Task<User> GetUserAsync(string username, CancellationToken cancellationToken = default);
+    Task<User> GetUserAsync(string username, CancellationToken cancellationToken);
+
+    /// <inheritdoc cref="GetUserAsync(string, CancellationToken)"/>
+    Task<User> GetUserAsync(string username) =>
+        GetUserAsync(username, CancellationToken.None);
 
     /// <summary>
     /// Gets the users of a league, the owners of its teams.
@@ -32,9 +36,14 @@ public interface IFantasyTeamService
     /// <item><c>display_name</c>: <c>Owner.Name</c></item>
     /// <item><c>metadata.team_name</c>: <c>FantasyTeam.Name</c></item>
     /// </list>
-    /// <para>Not used: <c>username</c>, <c>avatar</c>, <c>is_owner</c> (commissioner), and any other key of <c>metadata</c>.</para>
+    /// <para>Not used: <c>username</c>, <c>avatar</c>, <c>is_owner</c> (commissioner),
+    /// and any other key of <c>metadata</c>.</para>
     /// </remarks>
-    Task<IReadOnlyList<LeagueUser>> GetLeagueUsersAsync(string leagueId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<LeagueUser>> GetLeagueUsersAsync(string leagueId, CancellationToken cancellationToken);
+
+    /// <inheritdoc cref="GetLeagueUsersAsync(string, CancellationToken)"/>
+    Task<IReadOnlyList<LeagueUser>> GetLeagueUsersAsync(string leagueId) =>
+        GetLeagueUsersAsync(leagueId, CancellationToken.None);
 
     /// <summary>
     /// Gets the rosters of all teams in a league, in one call.
@@ -46,12 +55,17 @@ public interface IFantasyTeamService
     /// <item><c>roster_id</c>: <c>FantasyTeam.ExternalId</c></item>
     /// <item><c>owner_id</c>: the owner of the <c>FantasyTeam</c>, kept as a plain value</item>
     /// <item><c>players</c>: <c>RosteredPlayer.PlayerId</c>, kept as a plain value</item>
-    /// <item><c>starters</c>, <c>reserve</c>, <c>taxi</c>: <c>RosteredPlayer.SlotId</c>. A player in none of them is on the bench.
+    /// <item><c>starters</c>, <c>reserve</c>, <c>taxi</c>: <c>RosteredPlayer.SlotId</c>.
+    /// A player in none of them is on the bench.
     /// A starter's slot follows from its place in the ordered <c>starters</c> list; that this order equals the order
     /// of <c>roster_positions</c> is not verified.</item>
     /// </list>
     /// <para>Not used: <c>league_id</c> (already known from the call), <c>settings</c> (wins, losses, ties, fpts,
     /// fpts_against, fpts_decimal, fpts_against_decimal, waiver_position, waiver_budget_used, total_moves).</para>
     /// </remarks>
-    Task<IReadOnlyList<Roster>> GetRostersAsync(string leagueId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Roster>> GetRostersAsync(string leagueId, CancellationToken cancellationToken);
+
+    /// <inheritdoc cref="GetRostersAsync(string, CancellationToken)"/>
+    Task<IReadOnlyList<Roster>> GetRostersAsync(string leagueId) =>
+        GetRostersAsync(leagueId, CancellationToken.None);
 }

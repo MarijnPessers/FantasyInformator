@@ -1,4 +1,7 @@
-namespace FantasyInformator.Database.Models;
+
+using FantasyInformator.Database.Models.Tracking;
+
+namespace FantasyInformator.Database.Models.Nfl;
 
 public class NflTeam : TrackedModel
 {
@@ -6,9 +9,9 @@ public class NflTeam : TrackedModel
 
     public string Name { get; set; } = string.Empty;
 
-    public List<Player> Players { get; set; } = [];
+    public List<Player.Player> Players { get; init; } = [];
 
-    public List<Game> HomeGames { get; set; } = [];
+    public List<Game> HomeGames { get; init; } = [];
 
-    public List<Game> AwayGames { get; set; } = [];
+    public List<Game> AwayGames { get; init; } = [];
 }

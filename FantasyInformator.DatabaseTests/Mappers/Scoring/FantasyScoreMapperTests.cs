@@ -1,7 +1,7 @@
-using FantasyInformator.Database.Mappers;
-using DatabaseModels = FantasyInformator.Database.Models;
+using FantasyInformator.Database.Mappers.Scoring;
+using DatabaseScoring = FantasyInformator.Database.Models.Scoring;
 
-namespace FantasyInformator.DatabaseTests.Mappers;
+namespace FantasyInformator.DatabaseTests.Mappers.Scoring;
 
 [TestClass]
 public class FantasyScoreMapperTests
@@ -9,7 +9,7 @@ public class FantasyScoreMapperTests
     [TestMethod]
     public void ToModel_MapsAllFieldsAndLinks()
     {
-        var fantasyScore = SourceFactory.Create<DatabaseModels.FantasyScore>();
+        var fantasyScore = SourceFactory.Create<DatabaseScoring.FantasyScore>();
 
         var result = FantasyScoreMapper.ToModel(fantasyScore);
 

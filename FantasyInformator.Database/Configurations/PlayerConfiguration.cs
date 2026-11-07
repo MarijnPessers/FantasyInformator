@@ -1,58 +1,58 @@
-using FantasyInformator.Database.Models;
+using FantasyInformator.Database.Models.Player;
 using Microsoft.EntityFrameworkCore;
 
 namespace FantasyInformator.Database.Configurations;
 
 /// <summary>The tables of the Player group.</summary>
-internal static class PlayerConfiguration
+public static class PlayerConfiguration
 {
     public static void Configure(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Player>(player =>
+        _ = modelBuilder.Entity<Player>(player =>
         {
-            player.Property(p => p.ExternalId).HasMaxLength(ColumnSizes.ExternalId);
-            player.Property(p => p.Name).HasMaxLength(ColumnSizes.Name);
-            player.HasIndex(p => p.ExternalId).IsUnique();
-            player.Ignore(p => p.RosteredPlayers);
+            _ = player.Property(x => x.ExternalId).HasMaxLength(ColumnSizes.ExternalId);
+            _ = player.Property(x => x.Name).HasMaxLength(ColumnSizes.Name);
+            _ = player.HasIndex(x => x.ExternalId).IsUnique();
+            _ = player.Ignore(x => x.RosteredPlayers);
 
-            player.HasOne(p => p.CurrentNflTeam)
+            _ = player.HasOne(p => p.CurrentNflTeam)
                 .WithMany(t => t.Players)
                 .HasForeignKey(p => p.CurrentNflTeamId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        modelBuilder.Entity<Position>(position =>
+        _ = modelBuilder.Entity<Position>(position =>
         {
-            position.Property(p => p.Name).HasMaxLength(ColumnSizes.Name);
-            position.Property(p => p.Abbreviation).HasMaxLength(ColumnSizes.Abbreviation);
-            position.HasIndex(p => p.Abbreviation).IsUnique();
+            _ = position.Property(x => x.Name).HasMaxLength(ColumnSizes.Name);
+            _ = position.Property(x => x.Abbreviation).HasMaxLength(ColumnSizes.Abbreviation);
+            _ = position.HasIndex(x => x.Abbreviation).IsUnique();
         });
 
-        modelBuilder.Entity<PlayerPosition>(playerPosition =>
+        _ = modelBuilder.Entity<PlayerPosition>(playerPosition =>
         {
-            playerPosition.HasIndex(pp => new { pp.PlayerId, pp.PositionId }).IsUnique();
+            _ = playerPosition.HasIndex(x => new { x.PlayerId, x.PositionId }).IsUnique();
 
-            playerPosition.HasOne(pp => pp.Player)
+            _ = playerPosition.HasOne(pp => pp.Player)
                 .WithMany(p => p.PlayerPositions)
                 .HasForeignKey(pp => pp.PlayerId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            playerPosition.HasOne(pp => pp.Position)
+            _ = playerPosition.HasOne(pp => pp.Position)
                 .WithMany(p => p.PlayerPositions)
                 .HasForeignKey(pp => pp.PositionId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        modelBuilder.Entity<GameAppearance>(gameAppearance =>
+        _ = modelBuilder.Entity<GameAppearance>(gameAppearance =>
         {
-            gameAppearance.HasIndex(ga => new { ga.PlayerId, ga.GameId }).IsUnique();
+            _ = gameAppearance.HasIndex(x => new { x.PlayerId, x.GameId }).IsUnique();
 
-            gameAppearance.HasOne(ga => ga.Player)
+            _ = gameAppearance.HasOne(ga => ga.Player)
                 .WithMany(p => p.GameAppearances)
                 .HasForeignKey(ga => ga.PlayerId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            gameAppearance.HasOne(ga => ga.Game)
+            _ = gameAppearance.HasOne(ga => ga.Game)
                 .WithMany(g => g.GameAppearances)
                 .HasForeignKey(ga => ga.GameId)
                 .OnDelete(DeleteBehavior.Restrict);

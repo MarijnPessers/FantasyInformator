@@ -16,7 +16,9 @@ public class FantasyInformatorDbContextFactory : IDesignTimeDbContextFactory<Fan
             .AddUserSecrets<FantasyInformatorDbContextFactory>()
             .Build();
 
-        var databaseOptions = configuration.GetSection(DatabaseOptions.SectionName).Get<DatabaseOptions>() ?? new DatabaseOptions();
+        var databaseOptions = configuration
+            .GetSection(DatabaseOptions.SectionName)
+            .Get<DatabaseOptions>() ?? new DatabaseOptions();
 
         var contextOptions = new DbContextOptionsBuilder<FantasyInformatorDbContext>()
             .UseSqlServer(databaseOptions.ConnectionStringEF)

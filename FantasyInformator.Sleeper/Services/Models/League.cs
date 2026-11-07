@@ -17,7 +17,7 @@ public class League
     public string? PreviousLeagueId { get; set; }
 
     /// <summary>The slots of the lineup, one entry per slot, for example "QB", "FLEX", "BN".</summary>
-    public List<string> RosterPositions { get; set; } = [];
+    public List<string> RosterPositions { get; init; } = [];
 
     public LeagueSettings Settings { get; set; } = new();
 }

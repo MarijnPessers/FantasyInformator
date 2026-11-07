@@ -1,4 +1,8 @@
-namespace FantasyInformator.Models;
+
+using FantasyInformator.Models.League;
+using FantasyInformator.Models.Tracking;
+
+namespace FantasyInformator.Models.Scoring;
 
 /// <summary>
 /// The accumulated scores of a player in a league instance, up to the latest game played.
@@ -9,7 +13,7 @@ public class PlayerSeasonStats : TrackedModel
 {
     public Guid PlayerId { get; set; }
 
-    public Player? Player { get; set; }
+    public Player.Player? Player { get; set; }
 
     public Guid LeagueInstanceId { get; set; }
 

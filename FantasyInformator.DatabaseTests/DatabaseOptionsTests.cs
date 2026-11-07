@@ -29,13 +29,17 @@ public class DatabaseOptionsTests
         var results = Validate(options);
 
         Assert.HasCount(1, results);
-        CollectionAssert.Contains(results[0].MemberNames.ToList(), nameof(DatabaseOptions.ConnectionStringApp));
+        Assert.Contains(nameof(DatabaseOptions.ConnectionStringApp), results[0].MemberNames.ToList());
     }
 
     [TestMethod]
     public void Validate_ConnectionStringEFBlank_IsValid()
     {
-        var options = new DatabaseOptions { ConnectionStringApp = _fixture.Create<string>() };
+        var options = new DatabaseOptions
+        {
+            ConnectionStringApp = _fixture.Create<string>(),
+            ConnectionStringEF = string.Empty,
+        };
 
         var results = Validate(options);
 
@@ -45,7 +49,7 @@ public class DatabaseOptionsTests
     private static List<ValidationResult> Validate(DatabaseOptions options)
     {
         var results = new List<ValidationResult>();
-        Validator.TryValidateObject(options, new ValidationContext(options), results, validateAllProperties: true);
+        _ = Validator.TryValidateObject(options, new ValidationContext(options), results, true);
         return results;
     }
 }

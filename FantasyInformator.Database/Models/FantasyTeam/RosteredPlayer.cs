@@ -1,4 +1,8 @@
-namespace FantasyInformator.Database.Models;
+
+using FantasyInformator.Database.Models.Lineup;
+using FantasyInformator.Database.Models.Tracking;
+
+namespace FantasyInformator.Database.Models.FantasyTeam;
 
 /// <summary>A player on the roster of a fantasy team. The league comes through the team.</summary>
 public class RosteredPlayer : TrackedModel
@@ -9,7 +13,7 @@ public class RosteredPlayer : TrackedModel
 
     public Guid PlayerId { get; set; }
 
-    public Player? Player { get; set; }
+    public Player.Player? Player { get; set; }
 
     /// <summary>The slot the player is in on this team right now, such as QB or Bench.</summary>
     public Guid SlotId { get; set; }

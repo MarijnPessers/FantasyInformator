@@ -6,12 +6,16 @@ using Microsoft.Extensions.Configuration;
 // The user secrets are added last, so they override the defaults in appsettings.json.
 var configuration = new ConfigurationBuilder()
     .SetBasePath(AppContext.BaseDirectory)
-    .AddJsonFile("appsettings.json", optional: false)
+    .AddJsonFile("appsettings.json", false)
     .AddUserSecrets<Program>()
     .Build();
 
-var databaseOptions = configuration.GetSection(DatabaseOptions.SectionName).Get<DatabaseOptions>() ?? new DatabaseOptions();
-var migratorOptions = configuration.GetSection(MigratorOptions.SectionName).Get<MigratorOptions>() ?? new MigratorOptions();
+var databaseOptions = configuration
+    .GetSection(DatabaseOptions.SectionName)
+    .Get<DatabaseOptions>() ?? new DatabaseOptions();
+var migratorOptions = configuration
+    .GetSection(MigratorOptions.SectionName)
+    .Get<MigratorOptions>() ?? new MigratorOptions();
 
 // The serverless database pauses itself, so the first connection can fail while it wakes up.
 var contextOptions = new DbContextOptionsBuilder<FantasyInformatorDbContext>()
@@ -20,6 +24,7 @@ var contextOptions = new DbContextOptionsBuilder<FantasyInformatorDbContext>()
 
 await using var context = new FantasyInformatorDbContext(contextOptions);
 
-var menu = new MigratorMenu(context, new DotnetEfRunner(migratorOptions.DatabaseProjectPath, databaseOptions.ConnectionStringEF));
+var dotnetEfRunner = new DotnetEfRunner(migratorOptions.DatabaseProjectPath, databaseOptions.ConnectionStringEF);
+var menu = new MigratorMenu(context, dotnetEfRunner);
 
 await menu.RunAsync();

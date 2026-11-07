@@ -1,7 +1,7 @@
-using FantasyInformator.Database.Mappers;
-using DatabaseModels = FantasyInformator.Database.Models;
+using FantasyInformator.Database.Mappers.FantasyTeam;
+using DatabaseFantasyTeam = FantasyInformator.Database.Models.FantasyTeam;
 
-namespace FantasyInformator.DatabaseTests.Mappers;
+namespace FantasyInformator.DatabaseTests.Mappers.FantasyTeam;
 
 [TestClass]
 public class FantasyTeamMapperTests
@@ -9,7 +9,7 @@ public class FantasyTeamMapperTests
     [TestMethod]
     public void ToModel_MapsAllFieldsAndLinks()
     {
-        var fantasyTeam = SourceFactory.Create<DatabaseModels.FantasyTeam>();
+        var fantasyTeam = SourceFactory.Create<DatabaseFantasyTeam.FantasyTeam>();
 
         var result = FantasyTeamMapper.ToModel(fantasyTeam);
 

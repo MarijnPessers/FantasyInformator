@@ -13,13 +13,13 @@ public class Roster
     public string? OwnerId { get; set; }
 
     /// <summary>Every player on the roster, starters, IR and taxi included.</summary>
-    public List<string> Players { get; set; } = [];
+    public List<string> Players { get; init; } = [];
 
-    public List<string> Starters { get; set; } = [];
+    public List<string> Starters { get; init; } = [];
 
     /// <summary>The players on injured reserve.</summary>
-    public List<string> Reserve { get; set; } = [];
+    public List<string> Reserve { get; init; } = [];
 
     /// <summary>The players on the taxi squad.</summary>
-    public List<string> Taxi { get; set; } = [];
+    public List<string> Taxi { get; init; } = [];
 }

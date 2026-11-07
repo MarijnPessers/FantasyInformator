@@ -18,12 +18,18 @@ public interface INflScheduleService
     /// <list type="bullet">
     /// <item><c>season</c>: the filter for the requested season</item>
     /// <item><c>game_type</c>: the filter for the regular season ("REG"), the same as the Sleeper schedule</item>
-    /// <item><c>week</c>, <c>away_team</c>, <c>home_team</c>: the match with the games of the Sleeper schedule. A team code that differs
-    /// from Sleeper's (the Rams are "LA", Sleeper writes "LAR") needs a mapping.</item>
-    /// <item><c>gameday</c> and <c>gametime</c>: <c>Game.KickoffUtc</c>. The time is Eastern, so it is converted to UTC.</item>
+    /// <item><c>week</c>, <c>away_team</c>, <c>home_team</c>: the match with the games of the Sleeper schedule.
+    /// A team code that differs from Sleeper's (the Rams are "LA", Sleeper writes "LAR") needs a mapping.</item>
+    /// <item><c>gameday</c> and <c>gametime</c>: <c>Game.KickoffUtc</c>.
+    /// The time is Eastern, so it is converted to UTC.</item>
     /// </list>
-    /// <para>Not used: <c>game_id</c>, <c>weekday</c>, the scores and results, <c>location</c>, <c>overtime</c>, the ids at other sites,
-    /// rest days, betting lines, <c>roof</c>, <c>surface</c>, <c>temp</c>, <c>wind</c>, quarterbacks, coaches, referee and stadium.</para>
+    /// <para>Not used: <c>game_id</c>, <c>weekday</c>, the scores and results, <c>location</c>, <c>overtime</c>,
+    /// the ids at other sites, rest days, betting lines, <c>roof</c>, <c>surface</c>, <c>temp</c>, <c>wind</c>,
+    /// quarterbacks, coaches, referee and stadium.</para>
     /// </remarks>
-    Task<IReadOnlyList<Game>> GetScheduleAsync(int season, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Game>> GetScheduleAsync(int season, CancellationToken cancellationToken);
+
+    /// <inheritdoc cref="GetScheduleAsync(int, CancellationToken)"/>
+    Task<IReadOnlyList<Game>> GetScheduleAsync(int season) =>
+        GetScheduleAsync(season, CancellationToken.None);
 }

@@ -1,15 +1,18 @@
+using System.Data.Common;
 using System.Globalization;
 using FantasyInformator.Database;
+using FantasyInformator.Migrator.Resources;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace FantasyInformator.Migrator;
 
 /// <summary>
 /// The console menu: create a migration, apply all migrations, or move the database to a chosen migration.
 /// </summary>
-public sealed class MigratorMenu(FantasyInformatorDbContext context, DotnetEfRunner dotnetEfRunner)
+public class MigratorMenu(FantasyInformatorDbContext context, DotnetEfRunner dotnetEfRunner)
 {
     // The ids of migrations start with the UTC time they were created, for example 20261105003433_InitialCreate.
     private const string MigrationIdTimestampFormat = "yyyyMMddHHmmss";
@@ -23,10 +26,8 @@ public sealed class MigratorMenu(FantasyInformatorDbContext context, DotnetEfRun
 
     private const int PageSize = 9;
     private const string BackToMenuAnswer = "0";
-    private const string PreviousPageAnswer = "p";
-    private const string NextPageAnswer = "n";
-
-    private const string EmptyDatabaseText = "Empty database (before the first migration)";
+    private const string PreviousPageAnswer = "P";
+    private const string NextPageAnswer = "N";
 
     private const string MigrationsFolderName = "Migrations";
     private const string MigrationFilePattern = "*.cs";
@@ -43,7 +44,8 @@ public sealed class MigratorMenu(FantasyInformatorDbContext context, DotnetEfRun
     // The empty database is listed as a state too. It uses the id that EF has for "before the first migration".
     private sealed record ListedMigration(string Id, MigrationStatus Status)
     {
-        public bool IsEmptyDatabase => Id == Migration.InitialDatabase;
+        public bool IsEmptyDatabase =>
+            Id == Migration.InitialDatabase;
     }
 
     public async Task RunAsync()
@@ -56,7 +58,7 @@ public sealed class MigratorMenu(FantasyInformatorDbContext context, DotnetEfRun
 
             if (choice is null)
             {
-                Console.WriteLine("That is not one of the options.");
+                Console.WriteLine(Texts.OptionNotValid);
                 continue;
             }
 
@@ -70,59 +72,75 @@ public sealed class MigratorMenu(FantasyInformatorDbContext context, DotnetEfRun
             {
                 await RunChoiceAsync(choice.Value);
             }
-            catch (Exception exception)
+            catch (InvalidOperationException exception)
             {
-                Console.WriteLine($"Failed: {exception.Message}");
+                PrintFailure(exception);
+            }
+            catch (IOException exception)
+            {
+                PrintFailure(exception);
+            }
+            catch (DbException exception)
+            {
+                PrintFailure(exception);
+            }
+            catch (RetryLimitExceededException exception)
+            {
+                PrintFailure(exception);
             }
         }
     }
 
+    private static void PrintFailure(Exception exception) =>
+        Console.WriteLine(Format(Texts.Failed, exception.Message));
+
+    private static string Format(string text, params object[] arguments) =>
+        string.Format(CultureInfo.CurrentCulture, text, arguments);
+
     private static void PrintMenu()
     {
         Console.WriteLine();
-        Console.WriteLine("What do you want to do?");
-        Console.WriteLine($"  {(int)MenuChoice.CreateMigration}. Create a migration");
-        Console.WriteLine($"  {(int)MenuChoice.ApplyAllMigrations}. Apply all migrations");
-        Console.WriteLine($"  {(int)MenuChoice.MoveToMigration}. Apply or roll back to a migration");
-        Console.WriteLine($"  {(int)MenuChoice.Exit}. Exit");
-        Console.Write("Choice: ");
+        Console.WriteLine(Texts.MenuQuestion);
+        Console.WriteLine(Format(Texts.MenuCreateMigration, (int)MenuChoice.CreateMigration));
+        Console.WriteLine(Format(Texts.MenuApplyAllMigrations, (int)MenuChoice.ApplyAllMigrations));
+        Console.WriteLine(Format(Texts.MenuMoveToMigration, (int)MenuChoice.MoveToMigration));
+        Console.WriteLine(Format(Texts.MenuExit, (int)MenuChoice.Exit));
+        Console.Write(Texts.MenuPrompt);
     }
 
     private static MenuChoice? ReadMenuChoice()
     {
         var answer = Console.ReadLine();
 
-        // The input has ended (for example the console was closed), so there is nothing left to choose.
-        if (answer is null)
+        // A null answer means the input has ended (for example the console was closed), so there is nothing left to
+        // choose.
+        return answer switch
         {
-            return MenuChoice.Exit;
-        }
-
-        if (int.TryParse(answer, out var number) && Enum.IsDefined(typeof(MenuChoice), number))
-        {
-            return (MenuChoice)number;
-        }
-
-        return null;
+            null => MenuChoice.Exit,
+            _ when int.TryParse(answer, out var number) && Enum.IsDefined((MenuChoice)number) => (MenuChoice)number,
+            _ => null
+        };
     }
 
-    private Task RunChoiceAsync(MenuChoice choice) => choice switch
-    {
-        MenuChoice.CreateMigration => CreateMigrationAsync(),
-        MenuChoice.ApplyAllMigrations => ApplyAllMigrationsAsync(),
-        MenuChoice.MoveToMigration => MoveToMigrationAsync(),
-        _ => throw new ArgumentOutOfRangeException(nameof(choice), choice, "There is no action for this choice.")
-    };
+    private Task RunChoiceAsync(MenuChoice choice) =>
+        choice switch
+        {
+            MenuChoice.CreateMigration => CreateMigrationAsync(),
+            MenuChoice.ApplyAllMigrations => ApplyAllMigrationsAsync(),
+            MenuChoice.MoveToMigration => MoveToMigrationAsync(),
+            MenuChoice.Exit => throw new NotImplementedException(),
+            _ => throw new ArgumentOutOfRangeException(nameof(choice), choice, Texts.NoChoiceAction)
+        };
 
     private async Task CreateMigrationAsync()
     {
-        Console.Write("Name of the new migration (empty to cancel): ");
+        Console.Write(Texts.MigrationNamePrompt);
 
         var migrationName = Console.ReadLine()?.Trim();
 
         if (string.IsNullOrEmpty(migrationName))
         {
-            Console.WriteLine("No name given. No migration was created.");
+            Console.WriteLine(Texts.NoNameGiven);
             return;
         }
 
@@ -130,67 +148,72 @@ public sealed class MigratorMenu(FantasyInformatorDbContext context, DotnetEfRun
 
         if (modelCheck.ExitCode == 0)
         {
-            Console.WriteLine("The model has no changes since the last migration. No migration was created.");
+            Console.WriteLine(Texts.ModelHasNoChanges);
             return;
         }
 
         // The command also ends with an error code when it fails (for example when the build fails).
         if (!modelCheck.Output.Contains(ModelChangedText, StringComparison.OrdinalIgnoreCase))
         {
-            throw new InvalidOperationException($"Could not check the model for changes:{Environment.NewLine}{modelCheck.Output}");
+            throw new InvalidOperationException(
+                Format(Texts.ModelCheckFailed, Environment.NewLine, modelCheck.Output));
         }
 
-        var addResult = await dotnetEfRunner.RunMigrationsCommandAsync(DotnetEfRunner.AddMigrationCommand, migrationName);
+        var addResult = await dotnetEfRunner.RunMigrationsCommandAsync(
+            DotnetEfRunner.AddMigrationCommand,
+            migrationName);
 
         if (addResult.ExitCode != 0)
         {
-            throw new InvalidOperationException($"Could not create the migration:{Environment.NewLine}{addResult.Output}");
+            throw new InvalidOperationException(
+                Format(Texts.MigrationCreateFailed, Environment.NewLine, addResult.Output));
         }
 
-        Console.WriteLine($"Migration {migrationName} was created.");
+        Console.WriteLine(Format(Texts.MigrationCreated, migrationName));
     }
 
     private async Task ApplyAllMigrationsAsync()
     {
-        var builtMigrationIds = context.Database.GetMigrations().ToList();
-        var fileOnlyMigrationIds = ReadMigrationIdsFromFiles().Except(builtMigrationIds).ToList();
+        List<string> builtMigrationIds = [.. context.Database.GetMigrations()];
+        List<string> fileOnlyMigrationIds = [.. ReadMigrationIdsFromFiles().Except(builtMigrationIds)];
 
         if (builtMigrationIds.Count == 0 && fileOnlyMigrationIds.Count == 0)
         {
-            Console.WriteLine("There are no migrations. Create one first.");
+            Console.WriteLine(Texts.NoMigrations);
             return;
         }
 
-        var pendingMigrations = (await context.Database.GetPendingMigrationsAsync()).Concat(fileOnlyMigrationIds).ToList();
+        List<string> pendingMigrations =
+            [.. await context.Database.GetPendingMigrationsAsync(), .. fileOnlyMigrationIds];
 
         if (pendingMigrations.Count == 0)
         {
-            Console.WriteLine("The database is up to date.");
+            Console.WriteLine(Texts.DatabaseUpToDate);
             return;
         }
 
         // The running program cannot apply a migration it was not built with, but dotnet ef builds the project first.
         if (fileOnlyMigrationIds.Count > 0)
         {
-            await UpdateDatabaseWithEfAsync(targetMigrationId: null);
+            await UpdateDatabaseWithEfAsync(null);
         }
         else
         {
             await context.Database.MigrateAsync();
         }
 
-        Console.WriteLine($"Applied {pendingMigrations.Count} migration(s) correctly:");
+        Console.WriteLine(Format(Texts.AppliedMigrationCount, pendingMigrations.Count));
 
         foreach (var migrationId in pendingMigrations)
         {
-            Console.WriteLine($"  {migrationId}");
+            Console.WriteLine(Format(Texts.AppliedMigrationLine, migrationId));
         }
     }
 
     private async Task MoveToMigrationAsync()
     {
-        var allMigrationIds = context.Database.GetMigrations().ToList();
-        var appliedMigrationIds = (await context.Database.GetAppliedMigrationsAsync()).ToList();
+        List<string> allMigrationIds = [.. context.Database.GetMigrations()];
+        List<string> appliedMigrationIds = [.. await context.Database.GetAppliedMigrationsAsync()];
         var listedMigrations = ListMigrations(allMigrationIds, appliedMigrationIds);
 
         var targetMigration = ChooseMigration(listedMigrations);
@@ -206,18 +229,20 @@ public sealed class MigratorMenu(FantasyInformatorDbContext context, DotnetEfRun
         {
             await UpdateDatabaseWithEfAsync(targetMigrationId);
 
-            Console.WriteLine($"Applied up to {targetMigrationId} correctly.");
+            Console.WriteLine(Format(Texts.AppliedUpTo, targetMigrationId));
             return;
         }
 
         // The empty database is not in the list of built migrations, so its index is -1, the same as a database with
         // nothing applied.
         var targetIndex = allMigrationIds.IndexOf(targetMigrationId);
-        var lastAppliedIndex = appliedMigrationIds.Count == 0 ? -1 : allMigrationIds.IndexOf(appliedMigrationIds[^1]);
+        var lastAppliedIndex = appliedMigrationIds.Count == 0
+            ? -1
+            : allMigrationIds.IndexOf(appliedMigrationIds[^1]);
 
         if (targetIndex == lastAppliedIndex)
         {
-            Console.WriteLine($"The database is already at {Label(targetMigration)}.");
+            Console.WriteLine(Format(Texts.AlreadyAt, Label(targetMigration)));
             return;
         }
 
@@ -225,7 +250,7 @@ public sealed class MigratorMenu(FantasyInformatorDbContext context, DotnetEfRun
 
         if (isRollback)
         {
-            var rolledBackCount = appliedMigrationIds.Count(migrationId => allMigrationIds.IndexOf(migrationId) > targetIndex);
+            var rolledBackCount = appliedMigrationIds.Count(x => allMigrationIds.IndexOf(x) > targetIndex);
 
             if (!ConfirmRollback(rolledBackCount))
             {
@@ -235,8 +260,10 @@ public sealed class MigratorMenu(FantasyInformatorDbContext context, DotnetEfRun
 
         await context.GetService<IMigrator>().MigrateAsync(targetMigrationId);
 
-        var action = isRollback ? "Rolled back to" : "Applied up to";
-        Console.WriteLine($"{action} {Label(targetMigration)} correctly.");
+        var doneText = isRollback
+            ? Texts.RolledBackTo
+            : Texts.AppliedUpTo;
+        Console.WriteLine(Format(doneText, Label(targetMigration)));
     }
 
     /// <summary>
@@ -249,7 +276,7 @@ public sealed class MigratorMenu(FantasyInformatorDbContext context, DotnetEfRun
 
         while (true)
         {
-            var pageEnd = listedMigrations.Count - pageNumber * PageSize;
+            var pageEnd = listedMigrations.Count - (pageNumber * PageSize);
             var pageStart = Math.Max(0, pageEnd - PageSize);
             var hasOlderPage = pageStart > 0;
             var hasNewerPage = pageNumber > 0;
@@ -258,27 +285,29 @@ public sealed class MigratorMenu(FantasyInformatorDbContext context, DotnetEfRun
 
             for (var position = pageStart; position < pageEnd; position++)
             {
-                Console.WriteLine($"  {position - pageStart + 1}. {Describe(listedMigrations[position])}");
+                var itemNumber = position - pageStart + 1;
+
+                Console.WriteLine(Format(Texts.PageLine, itemNumber, Describe(listedMigrations[position])));
             }
 
-            Console.WriteLine($"  {BackToMenuAnswer}. Back to the menu");
+            Console.WriteLine(Format(Texts.BackToMenu, BackToMenuAnswer));
 
             if (hasOlderPage)
             {
-                Console.WriteLine($"  {PreviousPageAnswer}. Previous (older migrations)");
+                Console.WriteLine(Format(Texts.PreviousPage, PreviousPageAnswer));
             }
 
             if (hasNewerPage)
             {
-                Console.WriteLine($"  {NextPageAnswer}. Next (newer migrations)");
+                Console.WriteLine(Format(Texts.NextPage, NextPageAnswer));
             }
 
-            Console.Write("Number of the migration to go to: ");
+            Console.Write(Texts.MigrationNumberPrompt);
 
-            var answer = Console.ReadLine()?.Trim().ToLowerInvariant();
+            var answer = Console.ReadLine()?.Trim().ToUpperInvariant();
 
             // The input has ended (for example the console was closed), so there is nothing left to choose.
-            if (answer is null || answer == BackToMenuAnswer)
+            if (answer is null or BackToMenuAnswer)
             {
                 return null;
             }
@@ -297,7 +326,7 @@ public sealed class MigratorMenu(FantasyInformatorDbContext context, DotnetEfRun
             }
             else
             {
-                Console.WriteLine("That is not one of the options.");
+                Console.WriteLine(Texts.OptionNotValid);
             }
         }
     }
@@ -306,31 +335,42 @@ public sealed class MigratorMenu(FantasyInformatorDbContext context, DotnetEfRun
     {
         if (listedMigration.IsEmptyDatabase)
         {
-            return EmptyDatabaseText;
+            return Texts.EmptyDatabase;
         }
 
-        TryReadCreated(listedMigration.Id, out var created);
+        _ = TryReadCreated(listedMigration.Id, out var created);
 
-        var name = listedMigration.Id[(listedMigration.Id.IndexOf(MigrationIdNameSeparator) + 1)..];
-        var status = listedMigration.Status == MigrationStatus.Applied ? "applied" : "pending";
+        var separatorIndex = listedMigration.Id.IndexOf(MigrationIdNameSeparator, StringComparison.Ordinal);
+        var name = listedMigration.Id[(separatorIndex + 1)..];
+        var status = listedMigration.Status == MigrationStatus.Applied
+            ? Texts.StatusApplied
+            : Texts.StatusPending;
+        var createdText = created.ToString(ListedDateFormat, CultureInfo.InvariantCulture);
 
-        return $"{created.ToString(ListedDateFormat, CultureInfo.InvariantCulture)} | {name} | {listedMigration.Id}{MigrationFileExtension} | {status}";
+        return Format(
+            Texts.MigrationDescription,
+            createdText,
+            name,
+            listedMigration.Id + MigrationFileExtension,
+            status);
     }
 
     private static string Label(ListedMigration listedMigration) =>
-        listedMigration.IsEmptyDatabase ? EmptyDatabaseText : listedMigration.Id;
+        listedMigration.IsEmptyDatabase
+            ? Texts.EmptyDatabase
+            : listedMigration.Id;
 
     private static bool ConfirmRollback(int rolledBackCount)
     {
-        Console.WriteLine($"This undoes {rolledBackCount} migration(s) and can delete data.");
-        Console.Write($"Type {ConfirmRollbackAnswer} to continue: ");
+        Console.WriteLine(Format(Texts.RollbackWarning, rolledBackCount));
+        Console.Write(Format(Texts.RollbackConfirmPrompt, ConfirmRollbackAnswer));
 
         if (string.Equals(Console.ReadLine()?.Trim(), ConfirmRollbackAnswer, StringComparison.OrdinalIgnoreCase))
         {
             return true;
         }
 
-        Console.WriteLine("Nothing was changed.");
+        Console.WriteLine(Texts.NothingChanged);
         return false;
     }
 
@@ -340,7 +380,8 @@ public sealed class MigratorMenu(FantasyInformatorDbContext context, DotnetEfRun
 
         if (updateResult.ExitCode != 0)
         {
-            throw new InvalidOperationException($"Could not update the database:{Environment.NewLine}{updateResult.Output}");
+            throw new InvalidOperationException(
+                Format(Texts.DatabaseUpdateFailed, Environment.NewLine, updateResult.Output));
         }
     }
 
@@ -348,22 +389,26 @@ public sealed class MigratorMenu(FantasyInformatorDbContext context, DotnetEfRun
     private List<ListedMigration> ListMigrations(List<string> allMigrationIds, List<string> appliedMigrationIds)
     {
         var builtMigrations = allMigrationIds
-            .Select(migrationId => new ListedMigration(
-                migrationId,
-                appliedMigrationIds.Contains(migrationId) ? MigrationStatus.Applied : MigrationStatus.Pending));
+            .Select(x => new ListedMigration(x, GetStatus(x, appliedMigrationIds)));
 
         var notBuiltMigrations = ReadMigrationIdsFromFiles()
             .Except(allMigrationIds)
-            .Select(migrationId => new ListedMigration(migrationId, MigrationStatus.NotBuiltYet));
+            .Select(x => new ListedMigration(x, MigrationStatus.NotBuiltYet));
 
-        var emptyDatabaseStatus = appliedMigrationIds.Count == 0 ? MigrationStatus.Applied : MigrationStatus.Pending;
+        var emptyDatabaseStatus = appliedMigrationIds.Count == 0
+            ? MigrationStatus.Applied
+            : MigrationStatus.Pending;
 
-        return builtMigrations
+        return [.. builtMigrations
             .Concat(notBuiltMigrations)
-            .OrderBy(listedMigration => listedMigration.Id, StringComparer.Ordinal)
-            .Prepend(new ListedMigration(Migration.InitialDatabase, emptyDatabaseStatus))
-            .ToList();
+            .OrderBy(x => x.Id, StringComparer.Ordinal)
+            .Prepend(new ListedMigration(Migration.InitialDatabase, emptyDatabaseStatus))];
     }
+
+    private static MigrationStatus GetStatus(string migrationId, List<string> appliedMigrationIds) =>
+        appliedMigrationIds.Contains(migrationId)
+            ? MigrationStatus.Applied
+            : MigrationStatus.Pending;
 
     // Migrations created since the program was built are only in the files, not in the running program.
     private IEnumerable<string> ReadMigrationIdsFromFiles()
@@ -379,8 +424,8 @@ public sealed class MigratorMenu(FantasyInformatorDbContext context, DotnetEfRun
         return Directory.EnumerateFiles(migrationsFolder, MigrationFilePattern)
             .Select(Path.GetFileNameWithoutExtension)
             .OfType<string>()
-            .Where(fileName => !fileName.EndsWith(DesignerFileSuffix, StringComparison.Ordinal))
-            .Where(fileName => TryReadCreated(fileName, out _));
+            .Where(s => !s.EndsWith(DesignerFileSuffix, StringComparison.Ordinal))
+            .Where(s => TryReadCreated(s, out _));
     }
 
     private static bool TryReadCreated(string migrationId, out DateTime created)

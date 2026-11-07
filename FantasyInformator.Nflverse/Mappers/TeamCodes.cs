@@ -3,7 +3,7 @@ namespace FantasyInformator.Nflverse.Mappers;
 /// <summary>
 /// The team codes where nflverse differs from Sleeper. Only the codes seen to differ are listed.
 /// </summary>
-internal static class TeamCodes
+public static class TeamCodes
 {
     private static readonly Dictionary<string, string> SleeperCodeByNflverseCode = new()
     {

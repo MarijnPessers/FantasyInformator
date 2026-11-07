@@ -37,7 +37,7 @@ public class NflScheduleMapperTests
     {
         var game = CreateGame(new DateOnly(2025, 3, 9), new TimeOnly(2, 30));
 
-        Assert.ThrowsExactly<ArgumentException>(() => NflScheduleMapper.ToGame(game));
+        _ = Assert.ThrowsExactly<ArgumentException>(() => NflScheduleMapper.ToGame(game));
     }
 
     [TestMethod]
@@ -66,11 +66,12 @@ public class NflScheduleMapperTests
         Assert.AreEqual(SleeperRamsCode, result.AwayNflTeam!.ExternalId);
     }
 
-    private NflverseModels.Game CreateGame(DateOnly gameday, TimeOnly gametime) => new()
-    {
-        Gameday = gameday,
-        Gametime = gametime,
-        HomeTeam = _fixture.Create<string>(),
-        AwayTeam = _fixture.Create<string>(),
-    };
+    private NflverseModels.Game CreateGame(DateOnly gameday, TimeOnly gametime) =>
+        new()
+        {
+            Gameday = gameday,
+            Gametime = gametime,
+            HomeTeam = _fixture.Create<string>(),
+            AwayTeam = _fixture.Create<string>(),
+        };
 }

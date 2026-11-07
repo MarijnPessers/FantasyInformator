@@ -1,4 +1,6 @@
-namespace FantasyInformator.Models;
+using FantasyInformator.Models.Enums;
+
+namespace FantasyInformator.Models.Tracking;
 
 public abstract class TrackedModel
 {

@@ -11,7 +11,7 @@ public static class SleeperServiceCollectionExtensions
     /// </summary>
     public static IServiceCollection AddSleeperOptions(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddOptions<SleeperOptions>()
+        _ = services.AddOptions<SleeperOptions>()
             .Bind(configuration.GetSection(SleeperOptions.SectionName))
             .ValidateDataAnnotations()
             .ValidateOnStart();

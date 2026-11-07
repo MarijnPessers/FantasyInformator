@@ -16,7 +16,7 @@ public class Player
     public string? Position { get; set; }
 
     /// <summary>Every position the player can fill in a fantasy lineup.</summary>
-    public List<string> FantasyPositions { get; set; } = [];
+    public List<string> FantasyPositions { get; init; } = [];
 
     /// <summary>The NFL team abbreviation, for example "KC". Null without an NFL team.</summary>
     public string? Team { get; set; }

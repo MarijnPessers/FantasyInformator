@@ -1,9 +1,11 @@
 using AutoFixture;
-using FantasyInformator.Database.Mappers;
-using AppModels = FantasyInformator.Models;
-using DatabaseModels = FantasyInformator.Database.Models;
+using FantasyInformator.Database.Mappers.Tracking;
+using AppEnums = FantasyInformator.Models.Enums;
+using AppLeague = FantasyInformator.Models.League;
+using DatabaseLeague = FantasyInformator.Database.Models.League;
+using DatabaseTracking = FantasyInformator.Database.Models.Tracking;
 
-namespace FantasyInformator.DatabaseTests.Mappers;
+namespace FantasyInformator.DatabaseTests.Mappers.Tracking;
 
 [TestClass]
 public class TrackedModelMapperTests
@@ -13,12 +15,12 @@ public class TrackedModelMapperTests
     [TestMethod]
     public void Fill_CopiesIdAndUpdatedUtcAndReturnsTheModel()
     {
-        var databaseLeague = new DatabaseModels.League
+        var databaseLeague = new DatabaseLeague.League
         {
             Id = _fixture.Create<Guid>(),
             UpdatedUtc = _fixture.Create<DateTime>(),
         };
-        var league = new AppModels.League();
+        var league = new AppLeague.League();
 
         var result = TrackedModelMapper.Fill(databaseLeague, league);
 
@@ -28,15 +30,15 @@ public class TrackedModelMapperTests
     }
 
     [TestMethod]
-    [DataRow(DatabaseModels.TrackingState.New, AppModels.TrackingState.New)]
-    [DataRow(DatabaseModels.TrackingState.Pending, AppModels.TrackingState.Pending)]
-    [DataRow(DatabaseModels.TrackingState.Unchanged, AppModels.TrackingState.Unchanged)]
-    [DataRow(DatabaseModels.TrackingState.Deleted, AppModels.TrackingState.Deleted)]
-    public void Fill_MapsStateByName(DatabaseModels.TrackingState databaseState, AppModels.TrackingState expectedState)
+    [DataRow(DatabaseTracking.TrackingState.New, AppEnums.TrackingState.New)]
+    [DataRow(DatabaseTracking.TrackingState.Pending, AppEnums.TrackingState.Pending)]
+    [DataRow(DatabaseTracking.TrackingState.Unchanged, AppEnums.TrackingState.Unchanged)]
+    [DataRow(DatabaseTracking.TrackingState.Deleted, AppEnums.TrackingState.Deleted)]
+    public void Fill_MapsStateByName(DatabaseTracking.TrackingState databaseState, AppEnums.TrackingState expectedState)
     {
-        var databaseLeague = new DatabaseModels.League { State = databaseState };
+        var databaseLeague = new DatabaseLeague.League { State = databaseState };
 
-        var result = TrackedModelMapper.Fill(databaseLeague, new AppModels.League());
+        var result = TrackedModelMapper.Fill(databaseLeague, new AppLeague.League());
 
         Assert.AreEqual(expectedState, result.State);
     }

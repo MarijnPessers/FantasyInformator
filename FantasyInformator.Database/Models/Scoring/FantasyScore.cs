@@ -1,4 +1,9 @@
-namespace FantasyInformator.Database.Models;
+
+using FantasyInformator.Database.Models.League;
+using FantasyInformator.Database.Models.Player;
+using FantasyInformator.Database.Models.Tracking;
+
+namespace FantasyInformator.Database.Models.Scoring;
 
 /// <summary>The fantasy points a player scored in a game for a league instance.</summary>
 public class FantasyScore : TrackedModel

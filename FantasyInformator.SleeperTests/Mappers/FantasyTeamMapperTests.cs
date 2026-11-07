@@ -78,7 +78,7 @@ public class FantasyTeamMapperTests
     [TestMethod]
     public void ToRosteredPlayers_GivesEachPlayerHisSlot()
     {
-        var playerIds = _fixture.CreateMany<string>(5).ToList();
+        List<string> playerIds = [.. _fixture.CreateMany<string>(5)];
         var roster = new SleeperModels.Roster
         {
             Players = playerIds,
@@ -91,8 +91,8 @@ public class FantasyTeamMapperTests
         var result = FantasyTeamMapper.ToRosteredPlayers(roster, rosterPositions);
 
         var slotCodeByPlayer = result.ToDictionary(
-            rosteredPlayer => rosteredPlayer.Player!.ExternalId,
-            rosteredPlayer => rosteredPlayer.Slot!.ExternalId);
+            r => r.Player!.ExternalId,
+            r => r.Slot!.ExternalId);
         Assert.AreEqual(QuarterbackCode, slotCodeByPlayer[playerIds[0]]);
         Assert.AreEqual(FlexCode, slotCodeByPlayer[playerIds[1]]);
         Assert.AreEqual(InjuredReserveCode, slotCodeByPlayer[playerIds[2]]);
@@ -103,10 +103,11 @@ public class FantasyTeamMapperTests
     [TestMethod]
     public void ToRosteredPlayers_MoreStartersThanStartingSlots_Throws()
     {
-        var playerIds = _fixture.CreateMany<string>(2).ToList();
+        List<string> playerIds = [.. _fixture.CreateMany<string>(2)];
         var roster = new SleeperModels.Roster { Players = playerIds, Starters = playerIds };
         List<string> rosterPositions = [QuarterbackCode, BenchCode];
 
-        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => FantasyTeamMapper.ToRosteredPlayers(roster, rosterPositions));
+        _ = Assert.ThrowsExactly<ArgumentOutOfRangeException>(
+            () => FantasyTeamMapper.ToRosteredPlayers(roster, rosterPositions));
     }
 }

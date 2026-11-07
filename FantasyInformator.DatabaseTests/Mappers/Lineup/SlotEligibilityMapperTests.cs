@@ -1,7 +1,7 @@
-using FantasyInformator.Database.Mappers;
-using DatabaseModels = FantasyInformator.Database.Models;
+using FantasyInformator.Database.Mappers.Lineup;
+using DatabaseLineup = FantasyInformator.Database.Models.Lineup;
 
-namespace FantasyInformator.DatabaseTests.Mappers;
+namespace FantasyInformator.DatabaseTests.Mappers.Lineup;
 
 [TestClass]
 public class SlotEligibilityMapperTests
@@ -9,7 +9,7 @@ public class SlotEligibilityMapperTests
     [TestMethod]
     public void ToModel_MapsAllFieldsAndLinks()
     {
-        var slotEligibility = SourceFactory.Create<DatabaseModels.SlotEligibility>();
+        var slotEligibility = SourceFactory.Create<DatabaseLineup.SlotEligibility>();
 
         var result = SlotEligibilityMapper.ToModel(slotEligibility);
 
