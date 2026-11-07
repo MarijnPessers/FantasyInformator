@@ -26,7 +26,7 @@ The code-first database. It has its own database models and hand-written mappers
 
 ## EF commands
 
-Run them from the solution folder. `dotnet ef` uses `FantasyInformatorDbContextFactory`, which reads `Database:ConnectionStringEF` from the user secrets. Migrations are created and applied only when the developer asks.
+Run them from the solution folder. `dotnet ef` uses `FantasyInformatorDbContextFactory`, which reads `Database:ConnectionStringEF` from the user secrets.
 
 One time:
 
@@ -44,13 +44,6 @@ dotnet ef database update --project FantasyInformator.Database
 
 Instead of `database update` you can use `FantasyInformator.Migrator` (see its README).
 
-| Goal | Command |
-|------|---------|
-| List the migrations | `dotnet ef migrations list --project FantasyInformator.Database` |
-| Undo the last migration not applied yet | `dotnet ef migrations remove --project FantasyInformator.Database` |
-| Go back to an earlier migration | `dotnet ef database update <MigrationName> --project FantasyInformator.Database` |
-| Make a SQL script | `dotnet ef migrations script --idempotent --project FantasyInformator.Database --output <path>` |
-
 ## Saving
 
 - A save writes only objects marked New, Pending or Deleted. Unchanged objects are never sent.
@@ -62,6 +55,6 @@ Instead of `database update` you can use `FantasyInformator.Migrator` (see its R
 
 ## Firewall
 
-Add the PC's public IP address to the Azure SQL server firewall: SQL server, Networking, Selected networks, Add your client IPv4 address. Repeat when it changes.
+The Azure SQL server firewall must allow the PC's public IP address. Add it again when it changes.
 
 Tests: `FantasyInformator.DatabaseTests`.

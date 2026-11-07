@@ -39,7 +39,7 @@ Every functionality is a separate project. Each project has a sibling test proje
 | `FantasyInformator.Models` | The application models |
 | `FantasyInformator.Sleeper` | Retrieval from Sleeper, with its own Sleeper models and mappers to the application models |
 | `FantasyInformator.Database` | Code-first database, its own database models, mappers to the application models, and the services to call |
-| `FantasyInformator.ModelsTests`, `FantasyInformator.SleeperTests`, `FantasyInformator.DatabaseTests`, `FantasyInformatorTests` | Test projects |
+| `FantasyInformator.SleeperTests`, `FantasyInformator.DatabaseTests`, `FantasyInformatorTests` | Test projects |
 
 - Mappers live in the project that maps to the application models, and are written by hand. No AutoMapper. Every mapper has tests.
 - More projects may follow. Candidates: a State project for the state classes and handlers, and a project for slot logic. Decide when the code asks for it.

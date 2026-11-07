@@ -43,4 +43,4 @@ Every functionality is a separate project. A project's README holds its details.
 | [FantasyInformator.Database](FantasyInformator.Database/README.md) | Code-first database |
 | [FantasyInformator.Migrator](FantasyInformator.Migrator/README.md) | Applies the database migrations |
 
-Each project has a test project with the same name plus `Tests`. The tests use MSTest and AutoFixture.
+Each project except Models has a test project with the same name plus `Tests`. The models hold no logic, so they have none. The tests use MSTest and AutoFixture.
