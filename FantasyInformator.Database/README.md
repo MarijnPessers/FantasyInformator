@@ -213,7 +213,7 @@ If `dotnet ef` complains that it cannot find a startup project, add `--startup-p
 
 ## Saving
 
-- The save writes only objects marked New, Modified or Deleted, one statement per changed object.
+- The save writes only objects marked New, Pending or Deleted, one statement per changed object.
 - A changed parent does not update its unchanged children. Unchanged objects are never sent to the database.
 - Being absent from a save never deletes anything. Only an object marked Deleted is deleted, and a delete cascades.
 - A New complex object inserts records in all the tables it spans.

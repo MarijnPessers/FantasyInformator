@@ -1,20 +1,13 @@
 # FantasyInformator.Models
 
-The application's own models. The database and Sleeper projects have their own models and map to these by hand.
-
-## Technical notes
-
-- No dependencies on other projects or packages.
-- Slots and positions are tables, not enums. A position that arrives with a player and is not known is added, and the front end warns while a position has no slot link.
-- IR and TAX eligibility depend on injury status and rookie years and come later.
-- The slot Sleeper reports is the truth, even when it is not a preferred slot.
+The application's own models.
 
 ## Change tracking
 
-Every object has a tracking state: New, Modified, Unchanged or Deleted.
+Every object has a tracking state: New, Pending, Unchanged or Deleted.
 
 - Each item holds a current value and, only when it differs, a pending value. The pending value is never equal to the current one.
-- A New item has only a pending value. A Removed item has a pending value identical to the current one, with its state set to Removed.
+- A New item has only a pending value. A Deleted item has a pending value identical to the current one, with its state set to Deleted.
 - A new update overwrites the pending value. A pending value equal to the current one is dropped.
 - After a save, the pending value becomes the current value.
 - Every object has an updated time in UTC. When a child changes, its updated time and those of all its parents are set, bottom-up. An update without differences changes nothing.
@@ -49,9 +42,9 @@ The folders group the models. The namespace of every model is `FantasyInformator
 | | `PlayerSeasonStats` | PlayerId, LeagueInstanceId, TotalScore, GamesActive, AverageScore, AverageScoreLast3, MedianScore. Calculated by the application. |
 | **Administration** | `LastSleeperCall` | CallName (the key), CalledAtUtc. No `Id`. |
 
-The diagram is `models.drawio.svg`. Open it in draw.io to change it by hand and save it in the same file. Every model except `LastSleeperCall` also has the fields `State` and `UpdatedUtc`, which are not drawn. The table diagram is in the README of `FantasyInformator.Database`.
+The diagram is `models.drawio.svg`. Open it in draw.io to change it by hand and save it in the same file. Every model except `LastSleeperCall` also has the fields `State` and `UpdatedUtc`, which are not drawn.
 
-![Models](models.drawio.svg?t=20261105011800)
+![Models](models.drawio.svg?t=20261107132241)
 
 ## What the diagram shows
 
@@ -104,5 +97,3 @@ The shape at each end of a line says how many of that table are linked to one of
 - A circle and a fork: none, one or many. An owner can have no teams, one team or many teams.
 - A bar and a fork: at least one. A player always has at least one position.
 - A circle and a bar: none or one. A player has no NFL team, or one.
-
-Tests: `FantasyInformator.ModelsTests`.

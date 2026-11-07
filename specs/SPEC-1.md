@@ -52,7 +52,7 @@ Every functionality is a separate project. Each project has a sibling test proje
 
 ## Change tracking
 
-- Every application model has a tracking state (`TrackingState`: New, Modified, Unchanged, Deleted) and an updated time (`TrackedModel`). The exception is `LastSleeperCall`, which has neither.
+- Every application model has a tracking state (`TrackingState`: New, Pending, Unchanged, Deleted) and an updated time (`TrackedModel`). The exception is `LastSleeperCall`, which has neither.
 - The pending value is not part of the application models or the database models. It belongs to the state model, which is built when the app state is worked on. That model holds, per item, the current value, the pending value, the tracking state and the updated time. Bring this back into focus when starting on the state (see "Open").
 - Each item holds a current value and, only when it differs, a pending value. The current value is always Unchanged. The pending value is never equal to the current value.
 - A New item has only a pending value and stays New through further updates until it is saved.
@@ -60,7 +60,7 @@ Every functionality is a separate project. Each project has a sibling test proje
 - A second update overwrites the pending value. A pending value equal to the current one is dropped.
 - Items with a pending value get a slightly different color. A report icon button on a league or a player compares current with pending.
 - After a save, the pending value becomes the current value and is cleared.
-- Save writes only New, Modified and Deleted objects, one statement per changed object. A parent update does not update unchanged children. Unchanged objects are never sent to the database. Absence from a save never deletes anything. Only an object marked Deleted is deleted, and a delete cascades. A New complex object inserts records in all its tables.
+- Save writes only New, Pending and Deleted objects, one statement per changed object. A parent update does not update unchanged children. Unchanged objects are never sent to the database. Absence from a save never deletes anything. Only an object marked Deleted is deleted, and a delete cascades. A New complex object inserts records in all its tables.
 - Every object has an updated time. When a child changes, its updated time and those of all its parents are set, bottom-up. An update that finds no differences changes nothing, and Save stays disabled.
 - Exception: the global lists (the players list, and later games) always get a new update time on an update. The players list is saved at once ("Rules for the whole application").
 

@@ -29,7 +29,7 @@ public class TrackedModelMapperTests
 
     [TestMethod]
     [DataRow(DatabaseModels.TrackingState.New, AppModels.TrackingState.New)]
-    [DataRow(DatabaseModels.TrackingState.Modified, AppModels.TrackingState.Modified)]
+    [DataRow(DatabaseModels.TrackingState.Pending, AppModels.TrackingState.Pending)]
     [DataRow(DatabaseModels.TrackingState.Unchanged, AppModels.TrackingState.Unchanged)]
     [DataRow(DatabaseModels.TrackingState.Deleted, AppModels.TrackingState.Deleted)]
     public void Fill_MapsStateByName(DatabaseModels.TrackingState databaseState, AppModels.TrackingState expectedState)

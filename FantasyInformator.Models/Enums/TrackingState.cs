@@ -3,7 +3,7 @@ namespace FantasyInformator.Models;
 public enum TrackingState
 {
     New,
-    Modified,
+    Pending,
     Unchanged,
     Deleted
 }
