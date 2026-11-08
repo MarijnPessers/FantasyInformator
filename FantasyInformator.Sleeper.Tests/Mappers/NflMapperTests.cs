@@ -10,13 +10,14 @@ public class NflMapperTests
     private readonly Fixture _fixture = new();
 
     [TestMethod]
-    public void ToSeason_MapsYear()
+    public void ToSeason_MapsYearAndCurrentWeek()
     {
         var state = new SleeperModels.State { Season = "2025", Week = _fixture.Create<int>() };
 
         var result = NflMapper.ToSeason(state);
 
         Assert.AreEqual(2025, result.Year);
+        Assert.AreEqual(state.Week, result.CurrentWeek);
     }
 
     [TestMethod]

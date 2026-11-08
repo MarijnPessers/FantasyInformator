@@ -8,7 +8,8 @@ public class FantasyTeam : TrackedModel
 {
     public string ExternalId { get; set; } = string.Empty;
 
-    public Guid OwnerId { get; set; }
+    /// <summary>Null when the team has no owner.</summary>
+    public Guid? OwnerId { get; set; }
 
     public Owner? Owner { get; set; }
 

@@ -15,9 +15,9 @@ Some models also have an `ExternalId`, a separate value used only for matching r
 
 The diagram is `models.drawio.svg`. The base fields are not drawn.
 
-Each box has three columns: the field name, its type (with the length for text and the digits for decimals), and its key. `PK` is the primary key, `FK` a link to another table and `UK` a value that must be unique. `get` marks a read-only value that is worked out and not stored.
+Each box has three columns: the field name, its type (with the length for text and the digits for decimals), and its key. `PK` is the primary key, `FK` a link to another table and `UK` a value that must be unique. `get` marks a value that is not stored: a read-only value that is worked out, or a value the application sets, such as `CurrentWeek`.
 
-![Models](models.drawio.svg?t=20261108134927)
+![Models](models.drawio.svg?t=20261108215943)
 
 ## What the diagram shows
 
@@ -31,7 +31,7 @@ Each coloured block is a group of models that belong together.
 ### FantasyTeam (green)
 
 - **Owner:** a person in a league.
-- **Fantasy team:** the team an owner has in one league instance. The owner is a plain id, because it may point to an owner that is not known.
+- **Fantasy team:** the team an owner has in one league instance. The owner is a plain id, because it may point to an owner that is not known. A team can also have no owner, then the id is empty.
 - **Rostered player:** a player on that team, and the slot the player is in right now. The player is a plain id, because it may point to a player that is not known.
 
 ### Player (yellow)
@@ -43,7 +43,7 @@ Each coloured block is a group of models that belong together.
 
 ### Nfl (orange)
 
-- **Season:** one year of NFL football.
+- **Season:** one year of NFL football. The current season also has the current week, which comes from Sleeper and is not stored.
 - **NFL team:** a real team, such as the Chiefs.
 - **Game:** one real match between two NFL teams in a season.
 

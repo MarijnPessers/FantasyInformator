@@ -1,9 +1,10 @@
-using FantasyInformator.Nflverse.Services.Models;
+using FantasyInformator.Models.Nfl;
 
 namespace FantasyInformator.Nflverse.Services.Interfaces;
 
 /// <summary>
 /// Retrieves the kickoff times that Sleeper does not give, for <c>Game.KickoffUtc</c> of the Nfl group.
+/// The nflverse models stay inside this project.
 /// </summary>
 public interface INflScheduleService
 {

@@ -15,6 +15,7 @@ public static class NflMapper
         new()
         {
             Year = int.Parse(state.Season, CultureInfo.InvariantCulture),
+            CurrentWeek = state.Week,
         };
 
     /// <summary>

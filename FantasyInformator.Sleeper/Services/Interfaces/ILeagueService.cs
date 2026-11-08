@@ -1,9 +1,11 @@
-using FantasyInformator.Sleeper.Services.Models;
+using FantasyInformator.Models.League;
 
 namespace FantasyInformator.Sleeper.Services.Interfaces;
 
 /// <summary>
 /// Retrieves the data of the League group: <c>League</c> and <c>LeagueInstance</c>.
+/// A league comes back as a <c>LeagueInstance</c> with its <c>League</c> (the name), a <c>Season</c> that holds only
+/// the year, and its <c>LeagueSlot</c> records. The Sleeper models stay inside this project.
 /// </summary>
 public interface ILeagueService
 {
@@ -25,10 +27,13 @@ public interface ILeagueService
     /// <para>Not used: <c>total_rosters</c>, <c>status</c>, <c>sport</c>, <c>season_type</c>, <c>draft_id</c>,
     /// <c>avatar</c>, <c>scoring_settings</c>, and every other key of <c>settings</c>.</para>
     /// </remarks>
-    Task<IReadOnlyList<League>> GetLeaguesOfUserAsync(string userId, int season, CancellationToken cancellationToken);
+    Task<IReadOnlyList<LeagueInstance>> GetLeaguesOfUserAsync(
+        string userId,
+        int season,
+        CancellationToken cancellationToken);
 
     /// <inheritdoc cref="GetLeaguesOfUserAsync(string, int, CancellationToken)"/>
-    Task<IReadOnlyList<League>> GetLeaguesOfUserAsync(string userId, int season) =>
+    Task<IReadOnlyList<LeagueInstance>> GetLeaguesOfUserAsync(string userId, int season) =>
         GetLeaguesOfUserAsync(userId, season, CancellationToken.None);
 
     /// <summary>
@@ -39,9 +44,9 @@ public interface ILeagueService
     /// <para>Used and not used: the same as <see cref="GetLeaguesOfUserAsync(string, int, CancellationToken)"/>,
     /// which returns the same object.</para>
     /// </remarks>
-    Task<League> GetLeagueAsync(string leagueId, CancellationToken cancellationToken);
+    Task<LeagueInstance> GetLeagueAsync(string leagueId, CancellationToken cancellationToken);
 
     /// <inheritdoc cref="GetLeagueAsync(string, CancellationToken)"/>
-    Task<League> GetLeagueAsync(string leagueId) =>
+    Task<LeagueInstance> GetLeagueAsync(string leagueId) =>
         GetLeagueAsync(leagueId, CancellationToken.None);
 }

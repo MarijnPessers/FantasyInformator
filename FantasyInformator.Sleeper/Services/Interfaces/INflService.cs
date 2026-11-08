@@ -1,4 +1,4 @@
-using FantasyInformator.Sleeper.Services.Models;
+using FantasyInformator.Models.Nfl;
 
 namespace FantasyInformator.Sleeper.Services.Interfaces;
 
@@ -15,15 +15,15 @@ public interface INflService
     /// <para>Used for:</para>
     /// <list type="bullet">
     /// <item><c>season</c>: <c>Season.Year</c> of the current season. Kept in state, never saved.</item>
-    /// <item><c>week</c>: the current week. Kept in state, never saved.</item>
+    /// <item><c>week</c>: <c>Season.CurrentWeek</c>, the current week. Kept in state, never saved.</item>
     /// </list>
     /// <para>Not used: <c>season_type</c>, <c>season_start_date</c>, <c>previous_season</c>, <c>leg</c>,
     /// <c>league_season</c>, <c>league_create_season</c>, <c>display_week</c>.</para>
     /// </remarks>
-    Task<State> GetStateAsync(CancellationToken cancellationToken);
+    Task<Season> GetStateAsync(CancellationToken cancellationToken);
 
     /// <inheritdoc cref="GetStateAsync(CancellationToken)"/>
-    Task<State> GetStateAsync() =>
+    Task<Season> GetStateAsync() =>
         GetStateAsync(CancellationToken.None);
 
     /// <summary>

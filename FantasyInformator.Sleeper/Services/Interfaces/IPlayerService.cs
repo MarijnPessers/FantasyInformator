@@ -1,10 +1,12 @@
-using FantasyInformator.Sleeper.Services.Models;
+using FantasyInformator.Models.Player;
 
 namespace FantasyInformator.Sleeper.Services.Interfaces;
 
 /// <summary>
 /// Retrieves the data of the Player group:
 /// <c>Player</c>, <c>Position</c>, <c>PlayerPosition</c> and <c>GameAppearance</c>.
+/// A player comes back with his <c>PlayerPosition</c> records filled. Links to other records hold only their key.
+/// The Sleeper models stay inside this project.
 /// </summary>
 public interface IPlayerService
 {
@@ -31,10 +33,10 @@ public interface IPlayerService
     /// and the ids at other sites (<c>sportradar_id</c>, <c>fantasy_data_id</c>, <c>stats_id</c>, <c>espn_id</c>,
     /// <c>rotowire_id</c>, <c>rotoworld_id</c>, <c>yahoo_id</c>).</para>
     /// </remarks>
-    Task<IReadOnlyDictionary<string, Player>> GetPlayersAsync(CancellationToken cancellationToken);
+    Task<IReadOnlyList<Player>> GetPlayersAsync(CancellationToken cancellationToken);
 
     /// <inheritdoc cref="GetPlayersAsync(CancellationToken)"/>
-    Task<IReadOnlyDictionary<string, Player>> GetPlayersAsync() =>
+    Task<IReadOnlyList<Player>> GetPlayersAsync() =>
         GetPlayersAsync(CancellationToken.None);
 
     /// <summary>
@@ -58,13 +60,16 @@ public interface IPlayerService
     /// <c>week_shard</c>, <c>company</c>, and the whole <c>player</c> object
     /// (names, positions, team, injury fields, years_exp, news_updated, metadata).</para>
     /// </remarks>
-    Task<IReadOnlyList<StatLine>> GetWeekStatsAsync(
+    Task<IReadOnlyList<GameAppearance>> GetWeekStatsAsync(
         int season,
         int week,
         IReadOnlyCollection<string> positions,
         CancellationToken cancellationToken);
 
     /// <inheritdoc cref="GetWeekStatsAsync(int, int, IReadOnlyCollection{string}, CancellationToken)"/>
-    Task<IReadOnlyList<StatLine>> GetWeekStatsAsync(int season, int week, IReadOnlyCollection<string> positions) =>
+    Task<IReadOnlyList<GameAppearance>> GetWeekStatsAsync(
+        int season,
+        int week,
+        IReadOnlyCollection<string> positions) =>
         GetWeekStatsAsync(season, week, positions, CancellationToken.None);
 }

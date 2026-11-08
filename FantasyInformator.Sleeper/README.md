@@ -25,7 +25,9 @@ The schedule and weekly stats calls are unofficial, so they can change or be blo
 | NFL service | state, schedule |
 | Scoring service | matchups of a week |
 
-The Sleeper models hold only the fields that are used. Some names equal an application model, so a mapper needs a namespace alias.
+A service takes and returns only application models. The Sleeper models hold only the fields that are used and stay inside this project; the service maps them before it returns. Some names equal an application model, so a mapper needs a namespace alias.
+
+Not yet changed to return application models: the league users and the rosters.
 
 ## Mappers
 

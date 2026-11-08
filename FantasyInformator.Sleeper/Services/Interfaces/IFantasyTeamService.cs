@@ -1,3 +1,4 @@
+using FantasyInformator.Models.FantasyTeam;
 using FantasyInformator.Sleeper.Services.Models;
 
 namespace FantasyInformator.Sleeper.Services.Interfaces;
@@ -19,10 +20,10 @@ public interface IFantasyTeamService
     /// </list>
     /// <para>Not used: <c>username</c> (it can change, so the user id is the key), <c>avatar</c>.</para>
     /// </remarks>
-    Task<User> GetUserAsync(string username, CancellationToken cancellationToken);
+    Task<Owner> GetUserAsync(string username, CancellationToken cancellationToken);
 
     /// <inheritdoc cref="GetUserAsync(string, CancellationToken)"/>
-    Task<User> GetUserAsync(string username) =>
+    Task<Owner> GetUserAsync(string username) =>
         GetUserAsync(username, CancellationToken.None);
 
     /// <summary>

@@ -1,10 +1,11 @@
-using FantasyInformator.Sleeper.Services.Models;
+using FantasyInformator.Models.Scoring;
 
 namespace FantasyInformator.Sleeper.Services.Interfaces;
 
 /// <summary>
 /// Retrieves the data of the Scoring group: <c>FantasyScore</c>.
 /// <c>PlayerSeasonStats</c> is calculated by the application and has no call.
+/// The Sleeper models stay inside this project.
 /// </summary>
 public interface IScoringService
 {
@@ -26,9 +27,9 @@ public interface IScoringService
     /// <para>Not used: <c>points</c> (team total), <c>custom_points</c>, <c>starters</c>, <c>starters_points</c>,
     /// <c>players</c>, <c>roster_id</c>, <c>matchup_id</c>.</para>
     /// </remarks>
-    Task<IReadOnlyList<Matchup>> GetMatchupsAsync(string leagueId, int week, CancellationToken cancellationToken);
+    Task<IReadOnlyList<FantasyScore>> GetMatchupsAsync(string leagueId, int week, CancellationToken cancellationToken);
 
     /// <inheritdoc cref="GetMatchupsAsync(string, int, CancellationToken)"/>
-    Task<IReadOnlyList<Matchup>> GetMatchupsAsync(string leagueId, int week) =>
+    Task<IReadOnlyList<FantasyScore>> GetMatchupsAsync(string leagueId, int week) =>
         GetMatchupsAsync(leagueId, week, CancellationToken.None);
 }

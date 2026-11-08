@@ -4,6 +4,7 @@
     <Project Path="FantasyInformator.Database.Tests/FantasyInformator.Database.Tests.csproj" />
     <Project Path="FantasyInformator.Nflverse.Tests/FantasyInformator.Nflverse.Tests.csproj" />
     <Project Path="FantasyInformator.Sleeper.Tests/FantasyInformator.Sleeper.Tests.csproj" />
+    <Project Path="FantasyInformator.State.Tests/FantasyInformator.State.Tests.csproj" />
   </Folder>
   <Project Path="FantasyInformator.App/FantasyInformator.App.csproj" />
   <Project Path="FantasyInformator.Database/FantasyInformator.Database.csproj" />
@@ -11,4 +12,5 @@
   <Project Path="FantasyInformator.Models/FantasyInformator.Models.csproj" />
   <Project Path="FantasyInformator.Nflverse/FantasyInformator.Nflverse.csproj" />
   <Project Path="FantasyInformator.Sleeper/FantasyInformator.Sleeper.csproj" />
+  <Project Path="FantasyInformator.State/FantasyInformator.State.csproj" />
 </Solution>

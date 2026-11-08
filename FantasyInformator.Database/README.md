@@ -18,10 +18,10 @@ The settings of the tables are in the `Context` folder, next to the `FantasyInfo
 
 The diagram is a copy of `models.drawio.svg` in the Models project, without the read-only values (such as `IsIrEligible`), because the database does not store them.
 
-![Models](models.drawio.svg?t=20261108134927)
+![Models](models.drawio.svg?t=20261108215943)
 
 - `ExternalId` is unique where a model has one, and so are the pairs that must not repeat (for example a player on a roster).
-- The owner of a fantasy team and the player of a roster have no foreign key, because they can point to something not known. The columns are indexed.
+- The owner of a fantasy team and the player of a roster have no foreign key, because they can point to something not known. The columns are indexed. The owner column is optional, because a team can have no owner.
 - Players, NFL teams, seasons, leagues, league instances, fantasy teams and owners are never deleted. Only rostered players, league slots, slot eligibility and player positions are. Nothing depends on those, so a delete cascades to nothing.
 
 ## EF commands
