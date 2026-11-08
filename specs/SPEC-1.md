@@ -61,6 +61,7 @@ Every functionality is a separate project. Each project has a sibling test proje
 - Items with a pending value get a slightly different color. A report icon button on a league or a player compares current with pending.
 - After a save, the pending value becomes the current value and is cleared.
 - Save writes only New, Pending and Deleted objects, one statement per changed object. A parent update does not update unchanged children. Unchanged objects are never sent to the database. Absence from a save never deletes anything. Only an object marked Deleted is deleted, and a delete cascades. A New complex object inserts records in all its tables.
+- Deletes: players, NFL teams, seasons, leagues, league instances, fantasy teams and owners are never deleted. Only rostered players, league slots, slot eligibility and player positions are. No table points to those, so a delete cascades to nothing. The cascade and restrict settings on the links stay as a safety net. If a game or game appearance ever has to be deleted (a cancelled game, a player listed by mistake), it is decided then.
 - Every object has an updated time, set when that object itself changes. An update that finds no differences changes nothing, and Save stays disabled.
 - Exception: the global lists (the players list, and later games) always get a new update time on an update. The players list is saved at once ("Rules for the whole application").
 
@@ -146,7 +147,7 @@ Each item gets its own mini-grill when it is started.
 - NFL team schedules on their own screen, used to know which weeks a player played. A traded player needs the team he played for each week.
 - Wins and losses and matchups (a matchup is between two rosters in the same league). Records are defined when matchups are fetched.
 - Claude in the application: reads the stored data, gathers its own data and makes recommendations (Anthropic API, separate billing).
-- Failed saves: when any save fails, write what was to be saved as a JSON file in a queue folder. Name the files by UTC timestamp down to microseconds so the names are unique. A retry button processes the queued files in chronological order. The folder comes from configuration in user secrets. The database is not expected to be offline much.
+- Failed saves: the only retry is for a save of data that cannot be fetched again until a timeout has passed (for example the players list, locked after a fetch). When it fails, it is written as a JSON file in a queue folder. Name the files by UTC timestamp down to microseconds so the names are unique. A retry button processes the queued files in chronological order. The folder comes from configuration in user secrets. The database is not expected to be offline much.
 - Finding players to pick up: AI searches the internet for available players, and the stored rosters of all teams in a league show which of them are already taken.
 - Comparing team rosters, for example to find which team is heavy in a position when looking for a trade.
 - Putting the application online, with security.

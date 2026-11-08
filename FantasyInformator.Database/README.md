@@ -2,31 +2,30 @@
 
 The code-first database. It has its own database models and hand-written mappers to the application models. The tables match the diagram in the [Models README](../FantasyInformator.Models/README.md).
 
-- References `FantasyInformator.Models`. Uses Entity Framework Core 10 with SQL Server.
-- Target: Azure SQL Database, free tier. It pauses after 15 minutes without use, and until next month when the free limit is reached, so calls need retry logic.
-- Connection strings are in .NET user secrets: `Database:ConnectionStringApp` (the user that reads and writes while the application runs, required) and `Database:ConnectionStringEF` (the user that changes tables, for migrations only). `Database:FailedSaveQueueFolder` is the failed-save queue folder.
-- The database is created and migrated only when the developer asks.
-- The database is the source of truth. Memory changes it only when the user saves.
+- References `FantasyInformator.Models`. Uses Entity Framework Core.
+- Target: Azure SQL Database.
+- The connection strings and the failed-save queue folder are in .NET user secrets. One connection string is for the user that reads and writes while the application runs (required), the other for the user that changes tables (migrations only). This one can be copied and used by migration software.
 
 ## Models and mappers
 
-- `Models` is a copy of every application model, with the same folders and fields.
-- `Mappers` has one static class per model with `ToModel(model)` and `ToModel(model, context)`. A null model gives null.
-- A mapper maps its own fields and calls the mappers of the models it links to. `TrackedModelMapper` maps `Id`, `State` and `UpdatedUtc`.
-- Models link both ways, so a `MappingContext` remembers what was already mapped.
+- The database models are currently a copy of every application model, with the same folders and fields.
+- There is one static mapper per model, which turns a database model into an application model.
+- Models link both ways: when one model holds another, the other holds it back. Mapping would go back and forth without end, so the mapper remembers what it has already mapped and reuses it.
 
 ## Tables
 
-`FantasyInformatorDbContext` has a table per database model. The settings are in `Configurations`, one class per group.
+The settings are in the configuration classes, one per group.
 
-- Text columns have a size (`ColumnSizes`). Scores are `decimal(10,4)`.
+The diagram is a copy of `models.drawio.svg` in the Models project.
+
+![Models](models.drawio.svg?t=20261108003218)
+
 - `ExternalId` is unique where a model has one, and so are the pairs that must not repeat (for example a player on a roster).
 - The owner of a fantasy team and the player of a roster have no foreign key, because they can point to something not known. The columns are indexed.
-- Deleting cascades where one parent owns its children. All other links restrict the delete, because SQL Server refuses more than one cascade path.
-
+- Players, NFL teams, seasons, leagues, league instances, fantasy teams and owners are never deleted. Only rostered players, league slots, slot eligibility and player positions are. Nothing depends on those, so a delete cascades to nothing.
 ## EF commands
 
-Run them from the solution folder. `dotnet ef` uses `FantasyInformatorDbContextFactory`, which reads `Database:ConnectionStringEF` from the user secrets.
+Run them from the solution folder. The EF tool reads the connection string of the ef user from the user secrets.
 
 One time:
 
@@ -47,11 +46,10 @@ Instead of `database update` you can use `FantasyInformator.Migrator` (see its R
 ## Saving
 
 - A save writes only objects marked New, Pending or Deleted. Unchanged objects are never sent.
-- Not being in a save deletes nothing. Only a Deleted object is deleted, and the delete cascades.
-- EF Core's change tracker is not used. The `State` in the application models decides.
-- After a successful save, everything is Unchanged.
-- The global players list is saved right after it is fetched.
-- Planned: a failed save is written as JSON to the queue folder and retried in order.
+- Not being in a save deletes nothing. Only a Deleted object is deleted.
+- The change tracker of Entity Framework is not used. The state in the application models decides.
+- The global players list is saved right after it is fetched because this is informationt hat cannot be retried for a while. Saving it should not be forgotten.
+- Planned: the only retry is for a failed save of data that cannot be fetched again until a timeout has passed (for example the players list). That save is written as a JSON file to the queue folder, and a retry button saves the files in the order they were written.
 
 ## Firewall
 

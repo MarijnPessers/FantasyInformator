@@ -2,8 +2,8 @@
 
 The front end. It shows state and starts actions. It holds no retrieval, database or mapping code.
 
-- Blazor Server on .NET 10.
-- State: [TimeWarp.State](https://www.nuget.org/packages/TimeWarp.State) 11.0.3. Whether its actions and handlers can live in another project is not verified.
+- Blazor Server.
+- State: TimeWarp.State. Whether its actions and handlers can live in another project is not verified.
 - Every page has a code-behind. The markup holds no logic except loops and `if` on booleans.
 - The overview has one tab per season, current year first. Leagues are styled divs.
 - Opening the overview loads the stored seasons, leagues and rosters from the database. Sleeper calls and saves need a button.
@@ -12,6 +12,5 @@ The front end. It shows state and starts actions. It holds no retrieval, databas
 
 References `FantasyInformator.Models`, `FantasyInformator.Sleeper` and `FantasyInformator.Database` (the last two to register their services).
 
-Settings that belong to a person or PC come from .NET user secrets: the Sleeper username, the database connection string and the failed-save queue folder. `appsettings.example.json` shows every key.
-
+Settings that belong to a person or PC come from .NET user secrets: the Sleeper username, the database connection string and the failed-save queue folder.
 Tests: `FantasyInformatorTests`.
