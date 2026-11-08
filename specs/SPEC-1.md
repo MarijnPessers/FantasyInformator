@@ -41,7 +41,7 @@ Every functionality is a separate project. Each project has a sibling test proje
 | `FantasyInformator.Database` | Code-first database, its own database models, mappers to the application models, and the services to call |
 | `FantasyInformator.Sleeper.Tests`, `FantasyInformator.Database.Tests`, `FantasyInformator.App.Tests` | Test projects |
 
-- Mappers live in the project that maps to the application models, and are written by hand. No AutoMapper. Every mapper has tests.
+- Mappers live in the project that maps to the application models, and are written by hand. Every mapper has tests.
 - More projects may follow. Candidates: a State project for the state classes and handlers, and a project for slot logic. Decide when the code asks for it.
 - Whether TimeWarp.State actions and handlers can live in a project other than the Blazor app is not verified. Check before building.
 

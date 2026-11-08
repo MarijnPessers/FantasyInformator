@@ -66,7 +66,7 @@ Open points to settle on the way:
 Matt Pocock's skills that fit this project. Mention them when the matching step starts.
 
 - `grill-with-docs`: grilling that also updates a glossary and decision records.
-- `domain-modeling`: record the terms (update, save, season, pending value) and the big choices (no AutoMapper, own change tracking).
+- `domain-modeling`: record the terms (update, save, season, pending value) and the big choices (own change tracking).
 - `tdd`: for the change tracking and the mappers.
 - `prototype`: to try the overview screen and the state model first.
 - `research`: to check TimeWarp.State across projects.

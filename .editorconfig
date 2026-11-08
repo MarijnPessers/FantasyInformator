@@ -44,7 +44,7 @@ dotnet_diagnostic.S6605.severity = warning
 dotnet_diagnostic.S6802.severity = warning
 
 # --- SonarQube rules switched off ---
-# An empty block is allowed, e.g. a catch that ignores the JavaScript clean-up after the browser tab is closed.
+# An empty block is allowed, e.g. a catch that ignores a clean-up step that can fail harmlessly.
 dotnet_diagnostic.S108.severity = none
 # Counts every switch arm, so a flat mapping (e.g. an enum to its text) is flagged; S3776 checks real complexity.
 dotnet_diagnostic.S1541.severity = none

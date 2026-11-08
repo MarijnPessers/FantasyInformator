@@ -11,3 +11,6 @@ obj/
 claudeTmp/
 *.local.md
 *.local.json
+
+## Test results
+TestResults/
