@@ -49,7 +49,18 @@ Every functionality is a separate project. Each project has a sibling test proje
 
 - Mappers live in the project that maps to the application models, and are written by hand. Every mapper has tests.
 - **A service takes and returns only application models.** The models of an outside source stay inside the project that reads it, and the service maps them before it returns. The interfaces of Sleeper (except two methods, see "Open") and Nflverse already do this. How many Sleeper calls sit behind one service method is decided when that service is built: a request asks for data X, the service gathers it, maps it and returns application models.
-- **Who knows what:** the handler (State project) knows where to get the data. It asks a service, the service returns application models, and the handler writes them into the state. The Blazor app only sends requests (actions) and shows the state. So `FantasyInformator.App` references only `FantasyInformator.State` and `FantasyInformator.Models`. `FantasyInformator.State` references Sleeper, Nflverse, Database and Models, and registers their services and settings behind one extension method. The app's configuration files (`appsettings.json`, user secrets) stay in the app, and the app hands its configuration to that method. Mappers stay pure and static, and the source projects do not depend on the State project. Today the App still references Database and Sleeper (and `Microsoft.EntityFrameworkCore.Design`); that changes in "Next steps". The app stays the startup project of the EF tools (it reaches the Database project through State); check this with the next migration.
+- **Who knows what (the reference rule):** Models know nothing. Everything knows the Models, and beyond that:
+
+  ```
+  Models      knows nothing
+  Sleeper     -> Models
+  Nflverse    -> Models
+  Database    -> Models
+  State       -> Models, Sleeper, Nflverse, Database
+  App         -> Models, State
+  ```
+
+  The State project holds the application models of the app. It never holds fetched data: a service fetches and maps, so only models reach the state. The handler (State project) knows where to get the data. It asks a service, the service returns application models, and the handler writes them into the state. The Blazor app only sends requests (actions) and shows the state. `FantasyInformator.State` registers the services and settings of Sleeper, Nflverse and Database behind one extension method. The app's configuration files (`appsettings.json`, user secrets) stay in the app, and the app hands its configuration to that method. Mappers stay pure and static, and the source projects do not depend on the State project. Today the App still references Database and Sleeper (and `Microsoft.EntityFrameworkCore.Design`); that changes in "Next steps". The app stays the startup project of the EF tools (it reaches the Database project through State); check this with the next migration.
 - A project for slot logic is a candidate. Decide when the code asks for it.
 
 ## Working with the developer
@@ -83,6 +94,8 @@ Learned in the second session. The rule files in `.claude/rules/` say much of th
 ## Errors and HTTP clients
 
 - Every failure throws. Each of Sleeper, Nflverse and Database throws its own exception type, holding what failed (call name, HTTP status or operation). Only the front end catches and handles errors. No automatic retries. HTTP calls have a timeout. The exception types are not written yet.
+- **Fail fast, all or nothing:** everything runs one step after another, nothing in parallel. The first thing that cannot be done throws an exception and the whole action stops. Nothing from that run is processed or saved. There is no collecting of problems, no warning that carries on and no partial result. The front end shows the error message. The developer fixes the cause (for example the seed) and calls again. This holds for anything that cannot be inserted: an unknown position, slot or NFL team abbreviation, and a player without a position or with only unknown positions.
+- Only the response of the players call is saved to a folder (for now). After a fix, the next players call from the front end reads that saved response instead of calling Sleeper again.
 - The HTTP clients are written by hand with `IHttpClientFactory` (the package `Microsoft.Extensions.Http` is in the Sleeper project) and `System.Text.Json`, not Refit. Sample replies in tests are inline strings. This follows the rule "Prefer Microsoft packages".
 
 ## Tests
@@ -93,14 +106,10 @@ Learned in the second session. The rule files in `.claude/rules/` say much of th
 
 ## Change tracking
 
-- Every application model has a tracking state (`TrackingState`: New, Pending, Unchanged, Deleted) (`TrackedModel`). The exception is `LastSleeperCall`, which has none. The flag stays on the item itself. The database models have no state: a record read from the database is mapped as Unchanged. Instead, every database model holds a created time and an updated time, for database administration only. They are not mapped to the application models.
-- The pending value is not part of the application models or the database models. It belongs to the state model, which is built when the app state is worked on. That model holds, per item, the current value, the pending value, the tracking state and the updated time. Only the flag of the pending (fetched) copy counts; the current (stored) copy is always Unchanged.
-- Each item holds a current value and, only when it differs, a pending value. The current value is always Unchanged. The pending value is never equal to the current value.
-- A New item has only a pending value and stays New through further updates until it is saved.
-- A Deleted item has a pending value identical to the current one, with its state set to Deleted.
-- A second update overwrites the pending value. A pending value equal to the current one is dropped.
-- Items with a pending value get a slightly different color. A report icon button on a league or a player compares current with pending.
-- After a save, the pending value becomes the current value and is cleared.
+- Every application model exists once, with a tracking state (`TrackingState`: New, Pending, Unchanged, Deleted) (`TrackedModel`). The exception is `LastSleeperCall`, which has none. The flag stays on the item itself. There is no stored copy and no pending copy of an object, and no old value is kept anywhere. The database models have no state: a record read from the database is mapped as Unchanged. Instead, every database model holds a created time and an updated time, for database administration only. They are not mapped to the application models.
+- An update fetches, maps and matches each model with the existing one by `ExternalId` (see "Update flow"). Unknown: added as New. Known but different: that same object is updated and becomes Pending. Equal: stays Unchanged. A roster entry that is no longer listed: becomes Deleted.
+- After a save, New and Pending objects become Unchanged, and Deleted objects are removed.
+- Colors, the report of changes and the screens are not designed yet.
 - Save writes only New, Pending and Deleted objects, one statement per changed object. A parent update does not update unchanged children. Unchanged objects are never sent to the database. Absence from a save never deletes anything. Only an object marked Deleted is deleted, and a delete cascades. A New complex object inserts records in all its tables.
 - The save takes a flat list of changed models and writes them in one transaction. If one fails, none is written, and the error goes up. A model type the save does not know throws. Entity Framework only writes: it is told per object to insert, update or delete, and it does not detect changes. `CreatedUtc` is set on insert only, `UpdatedUtc` on insert and update, from the system clock, one time per save.
 - Deletes: players, NFL teams, seasons, leagues, league instances, fantasy teams and owners are never deleted. Only rostered players, league slots, slot eligibility and player positions are. No table points to those, so a delete cascades to nothing. The cascade and restrict settings on the links stay as a safety net. If a game or game appearance ever has to be deleted (a cancelled game, a player listed by mistake), it is decided then.
@@ -116,7 +125,7 @@ Learned in the second session. The rule files in `.claude/rules/` say much of th
 - Each tab has an Update button for the leagues of that tab's year. It calls only the user-leagues endpoint, with no players, scores or records.
 - Next to it, a checkbox "attempt to get next season": take the last known year plus one and try to get leagues. If there are some, create a new season record and show a new tab for it.
 - A league that already exists (matched by id) is only changed when its name differs.
-- The report icon on a league or a player opens a modal with a Close button. It shows a summary of the changes. Each line is an accordion, and clicking it shows the full details: each changed field as the current value next to the pending value. A New item shows as added, a Deleted item as removed. A league's report also covers its changed players.
+- The report icon on a league or a player was meant to open a modal that shows what changed. No old value is kept anywhere ("Change tracking"), so this report is not designed yet.
 - The front end is not designed in more detail yet, except that errors are caught and handled there. Settle it in its own short session.
 
 ## Slots and positions
@@ -126,7 +135,7 @@ Slots and positions are tables, not enums. They are built as models (see the Mod
 - `Slot`: the Sleeper code, a name and an abbreviation. `LeagueSlot` links a league instance to a slot and holds how many of that slot the league has. Only slots that exist in the league are linked. `RosteredPlayer` holds the slot a player is in right now.
 - `Position`: a name and an abbreviation. A player has one or more positions (`PlayerPosition`).
 - `SlotEligibility` links a position to the slots it can start in (one or more) and holds `IsPreferred`: the position is preferred to start in that slot.
-- When a player arrives from Sleeper with a position that is not known, the position is added. The front end shows a constant warning while a position has no slot link.
+- A position with no slot link is never added to the model or the state, so every position has at least one `SlotEligibility` (both lines in the models diagram show "one or many"). When a player arrives from Sleeper with a position that is not in the seed, the players call fails with an error and nothing is processed ("Errors and HTTP clients": fail fast, all or nothing). The data is fixed afterwards: the seed is corrected and applied, and the next players call reads the saved raw response (see "First milestone data"), not Sleeper. A player without a position does not exist: it fails the same way.
 - Starting data (to be seeded when the database is created): the slots QB, RB, WR, TE, Flex, SuperFlex, K, DL, LB, IDP (Sleeper's `IDP_FLEX`), DB, BN, IR and TAX. The eligible slots by position: QB: QB, SuperFlex. RB, WR, TE: own slot, Flex, SuperFlex. K: K. DL, DE: DL, IDP. LB: LB, IDP. DB, CB, S: DB, IDP. Everyone: BN.
 - A position can be dominant (`Position.IsDominant`): DL and DE are. A player who has a dominant position counts only as his dominant positions, and his other positions are ignored for the lineup. A player without one counts as all his positions. The eligible slots are then those of the positions that count. In a slot with a preferred position, such as LB in `IDP_FLEX`, the lineup picks the preferred position first.
 - Every position fits BN, IR and TAX. Whether a player may use IR depends only on the injury status from Sleeper (`injury_status`: IR, PUP or Out), kept as one field, `Player.InjuryStatus` (the enum `InjuryStatus`: None, Q, D, OUT, IR, PUP). `IsIrEligible` is true for IR, PUP and OUT and is not stored. Q (questionable) and D (doubtful) are kept too, for display only: they never keep a player out of the lineup. Rookie years for TAX are not used. The slot Sleeper reports is the truth, even when it is not a preferred slot, for example a DB in IDP.
@@ -138,7 +147,7 @@ Slots and positions are tables, not enums. They are built as models (see the Mod
 - A league's players update calls the rosters endpoint once. That call returns the rosters of all teams in the league, as player ids with the starters, IR and taxi lists. It returns no names or player details. All rosters are kept, not only the developer's own.
 - Owners are a separate update (the league-users endpoint), which also gives the team names. A roster holds its owner id as a plain value.
 - Player ids on a roster and owner ids on a roster are plain values with no database foreign key. They may point to a player or owner that is not known, for example an owner who left the league (see "Update flow").
-- The players list (about 5 MB, at most once a day per the Sleeper docs) is a separate table in a global update section. It is fetched by hand, only when needed: once at the start, and again when rookies are added. The Update button is locked for 24 hours after a fetch. The time of the last fetch is kept in `LastSleeperCall`, one row per call name. The list is saved to the database immediately on fetch. Names and positions come from this list.
+- The players list (about 5 MB, at most once a day per the Sleeper docs) is a separate table in a global update section. It is fetched by hand, only when needed: once at the start, and again when rookies are added. The Update button is locked for 24 hours after a fetch. The time of the last fetch is kept in `LastSleeperCall`, one row per call name. The list is saved to the database immediately on fetch. Names and positions come from this list. The raw response of the players call is also written to a folder (from configuration in user secrets), so it can be read again instead of calling Sleeper again, for example after the seed was fixed because of an unknown position. One backup of the previous file is kept. This is required for the first version; the general idea for other calls is under "For the future".
 
 ## Sleeper API facts (verified against docs.sleeper.com and live calls)
 
@@ -184,7 +193,7 @@ Each project has its own settings class (`DatabaseSettings`, `SleeperSettings`) 
 - The per-player points in the matchups call (`players_points`) are not in the Sleeper docs. Check them in a live response.
 - `NflTeam.Name` is not given by Sleeper (only an abbreviation): seed data, given by the developer.
 - The other links that may lack a record, besides the owner of a team and the player of a roster, are not decided.
-- The state model with the pending values (see "Change tracking") is not built. It lives in the State project.
+- The state (the application models with their flags, see "Change tracking") is not built. It lives in the State project.
 
 ## Next steps
 
@@ -193,9 +202,9 @@ Each project has its own settings class (`DatabaseSettings`, `SleeperSettings`) 
 3. **Developer:** create the migration for the nullable `OwnerId`, with the EF commands in the Database README, when ready.
 4. Update `CLAUDE.md`: the developer agreed that the next agent writes the decisions and steps of this spec into the section "Transition between sessions" (State, Next steps, open points), replacing what is out of date. This counts as a direct `CLAUDE.md` instruction. Keep it short: the developer said `CLAUDE.md` will later be emptied or hold only rules for future changes. Add the State, Nflverse and Migrator projects to the root README.
 5. Clean the rule files further: project names in `test.local.md` and the TimeWarp mention in "Banned packages" are project-specific and belong in this spec. The reference copy `.claude/coding-resources/.editorconfig` still holds folder names of the old solution (lines 231, 235, 239).
-6. Sleeper and Nflverse HTTP clients, by hand, starting with the user-leagues call: exception types, timeout, fake HTTP handler tests with inline JSON.
+6. Sleeper and Nflverse HTTP clients, by hand, starting with the user-leagues call: exception types, timeout, fake HTTP handler tests with inline JSON. The players call also writes its raw response to a folder, and can read it back (see "First milestone data"); this adds a folder setting to the configuration.
 7. Database: the read and save services with tests (in-memory SQLite), and the seed data (slots, positions, slot eligibility, NFL team names, given by the developer). The first migrations exist; new ones only when the developer asks.
-8. State project: change the references as described under "Projects" (the App loses its references to Database and Sleeper, State gains them and one registration method). Then the state model with current and pending values, the update flow, the database load, the save handler, and the warning while a position has no slot link.
+8. State project: change the references as described under "Projects" (the App loses its references to Database and Sleeper, State gains them and one registration method). Then the state (one instance of every model, with its flag), the update flow, the database load, and the save handler.
 9. Overview screen in the Blazor project: season tabs, update and save buttons, report modal.
 10. **Developer:** finish the Azure SQL database and the user secrets (`Database:ConnectionStringApp`, `Database:ConnectionStringEF`, `Sleeper:Username`, `Database:FailedSaveQueueFolder`). Claude never reads them.
 
@@ -211,7 +220,7 @@ Each item gets its own mini-grill when it is started.
 - Wins and losses and matchups (a matchup is between two rosters in the same league). Records are defined when matchups are fetched.
 - Claude in the application: reads the stored data, gathers its own data and makes recommendations (Anthropic API, separate billing).
 - Failed saves: the only retry is for a save of data that cannot be fetched again until a timeout has passed (for example the players list, locked after a fetch). When it fails, it is written as a JSON file in a queue folder. Name the files by UTC timestamp down to microseconds so the names are unique. A retry button processes the queued files in chronological order. The folder comes from configuration in user secrets. The database is not expected to be offline much.
-- Keeping the raw response of calls that can only be made once in a while (for example the players list, once a day): the raw response is written to a folder. When new data comes in, it is written too, and one backup of the previous file is kept. When the call is not possible, the latest file is read instead. The folder comes from configuration in user secrets. This is not the current focus.
+- Keeping the raw response of other calls that can only be made once in a while: the raw response is written to a folder. When new data comes in, it is written too, and one backup of the previous file is kept. When the call is not possible, the latest file is read instead. The folder comes from configuration in user secrets. For the players list this is required and is described under "First milestone data"; for other calls it is not the current focus.
 - Finding players to pick up: AI searches the internet for available players, and the stored rosters of all teams in a league show which of them are already taken. A player who is on no team in a league (a free agent: all players minus the rostered ones) must also be scorable for that league. For example, when a running back is needed, AI suggests good players that are still free, and the application fetches their scoring. The application cannot browse the internet itself, so it needs a source it can call. Whether Sleeper has one (for example stats or trending players) is not verified.
 - Comparing team rosters, for example to find which team is heavy in a position when looking for a trade.
 - Putting the application online, with security.
