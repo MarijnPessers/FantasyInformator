@@ -17,7 +17,7 @@ The diagram is `models.drawio.svg`. The base fields are not drawn.
 
 Each box has three columns: the field name, its type (with the length for text and the digits for decimals), and its key. `PK` is the primary key, `FK` a link to another table and `UK` a value that must be unique. `get` marks a value that is not stored: a read-only value that is worked out, or a value the application sets, such as `CurrentWeek`.
 
-![Models](models.drawio.svg?t=20261108215943)
+![Models](models.drawio.svg?t=20261108223457)
 
 ## What the diagram shows
 
