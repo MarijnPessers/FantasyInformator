@@ -7,20 +7,20 @@ namespace FantasyInformator.DatabaseTests.Mappers.Lineup;
 public class SlotEligibilityMapperTests
 {
     [TestMethod]
-    public void ToModel_MapsAllFieldsAndLinks()
+    public void Map_MapsAllFieldsAndLinks()
     {
         var slotEligibility = SourceFactory.Create<DatabaseLineup.SlotEligibility>();
 
-        var result = SlotEligibilityMapper.ToModel(slotEligibility);
+        var result = SlotEligibilityMapper.Map(slotEligibility);
 
         Assert.IsNotNull(result);
         MappedAssert.Equal(slotEligibility, result);
     }
 
     [TestMethod]
-    public void ToModel_Null_ReturnsNull()
+    public void Map_Null_ReturnsNull()
     {
-        var result = SlotEligibilityMapper.ToModel(null);
+        var result = SlotEligibilityMapper.Map(null);
 
         Assert.IsNull(result);
     }

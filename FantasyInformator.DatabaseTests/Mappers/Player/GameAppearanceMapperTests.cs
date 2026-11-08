@@ -7,20 +7,20 @@ namespace FantasyInformator.DatabaseTests.Mappers.Player;
 public class GameAppearanceMapperTests
 {
     [TestMethod]
-    public void ToModel_MapsAllFieldsAndLinks()
+    public void Map_MapsAllFieldsAndLinks()
     {
         var gameAppearance = SourceFactory.Create<DatabasePlayer.GameAppearance>();
 
-        var result = GameAppearanceMapper.ToModel(gameAppearance);
+        var result = GameAppearanceMapper.Map(gameAppearance);
 
         Assert.IsNotNull(result);
         MappedAssert.Equal(gameAppearance, result);
     }
 
     [TestMethod]
-    public void ToModel_Null_ReturnsNull()
+    public void Map_Null_ReturnsNull()
     {
-        var result = GameAppearanceMapper.ToModel(null);
+        var result = GameAppearanceMapper.Map(null);
 
         Assert.IsNull(result);
     }

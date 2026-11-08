@@ -7,20 +7,20 @@ namespace FantasyInformator.DatabaseTests.Mappers.Administration;
 public class LastSleeperCallMapperTests
 {
     [TestMethod]
-    public void ToModel_MapsAllFieldsAndLinks()
+    public void Map_MapsAllFieldsAndLinks()
     {
         var lastSleeperCall = SourceFactory.Create<DatabaseAdministration.LastSleeperCall>();
 
-        var result = LastSleeperCallMapper.ToModel(lastSleeperCall);
+        var result = LastSleeperCallMapper.Map(lastSleeperCall);
 
         Assert.IsNotNull(result);
         MappedAssert.Equal(lastSleeperCall, result);
     }
 
     [TestMethod]
-    public void ToModel_Null_ReturnsNull()
+    public void Map_Null_ReturnsNull()
     {
-        var result = LastSleeperCallMapper.ToModel(null);
+        var result = LastSleeperCallMapper.Map(null);
 
         Assert.IsNull(result);
     }

@@ -10,11 +10,11 @@ namespace FantasyInformator.Database.Mappers.League;
 
 public static class LeagueInstanceMapper
 {
-    public static AppLeague.LeagueInstance? ToModel(DatabaseLeague.LeagueInstance? leagueInstance) =>
-        ToModel(leagueInstance, new MappingContext());
+    public static AppLeague.LeagueInstance? Map(this DatabaseLeague.LeagueInstance? leagueInstance) =>
+        leagueInstance.Map(new MappingContext());
 
-    public static AppLeague.LeagueInstance? ToModel(
-        DatabaseLeague.LeagueInstance? leagueInstance,
+    public static AppLeague.LeagueInstance? Map(
+        this DatabaseLeague.LeagueInstance? leagueInstance,
         MappingContext context)
     {
         if (leagueInstance is null)
@@ -35,14 +35,15 @@ public static class LeagueInstanceMapper
         });
         context.Register(leagueInstance, mapped);
 
-        mapped.League = LeagueMapper.ToModel(leagueInstance.League, context);
-        mapped.Season = SeasonMapper.ToModel(leagueInstance.Season, context);
-        mapped.LeagueSlots.AddRange(context.MapList(leagueInstance.LeagueSlots, LeagueSlotMapper.ToModel));
-        mapped.FantasyTeams.AddRange(context.MapList(leagueInstance.FantasyTeams, FantasyTeamMapper.ToModel));
-        mapped.FantasyScores.AddRange(context.MapList(leagueInstance.FantasyScores, FantasyScoreMapper.ToModel));
+        mapped.League = leagueInstance.League.Map(context);
+        mapped.Season = leagueInstance.Season.Map(context);
+        mapped.LeagueSlots.AddRange(context.MapList(leagueInstance.LeagueSlots, LeagueSlotMapper.Map));
+        mapped.FantasyTeams.AddRange(context.MapList(leagueInstance.FantasyTeams, FantasyTeamMapper.Map));
+        mapped.FantasyScores.AddRange(
+            context.MapList(leagueInstance.FantasyScores, FantasyScoreMapper.Map));
         mapped.PlayerSeasonStats.AddRange(context.MapList(
             leagueInstance.PlayerSeasonStats,
-            PlayerSeasonStatsMapper.ToModel));
+            PlayerSeasonStatsMapper.Map));
 
         return mapped;
     }

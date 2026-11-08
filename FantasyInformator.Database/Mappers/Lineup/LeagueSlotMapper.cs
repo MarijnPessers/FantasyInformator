@@ -7,10 +7,12 @@ namespace FantasyInformator.Database.Mappers.Lineup;
 
 public static class LeagueSlotMapper
 {
-    public static AppLineup.LeagueSlot? ToModel(DatabaseLineup.LeagueSlot? leagueSlot) =>
-        ToModel(leagueSlot, new MappingContext());
+    public static AppLineup.LeagueSlot? Map(this DatabaseLineup.LeagueSlot? leagueSlot) =>
+        leagueSlot.Map(new MappingContext());
 
-    public static AppLineup.LeagueSlot? ToModel(DatabaseLineup.LeagueSlot? leagueSlot, MappingContext context)
+    public static AppLineup.LeagueSlot? Map(
+        this DatabaseLineup.LeagueSlot? leagueSlot,
+        MappingContext context)
     {
         if (leagueSlot is null)
         {
@@ -30,8 +32,8 @@ public static class LeagueSlotMapper
         });
         context.Register(leagueSlot, mapped);
 
-        mapped.LeagueInstance = LeagueInstanceMapper.ToModel(leagueSlot.LeagueInstance, context);
-        mapped.Slot = SlotMapper.ToModel(leagueSlot.Slot, context);
+        mapped.LeagueInstance = leagueSlot.LeagueInstance.Map(context);
+        mapped.Slot = leagueSlot.Slot.Map(context);
 
         return mapped;
     }

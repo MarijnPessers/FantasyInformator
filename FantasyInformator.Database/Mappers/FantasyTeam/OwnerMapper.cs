@@ -6,10 +6,10 @@ namespace FantasyInformator.Database.Mappers.FantasyTeam;
 
 public static class OwnerMapper
 {
-    public static AppFantasyTeam.Owner? ToModel(DatabaseFantasyTeam.Owner? owner) =>
-        ToModel(owner, new MappingContext());
+    public static AppFantasyTeam.Owner? Map(this DatabaseFantasyTeam.Owner? owner) =>
+        owner.Map(new MappingContext());
 
-    public static AppFantasyTeam.Owner? ToModel(DatabaseFantasyTeam.Owner? owner, MappingContext context)
+    public static AppFantasyTeam.Owner? Map(this DatabaseFantasyTeam.Owner? owner, MappingContext context)
     {
         if (owner is null)
         {
@@ -28,7 +28,7 @@ public static class OwnerMapper
         });
         context.Register(owner, mapped);
 
-        mapped.FantasyTeams.AddRange(context.MapList(owner.FantasyTeams, FantasyTeamMapper.ToModel));
+        mapped.FantasyTeams.AddRange(context.MapList(owner.FantasyTeams, FantasyTeamMapper.Map));
 
         return mapped;
     }

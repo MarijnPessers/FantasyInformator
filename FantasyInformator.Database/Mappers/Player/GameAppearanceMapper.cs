@@ -8,11 +8,11 @@ namespace FantasyInformator.Database.Mappers.Player;
 
 public static class GameAppearanceMapper
 {
-    public static AppPlayer.GameAppearance? ToModel(DatabasePlayer.GameAppearance? gameAppearance) =>
-        ToModel(gameAppearance, new MappingContext());
+    public static AppPlayer.GameAppearance? Map(this DatabasePlayer.GameAppearance? gameAppearance) =>
+        gameAppearance.Map(new MappingContext());
 
-    public static AppPlayer.GameAppearance? ToModel(
-        DatabasePlayer.GameAppearance? gameAppearance,
+    public static AppPlayer.GameAppearance? Map(
+        this DatabasePlayer.GameAppearance? gameAppearance,
         MappingContext context)
     {
         if (gameAppearance is null)
@@ -33,9 +33,10 @@ public static class GameAppearanceMapper
         });
         context.Register(gameAppearance, mapped);
 
-        mapped.Player = PlayerMapper.ToModel(gameAppearance.Player, context);
-        mapped.Game = GameMapper.ToModel(gameAppearance.Game, context);
-        mapped.FantasyScores.AddRange(context.MapList(gameAppearance.FantasyScores, FantasyScoreMapper.ToModel));
+        mapped.Player = gameAppearance.Player.Map(context);
+        mapped.Game = gameAppearance.Game.Map(context);
+        mapped.FantasyScores.AddRange(
+            context.MapList(gameAppearance.FantasyScores, FantasyScoreMapper.Map));
 
         return mapped;
     }

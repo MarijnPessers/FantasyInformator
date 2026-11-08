@@ -7,11 +7,11 @@ namespace FantasyInformator.Database.Mappers.FantasyTeam;
 
 public static class FantasyTeamMapper
 {
-    public static AppFantasyTeam.FantasyTeam? ToModel(DatabaseFantasyTeam.FantasyTeam? fantasyTeam) =>
-        ToModel(fantasyTeam, new MappingContext());
+    public static AppFantasyTeam.FantasyTeam? Map(this DatabaseFantasyTeam.FantasyTeam? fantasyTeam) =>
+        fantasyTeam.Map(new MappingContext());
 
-    public static AppFantasyTeam.FantasyTeam? ToModel(
-        DatabaseFantasyTeam.FantasyTeam? fantasyTeam,
+    public static AppFantasyTeam.FantasyTeam? Map(
+        this DatabaseFantasyTeam.FantasyTeam? fantasyTeam,
         MappingContext context)
     {
         if (fantasyTeam is null)
@@ -33,9 +33,10 @@ public static class FantasyTeamMapper
         });
         context.Register(fantasyTeam, mapped);
 
-        mapped.Owner = OwnerMapper.ToModel(fantasyTeam.Owner, context);
-        mapped.LeagueInstance = LeagueInstanceMapper.ToModel(fantasyTeam.LeagueInstance, context);
-        mapped.RosteredPlayers.AddRange(context.MapList(fantasyTeam.RosteredPlayers, RosteredPlayerMapper.ToModel));
+        mapped.Owner = fantasyTeam.Owner.Map(context);
+        mapped.LeagueInstance = fantasyTeam.LeagueInstance.Map(context);
+        mapped.RosteredPlayers.AddRange(
+            context.MapList(fantasyTeam.RosteredPlayers, RosteredPlayerMapper.Map));
 
         return mapped;
     }

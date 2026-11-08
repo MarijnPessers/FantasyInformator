@@ -6,10 +6,10 @@ namespace FantasyInformator.Database.Mappers.League;
 
 public static class LeagueMapper
 {
-    public static AppLeague.League? ToModel(DatabaseLeague.League? league) =>
-        ToModel(league, new MappingContext());
+    public static AppLeague.League? Map(this DatabaseLeague.League? league) =>
+        league.Map(new MappingContext());
 
-    public static AppLeague.League? ToModel(DatabaseLeague.League? league, MappingContext context)
+    public static AppLeague.League? Map(this DatabaseLeague.League? league, MappingContext context)
     {
         if (league is null)
         {
@@ -27,7 +27,8 @@ public static class LeagueMapper
         });
         context.Register(league, mapped);
 
-        mapped.LeagueInstances.AddRange(context.MapList(league.LeagueInstances, LeagueInstanceMapper.ToModel));
+        mapped.LeagueInstances.AddRange(
+            context.MapList(league.LeagueInstances, LeagueInstanceMapper.Map));
 
         return mapped;
     }

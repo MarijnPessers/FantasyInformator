@@ -7,20 +7,20 @@ namespace FantasyInformator.DatabaseTests.Mappers.FantasyTeam;
 public class OwnerMapperTests
 {
     [TestMethod]
-    public void ToModel_MapsAllFieldsAndLinks()
+    public void Map_MapsAllFieldsAndLinks()
     {
         var owner = SourceFactory.Create<DatabaseFantasyTeam.Owner>();
 
-        var result = OwnerMapper.ToModel(owner);
+        var result = OwnerMapper.Map(owner);
 
         Assert.IsNotNull(result);
         MappedAssert.Equal(owner, result);
     }
 
     [TestMethod]
-    public void ToModel_Null_ReturnsNull()
+    public void Map_Null_ReturnsNull()
     {
-        var result = OwnerMapper.ToModel(null);
+        var result = OwnerMapper.Map(null);
 
         Assert.IsNull(result);
     }

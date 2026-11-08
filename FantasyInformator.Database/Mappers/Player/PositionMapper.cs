@@ -7,10 +7,10 @@ namespace FantasyInformator.Database.Mappers.Player;
 
 public static class PositionMapper
 {
-    public static AppPlayer.Position? ToModel(DatabasePlayer.Position? position) =>
-        ToModel(position, new MappingContext());
+    public static AppPlayer.Position? Map(this DatabasePlayer.Position? position) =>
+        position.Map(new MappingContext());
 
-    public static AppPlayer.Position? ToModel(DatabasePlayer.Position? position, MappingContext context)
+    public static AppPlayer.Position? Map(this DatabasePlayer.Position? position, MappingContext context)
     {
         if (position is null)
         {
@@ -29,8 +29,10 @@ public static class PositionMapper
         });
         context.Register(position, mapped);
 
-        mapped.PlayerPositions.AddRange(context.MapList(position.PlayerPositions, PlayerPositionMapper.ToModel));
-        mapped.SlotEligibilities.AddRange(context.MapList(position.SlotEligibilities, SlotEligibilityMapper.ToModel));
+        mapped.PlayerPositions.AddRange(
+            context.MapList(position.PlayerPositions, PlayerPositionMapper.Map));
+        mapped.SlotEligibilities.AddRange(
+            context.MapList(position.SlotEligibilities, SlotEligibilityMapper.Map));
 
         return mapped;
     }

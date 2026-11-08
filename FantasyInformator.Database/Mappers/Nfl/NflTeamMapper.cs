@@ -7,10 +7,10 @@ namespace FantasyInformator.Database.Mappers.Nfl;
 
 public static class NflTeamMapper
 {
-    public static AppNfl.NflTeam? ToModel(DatabaseNfl.NflTeam? nflTeam) =>
-        ToModel(nflTeam, new MappingContext());
+    public static AppNfl.NflTeam? Map(this DatabaseNfl.NflTeam? nflTeam) =>
+        nflTeam.Map(new MappingContext());
 
-    public static AppNfl.NflTeam? ToModel(DatabaseNfl.NflTeam? nflTeam, MappingContext context)
+    public static AppNfl.NflTeam? Map(this DatabaseNfl.NflTeam? nflTeam, MappingContext context)
     {
         if (nflTeam is null)
         {
@@ -29,9 +29,9 @@ public static class NflTeamMapper
         });
         context.Register(nflTeam, mapped);
 
-        mapped.Players.AddRange(context.MapList(nflTeam.Players, PlayerMapper.ToModel));
-        mapped.HomeGames.AddRange(context.MapList(nflTeam.HomeGames, GameMapper.ToModel));
-        mapped.AwayGames.AddRange(context.MapList(nflTeam.AwayGames, GameMapper.ToModel));
+        mapped.Players.AddRange(context.MapList(nflTeam.Players, PlayerMapper.Map));
+        mapped.HomeGames.AddRange(context.MapList(nflTeam.HomeGames, GameMapper.Map));
+        mapped.AwayGames.AddRange(context.MapList(nflTeam.AwayGames, GameMapper.Map));
 
         return mapped;
     }

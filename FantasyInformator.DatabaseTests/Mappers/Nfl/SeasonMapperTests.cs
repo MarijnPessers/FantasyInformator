@@ -8,33 +8,33 @@ namespace FantasyInformator.DatabaseTests.Mappers.Nfl;
 public class SeasonMapperTests
 {
     [TestMethod]
-    public void ToModel_MapsAllFieldsAndLinks()
+    public void Map_MapsAllFieldsAndLinks()
     {
         var season = SourceFactory.Create<DatabaseNfl.Season>();
 
-        var result = SeasonMapper.ToModel(season);
+        var result = SeasonMapper.Map(season);
 
         Assert.IsNotNull(result);
         MappedAssert.Equal(season, result);
     }
 
     [TestMethod]
-    public void ToModel_Null_ReturnsNull()
+    public void Map_Null_ReturnsNull()
     {
-        var result = SeasonMapper.ToModel(null);
+        var result = SeasonMapper.Map(null);
 
         Assert.IsNull(result);
     }
 
     [TestMethod]
-    public void ToModel_TwoLeagueInstancesShareTheSeason_MapsTheSeasonOnce()
+    public void Map_TwoLeagueInstancesShareTheSeason_MapsTheSeasonOnce()
     {
         var season = new DatabaseNfl.Season();
         var firstInstance = new DatabaseLeague.LeagueInstance { Season = season };
         var secondInstance = new DatabaseLeague.LeagueInstance { Season = season };
         season.LeagueInstances.AddRange([firstInstance, secondInstance]);
 
-        var result = SeasonMapper.ToModel(season);
+        var result = SeasonMapper.Map(season);
 
         Assert.IsNotNull(result);
         Assert.HasCount(2, result.LeagueInstances);

@@ -8,10 +8,12 @@ namespace FantasyInformator.Database.Mappers.Scoring;
 
 public static class FantasyScoreMapper
 {
-    public static AppScoring.FantasyScore? ToModel(DatabaseScoring.FantasyScore? fantasyScore) =>
-        ToModel(fantasyScore, new MappingContext());
+    public static AppScoring.FantasyScore? Map(this DatabaseScoring.FantasyScore? fantasyScore) =>
+        fantasyScore.Map(new MappingContext());
 
-    public static AppScoring.FantasyScore? ToModel(DatabaseScoring.FantasyScore? fantasyScore, MappingContext context)
+    public static AppScoring.FantasyScore? Map(
+        this DatabaseScoring.FantasyScore? fantasyScore,
+        MappingContext context)
     {
         if (fantasyScore is null)
         {
@@ -31,8 +33,8 @@ public static class FantasyScoreMapper
         });
         context.Register(fantasyScore, mapped);
 
-        mapped.GameAppearance = GameAppearanceMapper.ToModel(fantasyScore.GameAppearance, context);
-        mapped.LeagueInstance = LeagueInstanceMapper.ToModel(fantasyScore.LeagueInstance, context);
+        mapped.GameAppearance = fantasyScore.GameAppearance.Map(context);
+        mapped.LeagueInstance = fantasyScore.LeagueInstance.Map(context);
 
         return mapped;
     }

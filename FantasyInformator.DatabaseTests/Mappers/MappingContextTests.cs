@@ -50,7 +50,7 @@ public class MappingContextTests
         var context = new MappingContext();
         var databaseLeagues = new List<DatabaseLeague.League> { new(), new(), new() };
 
-        var result = context.MapList(databaseLeagues, LeagueMapper.ToModel);
+        var result = context.MapList(databaseLeagues, LeagueMapper.Map);
 
         Assert.HasCount(3, result);
         Assert.IsTrue(context.TryGetMapped(databaseLeagues[1], out AppLeague.League? mapped));

@@ -7,20 +7,20 @@ namespace FantasyInformator.DatabaseTests.Mappers.Player;
 public class PositionMapperTests
 {
     [TestMethod]
-    public void ToModel_MapsAllFieldsAndLinks()
+    public void Map_MapsAllFieldsAndLinks()
     {
         var position = SourceFactory.Create<DatabasePlayer.Position>();
 
-        var result = PositionMapper.ToModel(position);
+        var result = PositionMapper.Map(position);
 
         Assert.IsNotNull(result);
         MappedAssert.Equal(position, result);
     }
 
     [TestMethod]
-    public void ToModel_Null_ReturnsNull()
+    public void Map_Null_ReturnsNull()
     {
-        var result = PositionMapper.ToModel(null);
+        var result = PositionMapper.Map(null);
 
         Assert.IsNull(result);
     }

@@ -7,20 +7,20 @@ namespace FantasyInformator.DatabaseTests.Mappers.FantasyTeam;
 public class FantasyTeamMapperTests
 {
     [TestMethod]
-    public void ToModel_MapsAllFieldsAndLinks()
+    public void Map_MapsAllFieldsAndLinks()
     {
         var fantasyTeam = SourceFactory.Create<DatabaseFantasyTeam.FantasyTeam>();
 
-        var result = FantasyTeamMapper.ToModel(fantasyTeam);
+        var result = FantasyTeamMapper.Map(fantasyTeam);
 
         Assert.IsNotNull(result);
         MappedAssert.Equal(fantasyTeam, result);
     }
 
     [TestMethod]
-    public void ToModel_Null_ReturnsNull()
+    public void Map_Null_ReturnsNull()
     {
-        var result = FantasyTeamMapper.ToModel(null);
+        var result = FantasyTeamMapper.Map(null);
 
         Assert.IsNull(result);
     }

@@ -7,20 +7,20 @@ namespace FantasyInformator.DatabaseTests.Mappers.FantasyTeam;
 public class RosteredPlayerMapperTests
 {
     [TestMethod]
-    public void ToModel_MapsAllFieldsAndLinks()
+    public void Map_MapsAllFieldsAndLinks()
     {
         var rosteredPlayer = SourceFactory.Create<DatabaseFantasyTeam.RosteredPlayer>();
 
-        var result = RosteredPlayerMapper.ToModel(rosteredPlayer);
+        var result = RosteredPlayerMapper.Map(rosteredPlayer);
 
         Assert.IsNotNull(result);
         MappedAssert.Equal(rosteredPlayer, result);
     }
 
     [TestMethod]
-    public void ToModel_Null_ReturnsNull()
+    public void Map_Null_ReturnsNull()
     {
-        var result = RosteredPlayerMapper.ToModel(null);
+        var result = RosteredPlayerMapper.Map(null);
 
         Assert.IsNull(result);
     }

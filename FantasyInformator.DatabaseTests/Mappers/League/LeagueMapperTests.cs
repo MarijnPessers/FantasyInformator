@@ -7,32 +7,32 @@ namespace FantasyInformator.DatabaseTests.Mappers.League;
 public class LeagueMapperTests
 {
     [TestMethod]
-    public void ToModel_MapsAllFieldsAndLinks()
+    public void Map_MapsAllFieldsAndLinks()
     {
         var league = SourceFactory.Create<DatabaseLeague.League>();
 
-        var result = LeagueMapper.ToModel(league);
+        var result = LeagueMapper.Map(league);
 
         Assert.IsNotNull(result);
         MappedAssert.Equal(league, result);
     }
 
     [TestMethod]
-    public void ToModel_Null_ReturnsNull()
+    public void Map_Null_ReturnsNull()
     {
-        var result = LeagueMapper.ToModel(null);
+        var result = LeagueMapper.Map(null);
 
         Assert.IsNull(result);
     }
 
     [TestMethod]
-    public void ToModel_LeagueAndInstanceLinkToEachOther_MappingEndsAndKeepsTheLoop()
+    public void Map_LeagueAndInstanceLinkToEachOther_MappingEndsAndKeepsTheLoop()
     {
         var league = new DatabaseLeague.League();
         var leagueInstance = new DatabaseLeague.LeagueInstance { League = league };
         league.LeagueInstances.Add(leagueInstance);
 
-        var result = LeagueMapper.ToModel(league);
+        var result = LeagueMapper.Map(league);
 
         Assert.IsNotNull(result);
         Assert.HasCount(1, result.LeagueInstances);

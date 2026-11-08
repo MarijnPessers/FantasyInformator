@@ -7,11 +7,12 @@ namespace FantasyInformator.Database.Mappers.Lineup;
 
 public static class SlotEligibilityMapper
 {
-    public static AppLineup.SlotEligibility? ToModel(DatabaseLineup.SlotEligibility? slotEligibility) =>
-        ToModel(slotEligibility, new MappingContext());
+    public static AppLineup.SlotEligibility? Map(
+        this DatabaseLineup.SlotEligibility? slotEligibility) =>
+        slotEligibility.Map(new MappingContext());
 
-    public static AppLineup.SlotEligibility? ToModel(
-        DatabaseLineup.SlotEligibility? slotEligibility,
+    public static AppLineup.SlotEligibility? Map(
+        this DatabaseLineup.SlotEligibility? slotEligibility,
         MappingContext context)
     {
         if (slotEligibility is null)
@@ -32,8 +33,8 @@ public static class SlotEligibilityMapper
         });
         context.Register(slotEligibility, mapped);
 
-        mapped.Position = PositionMapper.ToModel(slotEligibility.Position, context);
-        mapped.Slot = SlotMapper.ToModel(slotEligibility.Slot, context);
+        mapped.Position = slotEligibility.Position.Map(context);
+        mapped.Slot = slotEligibility.Slot.Map(context);
 
         return mapped;
     }

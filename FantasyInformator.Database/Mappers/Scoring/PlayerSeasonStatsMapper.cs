@@ -8,11 +8,12 @@ namespace FantasyInformator.Database.Mappers.Scoring;
 
 public static class PlayerSeasonStatsMapper
 {
-    public static AppScoring.PlayerSeasonStats? ToModel(DatabaseScoring.PlayerSeasonStats? playerSeasonStats) =>
-        ToModel(playerSeasonStats, new MappingContext());
+    public static AppScoring.PlayerSeasonStats? Map(
+        this DatabaseScoring.PlayerSeasonStats? playerSeasonStats) =>
+        playerSeasonStats.Map(new MappingContext());
 
-    public static AppScoring.PlayerSeasonStats? ToModel(
-        DatabaseScoring.PlayerSeasonStats? playerSeasonStats,
+    public static AppScoring.PlayerSeasonStats? Map(
+        this DatabaseScoring.PlayerSeasonStats? playerSeasonStats,
         MappingContext context)
     {
         if (playerSeasonStats is null)
@@ -37,8 +38,8 @@ public static class PlayerSeasonStatsMapper
         });
         context.Register(playerSeasonStats, mapped);
 
-        mapped.Player = PlayerMapper.ToModel(playerSeasonStats.Player, context);
-        mapped.LeagueInstance = LeagueInstanceMapper.ToModel(playerSeasonStats.LeagueInstance, context);
+        mapped.Player = playerSeasonStats.Player.Map(context);
+        mapped.LeagueInstance = playerSeasonStats.LeagueInstance.Map(context);
 
         return mapped;
     }

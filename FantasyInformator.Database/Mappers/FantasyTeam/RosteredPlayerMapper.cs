@@ -8,11 +8,12 @@ namespace FantasyInformator.Database.Mappers.FantasyTeam;
 
 public static class RosteredPlayerMapper
 {
-    public static AppFantasyTeam.RosteredPlayer? ToModel(DatabaseFantasyTeam.RosteredPlayer? rosteredPlayer) =>
-        ToModel(rosteredPlayer, new MappingContext());
+    public static AppFantasyTeam.RosteredPlayer? Map(
+        this DatabaseFantasyTeam.RosteredPlayer? rosteredPlayer) =>
+        rosteredPlayer.Map(new MappingContext());
 
-    public static AppFantasyTeam.RosteredPlayer? ToModel(
-        DatabaseFantasyTeam.RosteredPlayer? rosteredPlayer,
+    public static AppFantasyTeam.RosteredPlayer? Map(
+        this DatabaseFantasyTeam.RosteredPlayer? rosteredPlayer,
         MappingContext context)
     {
         if (rosteredPlayer is null)
@@ -33,9 +34,9 @@ public static class RosteredPlayerMapper
         });
         context.Register(rosteredPlayer, mapped);
 
-        mapped.FantasyTeam = FantasyTeamMapper.ToModel(rosteredPlayer.FantasyTeam, context);
-        mapped.Player = PlayerMapper.ToModel(rosteredPlayer.Player, context);
-        mapped.Slot = SlotMapper.ToModel(rosteredPlayer.Slot, context);
+        mapped.FantasyTeam = rosteredPlayer.FantasyTeam.Map(context);
+        mapped.Player = rosteredPlayer.Player.Map(context);
+        mapped.Slot = rosteredPlayer.Slot.Map(context);
 
         return mapped;
     }

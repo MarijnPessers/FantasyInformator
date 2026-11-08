@@ -7,20 +7,20 @@ namespace FantasyInformator.DatabaseTests.Mappers.Scoring;
 public class PlayerSeasonStatsMapperTests
 {
     [TestMethod]
-    public void ToModel_MapsAllFieldsAndLinks()
+    public void Map_MapsAllFieldsAndLinks()
     {
         var playerSeasonStats = SourceFactory.Create<DatabaseScoring.PlayerSeasonStats>();
 
-        var result = PlayerSeasonStatsMapper.ToModel(playerSeasonStats);
+        var result = PlayerSeasonStatsMapper.Map(playerSeasonStats);
 
         Assert.IsNotNull(result);
         MappedAssert.Equal(playerSeasonStats, result);
     }
 
     [TestMethod]
-    public void ToModel_Null_ReturnsNull()
+    public void Map_Null_ReturnsNull()
     {
-        var result = PlayerSeasonStatsMapper.ToModel(null);
+        var result = PlayerSeasonStatsMapper.Map(null);
 
         Assert.IsNull(result);
     }

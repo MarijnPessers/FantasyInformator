@@ -7,20 +7,20 @@ namespace FantasyInformator.DatabaseTests.Mappers.Lineup;
 public class LeagueSlotMapperTests
 {
     [TestMethod]
-    public void ToModel_MapsAllFieldsAndLinks()
+    public void Map_MapsAllFieldsAndLinks()
     {
         var leagueSlot = SourceFactory.Create<DatabaseLineup.LeagueSlot>();
 
-        var result = LeagueSlotMapper.ToModel(leagueSlot);
+        var result = LeagueSlotMapper.Map(leagueSlot);
 
         Assert.IsNotNull(result);
         MappedAssert.Equal(leagueSlot, result);
     }
 
     [TestMethod]
-    public void ToModel_Null_ReturnsNull()
+    public void Map_Null_ReturnsNull()
     {
-        var result = LeagueSlotMapper.ToModel(null);
+        var result = LeagueSlotMapper.Map(null);
 
         Assert.IsNull(result);
     }

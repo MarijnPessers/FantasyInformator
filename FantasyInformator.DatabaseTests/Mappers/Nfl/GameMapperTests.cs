@@ -7,20 +7,20 @@ namespace FantasyInformator.DatabaseTests.Mappers.Nfl;
 public class GameMapperTests
 {
     [TestMethod]
-    public void ToModel_MapsAllFieldsAndLinks()
+    public void Map_MapsAllFieldsAndLinks()
     {
         var game = SourceFactory.Create<DatabaseNfl.Game>();
 
-        var result = GameMapper.ToModel(game);
+        var result = GameMapper.Map(game);
 
         Assert.IsNotNull(result);
         MappedAssert.Equal(game, result);
     }
 
     [TestMethod]
-    public void ToModel_Null_ReturnsNull()
+    public void Map_Null_ReturnsNull()
     {
-        var result = GameMapper.ToModel(null);
+        var result = GameMapper.Map(null);
 
         Assert.IsNull(result);
     }

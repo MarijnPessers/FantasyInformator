@@ -7,20 +7,20 @@ namespace FantasyInformator.DatabaseTests.Mappers.Scoring;
 public class FantasyScoreMapperTests
 {
     [TestMethod]
-    public void ToModel_MapsAllFieldsAndLinks()
+    public void Map_MapsAllFieldsAndLinks()
     {
         var fantasyScore = SourceFactory.Create<DatabaseScoring.FantasyScore>();
 
-        var result = FantasyScoreMapper.ToModel(fantasyScore);
+        var result = FantasyScoreMapper.Map(fantasyScore);
 
         Assert.IsNotNull(result);
         MappedAssert.Equal(fantasyScore, result);
     }
 
     [TestMethod]
-    public void ToModel_Null_ReturnsNull()
+    public void Map_Null_ReturnsNull()
     {
-        var result = FantasyScoreMapper.ToModel(null);
+        var result = FantasyScoreMapper.Map(null);
 
         Assert.IsNull(result);
     }

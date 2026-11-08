@@ -6,11 +6,11 @@ namespace FantasyInformator.Database.Mappers.Player;
 
 public static class PlayerPositionMapper
 {
-    public static AppPlayer.PlayerPosition? ToModel(DatabasePlayer.PlayerPosition? playerPosition) =>
-        ToModel(playerPosition, new MappingContext());
+    public static AppPlayer.PlayerPosition? Map(this DatabasePlayer.PlayerPosition? playerPosition) =>
+        playerPosition.Map(new MappingContext());
 
-    public static AppPlayer.PlayerPosition? ToModel(
-        DatabasePlayer.PlayerPosition? playerPosition,
+    public static AppPlayer.PlayerPosition? Map(
+        this DatabasePlayer.PlayerPosition? playerPosition,
         MappingContext context)
     {
         if (playerPosition is null)
@@ -30,8 +30,8 @@ public static class PlayerPositionMapper
         });
         context.Register(playerPosition, mapped);
 
-        mapped.Player = PlayerMapper.ToModel(playerPosition.Player, context);
-        mapped.Position = PositionMapper.ToModel(playerPosition.Position, context);
+        mapped.Player = playerPosition.Player.Map(context);
+        mapped.Position = playerPosition.Position.Map(context);
 
         return mapped;
     }

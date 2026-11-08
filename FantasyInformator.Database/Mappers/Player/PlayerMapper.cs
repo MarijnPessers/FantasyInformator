@@ -9,10 +9,10 @@ namespace FantasyInformator.Database.Mappers.Player;
 
 public static class PlayerMapper
 {
-    public static AppPlayer.Player? ToModel(DatabasePlayer.Player? player) =>
-        ToModel(player, new MappingContext());
+    public static AppPlayer.Player? Map(this DatabasePlayer.Player? player) =>
+        player.Map(new MappingContext());
 
-    public static AppPlayer.Player? ToModel(DatabasePlayer.Player? player, MappingContext context)
+    public static AppPlayer.Player? Map(this DatabasePlayer.Player? player, MappingContext context)
     {
         if (player is null)
         {
@@ -32,11 +32,15 @@ public static class PlayerMapper
         });
         context.Register(player, mapped);
 
-        mapped.CurrentNflTeam = NflTeamMapper.ToModel(player.CurrentNflTeam, context);
-        mapped.PlayerPositions.AddRange(context.MapList(player.PlayerPositions, PlayerPositionMapper.ToModel));
-        mapped.GameAppearances.AddRange(context.MapList(player.GameAppearances, GameAppearanceMapper.ToModel));
-        mapped.RosteredPlayers.AddRange(context.MapList(player.RosteredPlayers, RosteredPlayerMapper.ToModel));
-        mapped.PlayerSeasonStats.AddRange(context.MapList(player.PlayerSeasonStats, PlayerSeasonStatsMapper.ToModel));
+        mapped.CurrentNflTeam = player.CurrentNflTeam.Map(context);
+        mapped.PlayerPositions.AddRange(
+            context.MapList(player.PlayerPositions, PlayerPositionMapper.Map));
+        mapped.GameAppearances.AddRange(
+            context.MapList(player.GameAppearances, GameAppearanceMapper.Map));
+        mapped.RosteredPlayers.AddRange(
+            context.MapList(player.RosteredPlayers, RosteredPlayerMapper.Map));
+        mapped.PlayerSeasonStats.AddRange(
+            context.MapList(player.PlayerSeasonStats, PlayerSeasonStatsMapper.Map));
 
         return mapped;
     }
