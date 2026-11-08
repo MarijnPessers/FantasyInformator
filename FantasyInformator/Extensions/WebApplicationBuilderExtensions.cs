@@ -14,4 +14,7 @@ public static class WebApplicationBuilderExtensions
         _ = builder.Services.AddDatabaseOptions(builder.Configuration);
         _ = builder.Services.AddSleeperOptions(builder.Configuration);
     }
+
+    public static void AddAppServices(this WebApplicationBuilder builder) =>
+        builder.Services.AddDatabaseServices();
 }

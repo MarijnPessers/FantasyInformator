@@ -4,11 +4,10 @@ The application's own models.
 
 ## Change tracking
 
-Every model except `LastSleeperCall` has three base fields:
+Every model except `LastSleeperCall` has two base fields:
 
 - `Id`: a Guid.
 - `State`: `New`, `Pending`, `Unchanged` or `Deleted`.
-- `UpdatedUtc`: when the model last changed.
 
 ## Models
 
@@ -18,7 +17,7 @@ The diagram is `models.drawio.svg`. The base fields are not drawn.
 
 Each box has three columns: the field name, its type (with the length for text and the digits for decimals), and its key. `PK` is the primary key, `FK` a link to another table and `UK` a value that must be unique.
 
-![Models](models.drawio.svg?t=20261107230338)
+![Models](models.drawio.svg?t=20261108013718)
 
 ## What the diagram shows
 

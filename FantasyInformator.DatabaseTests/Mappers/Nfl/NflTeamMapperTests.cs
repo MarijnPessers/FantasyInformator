@@ -20,8 +20,18 @@ public class NflTeamMapperTests
     [TestMethod]
     public void Map_Null_ReturnsNull()
     {
-        var result = NflTeamMapper.Map(null);
+        var result = NflTeamMapper.Map((DatabaseNfl.NflTeam?)null);
 
         Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void Map_ApplicationModel_MapsAllOwnFields()
+    {
+        var model = SourceFactory.Create<DatabaseNfl.NflTeam>().Map()!;
+
+        var result = model.Map();
+
+        MappedAssert.OwnFieldsEqual(result, model);
     }
 }

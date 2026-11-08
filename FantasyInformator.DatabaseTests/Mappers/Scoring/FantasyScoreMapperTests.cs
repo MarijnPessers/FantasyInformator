@@ -20,8 +20,18 @@ public class FantasyScoreMapperTests
     [TestMethod]
     public void Map_Null_ReturnsNull()
     {
-        var result = FantasyScoreMapper.Map(null);
+        var result = FantasyScoreMapper.Map((DatabaseScoring.FantasyScore?)null);
 
         Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void Map_ApplicationModel_MapsAllOwnFields()
+    {
+        var model = SourceFactory.Create<DatabaseScoring.FantasyScore>().Map()!;
+
+        var result = model.Map();
+
+        MappedAssert.OwnFieldsEqual(result, model);
     }
 }

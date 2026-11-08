@@ -32,4 +32,11 @@ public static class OwnerMapper
 
         return mapped;
     }
+
+    public static DatabaseFantasyTeam.Owner Map(this AppFantasyTeam.Owner owner) =>
+        TrackedModelMapper.FillDatabase(owner, new DatabaseFantasyTeam.Owner
+        {
+            ExternalId = owner.ExternalId,
+            Name = owner.Name,
+        });
 }

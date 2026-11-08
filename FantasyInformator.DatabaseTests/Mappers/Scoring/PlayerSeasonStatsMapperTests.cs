@@ -20,8 +20,18 @@ public class PlayerSeasonStatsMapperTests
     [TestMethod]
     public void Map_Null_ReturnsNull()
     {
-        var result = PlayerSeasonStatsMapper.Map(null);
+        var result = PlayerSeasonStatsMapper.Map((DatabaseScoring.PlayerSeasonStats?)null);
 
         Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void Map_ApplicationModel_MapsAllOwnFields()
+    {
+        var model = SourceFactory.Create<DatabaseScoring.PlayerSeasonStats>().Map()!;
+
+        var result = model.Map();
+
+        MappedAssert.OwnFieldsEqual(result, model);
     }
 }

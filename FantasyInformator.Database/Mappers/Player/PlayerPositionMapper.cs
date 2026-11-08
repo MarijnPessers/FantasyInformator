@@ -35,4 +35,11 @@ public static class PlayerPositionMapper
 
         return mapped;
     }
+
+    public static DatabasePlayer.PlayerPosition Map(this AppPlayer.PlayerPosition playerPosition) =>
+        TrackedModelMapper.FillDatabase(playerPosition, new DatabasePlayer.PlayerPosition
+        {
+            PlayerId = playerPosition.PlayerId,
+            PositionId = playerPosition.PositionId,
+        });
 }

@@ -34,4 +34,10 @@ public static class SeasonMapper
 
         return mapped;
     }
+
+    public static DatabaseNfl.Season Map(this AppNfl.Season season) =>
+        TrackedModelMapper.FillDatabase(season, new DatabaseNfl.Season
+        {
+            Year = season.Year,
+        });
 }

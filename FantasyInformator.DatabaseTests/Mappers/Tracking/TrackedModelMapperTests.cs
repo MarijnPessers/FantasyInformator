@@ -3,7 +3,6 @@ using FantasyInformator.Database.Mappers.Tracking;
 using AppEnums = FantasyInformator.Models.Enums;
 using AppLeague = FantasyInformator.Models.League;
 using DatabaseLeague = FantasyInformator.Database.Models.League;
-using DatabaseTracking = FantasyInformator.Database.Models.Tracking;
 
 namespace FantasyInformator.DatabaseTests.Mappers.Tracking;
 
@@ -13,12 +12,11 @@ public class TrackedModelMapperTests
     private readonly Fixture _fixture = new();
 
     [TestMethod]
-    public void Fill_CopiesIdAndUpdatedUtcAndReturnsTheModel()
+    public void Fill_CopiesIdAndReturnsTheModel()
     {
         var databaseLeague = new DatabaseLeague.League
         {
             Id = _fixture.Create<Guid>(),
-            UpdatedUtc = _fixture.Create<DateTime>(),
         };
         var league = new AppLeague.League();
 
@@ -26,20 +24,16 @@ public class TrackedModelMapperTests
 
         Assert.AreSame(league, result);
         Assert.AreEqual(databaseLeague.Id, result.Id);
-        Assert.AreEqual(databaseLeague.UpdatedUtc, result.UpdatedUtc);
     }
 
     [TestMethod]
-    [DataRow(DatabaseTracking.TrackingState.New, AppEnums.TrackingState.New)]
-    [DataRow(DatabaseTracking.TrackingState.Pending, AppEnums.TrackingState.Pending)]
-    [DataRow(DatabaseTracking.TrackingState.Unchanged, AppEnums.TrackingState.Unchanged)]
-    [DataRow(DatabaseTracking.TrackingState.Deleted, AppEnums.TrackingState.Deleted)]
-    public void Fill_MapsStateByName(DatabaseTracking.TrackingState databaseState, AppEnums.TrackingState expectedState)
+    public void Fill_SetsStateToUnchanged()
     {
-        var databaseLeague = new DatabaseLeague.League { State = databaseState };
+        var databaseLeague = new DatabaseLeague.League();
+        var league = new AppLeague.League { State = AppEnums.TrackingState.New };
 
-        var result = TrackedModelMapper.Fill(databaseLeague, new AppLeague.League());
+        var result = TrackedModelMapper.Fill(databaseLeague, league);
 
-        Assert.AreEqual(expectedState, result.State);
+        Assert.AreEqual(AppEnums.TrackingState.Unchanged, result.State);
     }
 }

@@ -44,4 +44,12 @@ public static class PlayerMapper
 
         return mapped;
     }
+
+    public static DatabasePlayer.Player Map(this AppPlayer.Player player) =>
+        TrackedModelMapper.FillDatabase(player, new DatabasePlayer.Player
+        {
+            ExternalId = player.ExternalId,
+            Name = player.Name,
+            CurrentNflTeamId = player.CurrentNflTeamId,
+        });
 }

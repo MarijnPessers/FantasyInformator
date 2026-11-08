@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Reflection;
+using DatabaseTracking = FantasyInformator.Database.Models.Tracking;
 
 namespace FantasyInformator.DatabaseTests;
 
@@ -10,6 +11,12 @@ namespace FantasyInformator.DatabaseTests;
 /// </summary>
 public static class MappedAssert
 {
+    private static readonly string[] DatabaseOnlyFields =
+    [
+        nameof(DatabaseTracking.TrackedModel.CreatedUtc),
+        nameof(DatabaseTracking.TrackedModel.UpdatedUtc),
+    ];
+
     public static void Equal(object databaseModel, object model)
     {
         OwnFieldsEqual(databaseModel, model);
@@ -37,26 +44,29 @@ public static class MappedAssert
         }
     }
 
-    private static void OwnFieldsEqual(object databaseModel, object model)
+    public static void OwnFieldsEqual(object databaseModel, object model)
     {
-        List<PropertyInfo> ownFields = [.. SourceFactory.GetOwnFields(model.GetType())];
-        Assert.IsNotEmpty(ownFields);
+        List<PropertyInfo> databaseFields =
+        [
+            .. SourceFactory.GetOwnFields(databaseModel.GetType()).Where(x => !DatabaseOnlyFields.Contains(x.Name)),
+        ];
+        Assert.IsNotEmpty(databaseFields);
 
-        foreach (var ownField in ownFields)
+        foreach (var databaseField in databaseFields)
         {
-            var databaseField = databaseModel.GetType().GetProperty(ownField.Name);
-            Assert.IsNotNull(databaseField, $"{ownField.Name} exists in the database model");
+            var field = model.GetType().GetProperty(databaseField.Name);
+            Assert.IsNotNull(field, $"{databaseField.Name} exists in the model");
 
             var databaseValue = databaseField.GetValue(databaseModel);
-            var value = ownField.GetValue(model);
+            var value = field.GetValue(model);
 
-            if (ownField.PropertyType.IsEnum)
+            if (databaseField.PropertyType.IsEnum)
             {
-                Assert.AreEqual(databaseValue!.ToString(), value!.ToString(), ownField.Name);
+                Assert.AreEqual(databaseValue!.ToString(), value!.ToString(), databaseField.Name);
             }
             else
             {
-                Assert.AreEqual(databaseValue, value, ownField.Name);
+                Assert.AreEqual(databaseValue, value, databaseField.Name);
             }
         }
     }

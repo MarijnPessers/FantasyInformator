@@ -20,8 +20,18 @@ public class SlotEligibilityMapperTests
     [TestMethod]
     public void Map_Null_ReturnsNull()
     {
-        var result = SlotEligibilityMapper.Map(null);
+        var result = SlotEligibilityMapper.Map((DatabaseLineup.SlotEligibility?)null);
 
         Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void Map_ApplicationModel_MapsAllOwnFields()
+    {
+        var model = SourceFactory.Create<DatabaseLineup.SlotEligibility>().Map()!;
+
+        var result = model.Map();
+
+        MappedAssert.OwnFieldsEqual(result, model);
     }
 }

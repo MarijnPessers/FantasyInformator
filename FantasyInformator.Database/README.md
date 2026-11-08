@@ -8,8 +8,8 @@ The code-first database. It has its own database models and hand-written mappers
 
 ## Models and mappers
 
-- The database models are currently a copy of every application model, with the same folders and fields.
-- There is one static mapper per model, which turns a database model into an application model.
+- The database models are currently a copy of every application model, with the same folders and fields. The one difference: they have no state, and every model holds two dates, `CreatedUtc` and `UpdatedUtc`. The dates are for database administration only and are not mapped to the application models.
+- There is one static mapper per model. It turns a database model into an application model, and back. The way back copies only the model's own fields and ids, not its links.
 - Models link both ways: when one model holds another, the other holds it back. Mapping would go back and forth without end, so the mapper remembers what it has already mapped and reuses it.
 
 ## Tables
@@ -18,7 +18,7 @@ The settings are in the configuration classes, one per group.
 
 The diagram is a copy of `models.drawio.svg` in the Models project.
 
-![Models](models.drawio.svg?t=20261108003218)
+![Models](models.drawio.svg?t=20261108015821)
 
 - `ExternalId` is unique where a model has one, and so are the pairs that must not repeat (for example a player on a roster).
 - The owner of a fantasy team and the player of a roster have no foreign key, because they can point to something not known. The columns are indexed.
@@ -46,6 +46,8 @@ Instead of `database update` you can use `FantasyInformator.Migrator` (see its R
 ## Saving
 
 - A save writes only objects marked New, Pending or Deleted. Unchanged objects are never sent.
+- The save takes a flat list of changed models and writes them in one transaction. If one fails, none is written, and the error goes up.
+- `CreatedUtc` is set when a record is inserted, `UpdatedUtc` on insert and on every update, with one time for the whole save. An update never overwrites `CreatedUtc`.
 - Not being in a save deletes nothing. Only a Deleted object is deleted.
 - The change tracker of Entity Framework is not used. The state in the application models decides.
 - The global players list is saved right after it is fetched because this is informationt hat cannot be retried for a while. Saving it should not be forgotten.

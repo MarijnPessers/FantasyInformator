@@ -36,4 +36,11 @@ public static class PositionMapper
 
         return mapped;
     }
+
+    public static DatabasePlayer.Position Map(this AppPlayer.Position position) =>
+        TrackedModelMapper.FillDatabase(position, new DatabasePlayer.Position
+        {
+            Name = position.Name,
+            Abbreviation = position.Abbreviation,
+        });
 }

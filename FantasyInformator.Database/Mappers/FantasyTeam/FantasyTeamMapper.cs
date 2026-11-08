@@ -40,4 +40,13 @@ public static class FantasyTeamMapper
 
         return mapped;
     }
+
+    public static DatabaseFantasyTeam.FantasyTeam Map(this AppFantasyTeam.FantasyTeam fantasyTeam) =>
+        TrackedModelMapper.FillDatabase(fantasyTeam, new DatabaseFantasyTeam.FantasyTeam
+        {
+            ExternalId = fantasyTeam.ExternalId,
+            OwnerId = fantasyTeam.OwnerId,
+            LeagueInstanceId = fantasyTeam.LeagueInstanceId,
+            Name = fantasyTeam.Name,
+        });
 }

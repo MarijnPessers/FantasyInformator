@@ -35,4 +35,11 @@ public static class NflTeamMapper
 
         return mapped;
     }
+
+    public static DatabaseNfl.NflTeam Map(this AppNfl.NflTeam nflTeam) =>
+        TrackedModelMapper.FillDatabase(nflTeam, new DatabaseNfl.NflTeam
+        {
+            ExternalId = nflTeam.ExternalId,
+            Name = nflTeam.Name,
+        });
 }

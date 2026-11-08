@@ -32,4 +32,10 @@ public static class LeagueMapper
 
         return mapped;
     }
+
+    public static DatabaseLeague.League Map(this AppLeague.League league) =>
+        TrackedModelMapper.FillDatabase(league, new DatabaseLeague.League
+        {
+            Name = league.Name,
+        });
 }

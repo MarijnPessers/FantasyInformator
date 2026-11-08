@@ -40,4 +40,12 @@ public static class RosteredPlayerMapper
 
         return mapped;
     }
+
+    public static DatabaseFantasyTeam.RosteredPlayer Map(this AppFantasyTeam.RosteredPlayer rosteredPlayer) =>
+        TrackedModelMapper.FillDatabase(rosteredPlayer, new DatabaseFantasyTeam.RosteredPlayer
+        {
+            FantasyTeamId = rosteredPlayer.FantasyTeamId,
+            PlayerId = rosteredPlayer.PlayerId,
+            SlotId = rosteredPlayer.SlotId,
+        });
 }

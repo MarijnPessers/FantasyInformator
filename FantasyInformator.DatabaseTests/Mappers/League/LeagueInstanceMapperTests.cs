@@ -20,8 +20,18 @@ public class LeagueInstanceMapperTests
     [TestMethod]
     public void Map_Null_ReturnsNull()
     {
-        var result = LeagueInstanceMapper.Map(null);
+        var result = LeagueInstanceMapper.Map((DatabaseLeague.LeagueInstance?)null);
 
         Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void Map_ApplicationModel_MapsAllOwnFields()
+    {
+        var model = SourceFactory.Create<DatabaseLeague.LeagueInstance>().Map()!;
+
+        var result = model.Map();
+
+        MappedAssert.OwnFieldsEqual(result, model);
     }
 }

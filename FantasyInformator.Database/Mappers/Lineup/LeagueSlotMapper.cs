@@ -37,4 +37,12 @@ public static class LeagueSlotMapper
 
         return mapped;
     }
+
+    public static DatabaseLineup.LeagueSlot Map(this AppLineup.LeagueSlot leagueSlot) =>
+        TrackedModelMapper.FillDatabase(leagueSlot, new DatabaseLineup.LeagueSlot
+        {
+            LeagueInstanceId = leagueSlot.LeagueInstanceId,
+            SlotId = leagueSlot.SlotId,
+            Count = leagueSlot.Count,
+        });
 }

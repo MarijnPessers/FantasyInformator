@@ -20,8 +20,18 @@ public class LeagueSlotMapperTests
     [TestMethod]
     public void Map_Null_ReturnsNull()
     {
-        var result = LeagueSlotMapper.Map(null);
+        var result = LeagueSlotMapper.Map((DatabaseLineup.LeagueSlot?)null);
 
         Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void Map_ApplicationModel_MapsAllOwnFields()
+    {
+        var model = SourceFactory.Create<DatabaseLineup.LeagueSlot>().Map()!;
+
+        var result = model.Map();
+
+        MappedAssert.OwnFieldsEqual(result, model);
     }
 }

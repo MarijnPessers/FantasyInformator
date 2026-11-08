@@ -41,4 +41,15 @@ public static class GameMapper
 
         return mapped;
     }
+
+    public static DatabaseNfl.Game Map(this AppNfl.Game game) =>
+        TrackedModelMapper.FillDatabase(game, new DatabaseNfl.Game
+        {
+            ExternalId = game.ExternalId,
+            SeasonId = game.SeasonId,
+            Week = game.Week,
+            HomeNflTeamId = game.HomeNflTeamId,
+            AwayNflTeamId = game.AwayNflTeamId,
+            KickoffUtc = game.KickoffUtc,
+        });
 }

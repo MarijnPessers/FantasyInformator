@@ -38,4 +38,12 @@ public static class SlotMapper
 
         return mapped;
     }
+
+    public static DatabaseLineup.Slot Map(this AppLineup.Slot slot) =>
+        TrackedModelMapper.FillDatabase(slot, new DatabaseLineup.Slot
+        {
+            ExternalId = slot.ExternalId,
+            Name = slot.Name,
+            Abbreviation = slot.Abbreviation,
+        });
 }

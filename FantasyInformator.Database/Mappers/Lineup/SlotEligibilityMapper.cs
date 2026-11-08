@@ -38,4 +38,12 @@ public static class SlotEligibilityMapper
 
         return mapped;
     }
+
+    public static DatabaseLineup.SlotEligibility Map(this AppLineup.SlotEligibility slotEligibility) =>
+        TrackedModelMapper.FillDatabase(slotEligibility, new DatabaseLineup.SlotEligibility
+        {
+            PositionId = slotEligibility.PositionId,
+            SlotId = slotEligibility.SlotId,
+            IsPreferred = slotEligibility.IsPreferred,
+        });
 }

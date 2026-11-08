@@ -20,8 +20,18 @@ public class GameMapperTests
     [TestMethod]
     public void Map_Null_ReturnsNull()
     {
-        var result = GameMapper.Map(null);
+        var result = GameMapper.Map((DatabaseNfl.Game?)null);
 
         Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void Map_ApplicationModel_MapsAllOwnFields()
+    {
+        var model = SourceFactory.Create<DatabaseNfl.Game>().Map()!;
+
+        var result = model.Map();
+
+        MappedAssert.OwnFieldsEqual(result, model);
     }
 }

@@ -4,7 +4,7 @@ public abstract class TrackedModel
 {
     public Guid Id { get; set; }
 
-    public TrackingState State { get; set; } = TrackingState.New;
+    public DateTime CreatedUtc { get; set; }
 
     public DateTime UpdatedUtc { get; set; }
 }

@@ -38,4 +38,12 @@ public static class FantasyScoreMapper
 
         return mapped;
     }
+
+    public static DatabaseScoring.FantasyScore Map(this AppScoring.FantasyScore fantasyScore) =>
+        TrackedModelMapper.FillDatabase(fantasyScore, new DatabaseScoring.FantasyScore
+        {
+            GameAppearanceId = fantasyScore.GameAppearanceId,
+            LeagueInstanceId = fantasyScore.LeagueInstanceId,
+            Points = fantasyScore.Points,
+        });
 }

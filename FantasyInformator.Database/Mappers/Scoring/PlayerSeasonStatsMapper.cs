@@ -43,4 +43,16 @@ public static class PlayerSeasonStatsMapper
 
         return mapped;
     }
+
+    public static DatabaseScoring.PlayerSeasonStats Map(this AppScoring.PlayerSeasonStats playerSeasonStats) =>
+        TrackedModelMapper.FillDatabase(playerSeasonStats, new DatabaseScoring.PlayerSeasonStats
+        {
+            PlayerId = playerSeasonStats.PlayerId,
+            LeagueInstanceId = playerSeasonStats.LeagueInstanceId,
+            TotalScore = playerSeasonStats.TotalScore,
+            GamesActive = playerSeasonStats.GamesActive,
+            AverageScore = playerSeasonStats.AverageScore,
+            AverageScoreLast3 = playerSeasonStats.AverageScoreLast3,
+            MedianScore = playerSeasonStats.MedianScore,
+        });
 }

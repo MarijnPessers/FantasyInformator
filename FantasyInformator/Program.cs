@@ -4,6 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddBlazor();
 builder.LoadConfiguration();
+builder.AddAppServices();
 
 var app = builder.Build();
 

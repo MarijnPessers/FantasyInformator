@@ -20,8 +20,18 @@ public class SlotMapperTests
     [TestMethod]
     public void Map_Null_ReturnsNull()
     {
-        var result = SlotMapper.Map(null);
+        var result = SlotMapper.Map((DatabaseLineup.Slot?)null);
 
         Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void Map_ApplicationModel_MapsAllOwnFields()
+    {
+        var model = SourceFactory.Create<DatabaseLineup.Slot>().Map()!;
+
+        var result = model.Map();
+
+        MappedAssert.OwnFieldsEqual(result, model);
     }
 }

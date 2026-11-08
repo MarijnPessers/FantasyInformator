@@ -47,4 +47,12 @@ public static class LeagueInstanceMapper
 
         return mapped;
     }
+
+    public static DatabaseLeague.LeagueInstance Map(this AppLeague.LeagueInstance leagueInstance) =>
+        TrackedModelMapper.FillDatabase(leagueInstance, new DatabaseLeague.LeagueInstance
+        {
+            ExternalId = leagueInstance.ExternalId,
+            LeagueId = leagueInstance.LeagueId,
+            SeasonId = leagueInstance.SeasonId,
+        });
 }

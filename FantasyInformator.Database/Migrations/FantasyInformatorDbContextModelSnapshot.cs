@@ -22,43 +22,28 @@ namespace FantasyInformator.Database.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("FantasyInformator.Database.Models.FantasyScore", b =>
+            modelBuilder.Entity("FantasyInformator.Database.Models.Administration.LastSleeperCall", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("CallName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<Guid>("GameAppearanceId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("LeagueInstanceId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal?>("Points")
-                        .HasPrecision(10, 4)
-                        .HasColumnType("decimal(10,4)");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedUtc")
+                    b.Property<DateTime>("CalledAtUtc")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                    b.HasKey("CallName");
 
-                    b.HasIndex("LeagueInstanceId");
-
-                    b.HasIndex("GameAppearanceId", "LeagueInstanceId")
-                        .IsUnique();
-
-                    b.ToTable("FantasyScores");
+                    b.ToTable("LastSleeperCalls");
                 });
 
-            modelBuilder.Entity("FantasyInformator.Database.Models.FantasyTeam", b =>
+            modelBuilder.Entity("FantasyInformator.Database.Models.FantasyTeam.FantasyTeam", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ExternalId")
                         .IsRequired()
@@ -76,9 +61,6 @@ namespace FantasyInformator.Database.Migrations
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("UpdatedUtc")
                         .HasColumnType("datetime2");
 
@@ -92,7 +74,222 @@ namespace FantasyInformator.Database.Migrations
                     b.ToTable("FantasyTeams");
                 });
 
-            modelBuilder.Entity("FantasyInformator.Database.Models.Game", b =>
+            modelBuilder.Entity("FantasyInformator.Database.Models.FantasyTeam.Owner", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ExternalId")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("UpdatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExternalId")
+                        .IsUnique();
+
+                    b.ToTable("Owners");
+                });
+
+            modelBuilder.Entity("FantasyInformator.Database.Models.FantasyTeam.RosteredPlayer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("FantasyTeamId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PlayerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SlotId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SlotId");
+
+                    b.HasIndex("FantasyTeamId", "PlayerId")
+                        .IsUnique();
+
+                    b.ToTable("RosteredPlayers");
+                });
+
+            modelBuilder.Entity("FantasyInformator.Database.Models.League.League", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("UpdatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Leagues");
+                });
+
+            modelBuilder.Entity("FantasyInformator.Database.Models.League.LeagueInstance", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ExternalId")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<Guid>("LeagueId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SeasonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExternalId")
+                        .IsUnique();
+
+                    b.HasIndex("LeagueId");
+
+                    b.HasIndex("SeasonId");
+
+                    b.ToTable("LeagueInstances");
+                });
+
+            modelBuilder.Entity("FantasyInformator.Database.Models.Lineup.LeagueSlot", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("LeagueInstanceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SlotId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SlotId");
+
+                    b.HasIndex("LeagueInstanceId", "SlotId")
+                        .IsUnique();
+
+                    b.ToTable("LeagueSlots");
+                });
+
+            modelBuilder.Entity("FantasyInformator.Database.Models.Lineup.Slot", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Abbreviation")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ExternalId")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("UpdatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExternalId")
+                        .IsUnique();
+
+                    b.ToTable("Slots");
+                });
+
+            modelBuilder.Entity("FantasyInformator.Database.Models.Lineup.SlotEligibility", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsPreferred")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("PositionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SlotId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SlotId");
+
+                    b.HasIndex("PositionId", "SlotId")
+                        .IsUnique();
+
+                    b.ToTable("SlotEligibilities");
+                });
+
+            modelBuilder.Entity("FantasyInformator.Database.Models.Nfl.Game", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -100,6 +297,9 @@ namespace FantasyInformator.Database.Migrations
 
                     b.Property<Guid>("AwayNflTeamId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ExternalId")
                         .IsRequired()
@@ -114,9 +314,6 @@ namespace FantasyInformator.Database.Migrations
 
                     b.Property<Guid>("SeasonId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedUtc")
                         .HasColumnType("datetime2");
@@ -138,11 +335,67 @@ namespace FantasyInformator.Database.Migrations
                     b.ToTable("Games");
                 });
 
-            modelBuilder.Entity("FantasyInformator.Database.Models.GameAppearance", b =>
+            modelBuilder.Entity("FantasyInformator.Database.Models.Nfl.NflTeam", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ExternalId")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("UpdatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExternalId")
+                        .IsUnique();
+
+                    b.ToTable("NflTeams");
+                });
+
+            modelBuilder.Entity("FantasyInformator.Database.Models.Nfl.Season", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("UpdatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Year")
+                        .IsUnique();
+
+                    b.ToTable("Seasons");
+                });
+
+            modelBuilder.Entity("FantasyInformator.Database.Models.Player.GameAppearance", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("GameId")
                         .HasColumnType("uniqueidentifier");
@@ -152,9 +405,6 @@ namespace FantasyInformator.Database.Migrations
 
                     b.Property<Guid>("PlayerId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedUtc")
                         .HasColumnType("datetime2");
@@ -169,173 +419,14 @@ namespace FantasyInformator.Database.Migrations
                     b.ToTable("GameAppearances");
                 });
 
-            modelBuilder.Entity("FantasyInformator.Database.Models.LastSleeperCall", b =>
-                {
-                    b.Property<string>("CallName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("CalledAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("CallName");
-
-                    b.ToTable("LastSleeperCalls");
-                });
-
-            modelBuilder.Entity("FantasyInformator.Database.Models.League", b =>
+            modelBuilder.Entity("FantasyInformator.Database.Models.Player.Player", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedUtc")
+                    b.Property<DateTime>("CreatedUtc")
                         .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Leagues");
-                });
-
-            modelBuilder.Entity("FantasyInformator.Database.Models.LeagueInstance", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ExternalId")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
-
-                    b.Property<Guid>("LeagueId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SeasonId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedUtc")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExternalId")
-                        .IsUnique();
-
-                    b.HasIndex("LeagueId");
-
-                    b.HasIndex("SeasonId");
-
-                    b.ToTable("LeagueInstances");
-                });
-
-            modelBuilder.Entity("FantasyInformator.Database.Models.LeagueSlot", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("LeagueInstanceId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SlotId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedUtc")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SlotId");
-
-                    b.HasIndex("LeagueInstanceId", "SlotId")
-                        .IsUnique();
-
-                    b.ToTable("LeagueSlots");
-                });
-
-            modelBuilder.Entity("FantasyInformator.Database.Models.NflTeam", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ExternalId")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedUtc")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExternalId")
-                        .IsUnique();
-
-                    b.ToTable("NflTeams");
-                });
-
-            modelBuilder.Entity("FantasyInformator.Database.Models.Owner", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ExternalId")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedUtc")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExternalId")
-                        .IsUnique();
-
-                    b.ToTable("Owners");
-                });
-
-            modelBuilder.Entity("FantasyInformator.Database.Models.Player", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("CurrentNflTeamId")
                         .HasColumnType("uniqueidentifier");
@@ -350,9 +441,6 @@ namespace FantasyInformator.Database.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("UpdatedUtc")
                         .HasColumnType("datetime2");
 
@@ -366,20 +454,20 @@ namespace FantasyInformator.Database.Migrations
                     b.ToTable("Players");
                 });
 
-            modelBuilder.Entity("FantasyInformator.Database.Models.PlayerPosition", b =>
+            modelBuilder.Entity("FantasyInformator.Database.Models.Player.PlayerPosition", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("PlayerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("PositionId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedUtc")
                         .HasColumnType("datetime2");
@@ -394,7 +482,69 @@ namespace FantasyInformator.Database.Migrations
                     b.ToTable("PlayerPositions");
                 });
 
-            modelBuilder.Entity("FantasyInformator.Database.Models.PlayerSeasonStats", b =>
+            modelBuilder.Entity("FantasyInformator.Database.Models.Player.Position", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Abbreviation")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("UpdatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Abbreviation")
+                        .IsUnique();
+
+                    b.ToTable("Positions");
+                });
+
+            modelBuilder.Entity("FantasyInformator.Database.Models.Scoring.FantasyScore", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("GameAppearanceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("LeagueInstanceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("Points")
+                        .HasPrecision(10, 4)
+                        .HasColumnType("decimal(10,4)");
+
+                    b.Property<DateTime>("UpdatedUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LeagueInstanceId");
+
+                    b.HasIndex("GameAppearanceId", "LeagueInstanceId")
+                        .IsUnique();
+
+                    b.ToTable("FantasyScores");
+                });
+
+            modelBuilder.Entity("FantasyInformator.Database.Models.Scoring.PlayerSeasonStats", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -408,6 +558,9 @@ namespace FantasyInformator.Database.Migrations
                         .HasPrecision(10, 4)
                         .HasColumnType("decimal(10,4)");
 
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("GamesActive")
                         .HasColumnType("int");
 
@@ -420,9 +573,6 @@ namespace FantasyInformator.Database.Migrations
 
                     b.Property<Guid>("PlayerId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
 
                     b.Property<decimal?>("TotalScore")
                         .HasPrecision(10, 4)
@@ -441,178 +591,9 @@ namespace FantasyInformator.Database.Migrations
                     b.ToTable("PlayerSeasonStats");
                 });
 
-            modelBuilder.Entity("FantasyInformator.Database.Models.Position", b =>
+            modelBuilder.Entity("FantasyInformator.Database.Models.FantasyTeam.FantasyTeam", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Abbreviation")
-                        .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedUtc")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Abbreviation")
-                        .IsUnique();
-
-                    b.ToTable("Positions");
-                });
-
-            modelBuilder.Entity("FantasyInformator.Database.Models.RosteredPlayer", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("FantasyTeamId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PlayerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SlotId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedUtc")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SlotId");
-
-                    b.HasIndex("FantasyTeamId", "PlayerId")
-                        .IsUnique();
-
-                    b.ToTable("RosteredPlayers");
-                });
-
-            modelBuilder.Entity("FantasyInformator.Database.Models.Season", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Year")
-                        .IsUnique();
-
-                    b.ToTable("Seasons");
-                });
-
-            modelBuilder.Entity("FantasyInformator.Database.Models.Slot", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Abbreviation")
-                        .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)");
-
-                    b.Property<string>("ExternalId")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedUtc")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExternalId")
-                        .IsUnique();
-
-                    b.ToTable("Slots");
-                });
-
-            modelBuilder.Entity("FantasyInformator.Database.Models.SlotEligibility", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsPreferred")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("PositionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SlotId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedUtc")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SlotId");
-
-                    b.HasIndex("PositionId", "SlotId")
-                        .IsUnique();
-
-                    b.ToTable("SlotEligibilities");
-                });
-
-            modelBuilder.Entity("FantasyInformator.Database.Models.FantasyScore", b =>
-                {
-                    b.HasOne("FantasyInformator.Database.Models.GameAppearance", "GameAppearance")
-                        .WithMany("FantasyScores")
-                        .HasForeignKey("GameAppearanceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FantasyInformator.Database.Models.LeagueInstance", "LeagueInstance")
-                        .WithMany("FantasyScores")
-                        .HasForeignKey("LeagueInstanceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("GameAppearance");
-
-                    b.Navigation("LeagueInstance");
-                });
-
-            modelBuilder.Entity("FantasyInformator.Database.Models.FantasyTeam", b =>
-                {
-                    b.HasOne("FantasyInformator.Database.Models.LeagueInstance", "LeagueInstance")
+                    b.HasOne("FantasyInformator.Database.Models.League.LeagueInstance", "LeagueInstance")
                         .WithMany("FantasyTeams")
                         .HasForeignKey("LeagueInstanceId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -621,21 +602,97 @@ namespace FantasyInformator.Database.Migrations
                     b.Navigation("LeagueInstance");
                 });
 
-            modelBuilder.Entity("FantasyInformator.Database.Models.Game", b =>
+            modelBuilder.Entity("FantasyInformator.Database.Models.FantasyTeam.RosteredPlayer", b =>
                 {
-                    b.HasOne("FantasyInformator.Database.Models.NflTeam", "AwayNflTeam")
+                    b.HasOne("FantasyInformator.Database.Models.FantasyTeam.FantasyTeam", "FantasyTeam")
+                        .WithMany("RosteredPlayers")
+                        .HasForeignKey("FantasyTeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FantasyInformator.Database.Models.Lineup.Slot", "Slot")
+                        .WithMany("RosteredPlayers")
+                        .HasForeignKey("SlotId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FantasyTeam");
+
+                    b.Navigation("Slot");
+                });
+
+            modelBuilder.Entity("FantasyInformator.Database.Models.League.LeagueInstance", b =>
+                {
+                    b.HasOne("FantasyInformator.Database.Models.League.League", "League")
+                        .WithMany("LeagueInstances")
+                        .HasForeignKey("LeagueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FantasyInformator.Database.Models.Nfl.Season", "Season")
+                        .WithMany("LeagueInstances")
+                        .HasForeignKey("SeasonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("League");
+
+                    b.Navigation("Season");
+                });
+
+            modelBuilder.Entity("FantasyInformator.Database.Models.Lineup.LeagueSlot", b =>
+                {
+                    b.HasOne("FantasyInformator.Database.Models.League.LeagueInstance", "LeagueInstance")
+                        .WithMany("LeagueSlots")
+                        .HasForeignKey("LeagueInstanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FantasyInformator.Database.Models.Lineup.Slot", "Slot")
+                        .WithMany("LeagueSlots")
+                        .HasForeignKey("SlotId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("LeagueInstance");
+
+                    b.Navigation("Slot");
+                });
+
+            modelBuilder.Entity("FantasyInformator.Database.Models.Lineup.SlotEligibility", b =>
+                {
+                    b.HasOne("FantasyInformator.Database.Models.Player.Position", "Position")
+                        .WithMany("SlotEligibilities")
+                        .HasForeignKey("PositionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FantasyInformator.Database.Models.Lineup.Slot", "Slot")
+                        .WithMany("SlotEligibilities")
+                        .HasForeignKey("SlotId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Position");
+
+                    b.Navigation("Slot");
+                });
+
+            modelBuilder.Entity("FantasyInformator.Database.Models.Nfl.Game", b =>
+                {
+                    b.HasOne("FantasyInformator.Database.Models.Nfl.NflTeam", "AwayNflTeam")
                         .WithMany("AwayGames")
                         .HasForeignKey("AwayNflTeamId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FantasyInformator.Database.Models.NflTeam", "HomeNflTeam")
+                    b.HasOne("FantasyInformator.Database.Models.Nfl.NflTeam", "HomeNflTeam")
                         .WithMany("HomeGames")
                         .HasForeignKey("HomeNflTeamId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FantasyInformator.Database.Models.Season", "Season")
+                    b.HasOne("FantasyInformator.Database.Models.Nfl.Season", "Season")
                         .WithMany("Games")
                         .HasForeignKey("SeasonId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -648,15 +705,15 @@ namespace FantasyInformator.Database.Migrations
                     b.Navigation("Season");
                 });
 
-            modelBuilder.Entity("FantasyInformator.Database.Models.GameAppearance", b =>
+            modelBuilder.Entity("FantasyInformator.Database.Models.Player.GameAppearance", b =>
                 {
-                    b.HasOne("FantasyInformator.Database.Models.Game", "Game")
+                    b.HasOne("FantasyInformator.Database.Models.Nfl.Game", "Game")
                         .WithMany("GameAppearances")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FantasyInformator.Database.Models.Player", "Player")
+                    b.HasOne("FantasyInformator.Database.Models.Player.Player", "Player")
                         .WithMany("GameAppearances")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -667,47 +724,9 @@ namespace FantasyInformator.Database.Migrations
                     b.Navigation("Player");
                 });
 
-            modelBuilder.Entity("FantasyInformator.Database.Models.LeagueInstance", b =>
+            modelBuilder.Entity("FantasyInformator.Database.Models.Player.Player", b =>
                 {
-                    b.HasOne("FantasyInformator.Database.Models.League", "League")
-                        .WithMany("LeagueInstances")
-                        .HasForeignKey("LeagueId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FantasyInformator.Database.Models.Season", "Season")
-                        .WithMany("LeagueInstances")
-                        .HasForeignKey("SeasonId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("League");
-
-                    b.Navigation("Season");
-                });
-
-            modelBuilder.Entity("FantasyInformator.Database.Models.LeagueSlot", b =>
-                {
-                    b.HasOne("FantasyInformator.Database.Models.LeagueInstance", "LeagueInstance")
-                        .WithMany("LeagueSlots")
-                        .HasForeignKey("LeagueInstanceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FantasyInformator.Database.Models.Slot", "Slot")
-                        .WithMany("LeagueSlots")
-                        .HasForeignKey("SlotId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("LeagueInstance");
-
-                    b.Navigation("Slot");
-                });
-
-            modelBuilder.Entity("FantasyInformator.Database.Models.Player", b =>
-                {
-                    b.HasOne("FantasyInformator.Database.Models.NflTeam", "CurrentNflTeam")
+                    b.HasOne("FantasyInformator.Database.Models.Nfl.NflTeam", "CurrentNflTeam")
                         .WithMany("Players")
                         .HasForeignKey("CurrentNflTeamId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -715,15 +734,15 @@ namespace FantasyInformator.Database.Migrations
                     b.Navigation("CurrentNflTeam");
                 });
 
-            modelBuilder.Entity("FantasyInformator.Database.Models.PlayerPosition", b =>
+            modelBuilder.Entity("FantasyInformator.Database.Models.Player.PlayerPosition", b =>
                 {
-                    b.HasOne("FantasyInformator.Database.Models.Player", "Player")
+                    b.HasOne("FantasyInformator.Database.Models.Player.Player", "Player")
                         .WithMany("PlayerPositions")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FantasyInformator.Database.Models.Position", "Position")
+                    b.HasOne("FantasyInformator.Database.Models.Player.Position", "Position")
                         .WithMany("PlayerPositions")
                         .HasForeignKey("PositionId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -734,15 +753,34 @@ namespace FantasyInformator.Database.Migrations
                     b.Navigation("Position");
                 });
 
-            modelBuilder.Entity("FantasyInformator.Database.Models.PlayerSeasonStats", b =>
+            modelBuilder.Entity("FantasyInformator.Database.Models.Scoring.FantasyScore", b =>
                 {
-                    b.HasOne("FantasyInformator.Database.Models.LeagueInstance", "LeagueInstance")
+                    b.HasOne("FantasyInformator.Database.Models.Player.GameAppearance", "GameAppearance")
+                        .WithMany("FantasyScores")
+                        .HasForeignKey("GameAppearanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FantasyInformator.Database.Models.League.LeagueInstance", "LeagueInstance")
+                        .WithMany("FantasyScores")
+                        .HasForeignKey("LeagueInstanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GameAppearance");
+
+                    b.Navigation("LeagueInstance");
+                });
+
+            modelBuilder.Entity("FantasyInformator.Database.Models.Scoring.PlayerSeasonStats", b =>
+                {
+                    b.HasOne("FantasyInformator.Database.Models.League.LeagueInstance", "LeagueInstance")
                         .WithMany("PlayerSeasonStats")
                         .HasForeignKey("LeagueInstanceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FantasyInformator.Database.Models.Player", "Player")
+                    b.HasOne("FantasyInformator.Database.Models.Player.Player", "Player")
                         .WithMany("PlayerSeasonStats")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -753,65 +791,17 @@ namespace FantasyInformator.Database.Migrations
                     b.Navigation("Player");
                 });
 
-            modelBuilder.Entity("FantasyInformator.Database.Models.RosteredPlayer", b =>
-                {
-                    b.HasOne("FantasyInformator.Database.Models.FantasyTeam", "FantasyTeam")
-                        .WithMany("RosteredPlayers")
-                        .HasForeignKey("FantasyTeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FantasyInformator.Database.Models.Slot", "Slot")
-                        .WithMany("RosteredPlayers")
-                        .HasForeignKey("SlotId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("FantasyTeam");
-
-                    b.Navigation("Slot");
-                });
-
-            modelBuilder.Entity("FantasyInformator.Database.Models.SlotEligibility", b =>
-                {
-                    b.HasOne("FantasyInformator.Database.Models.Position", "Position")
-                        .WithMany("SlotEligibilities")
-                        .HasForeignKey("PositionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("FantasyInformator.Database.Models.Slot", "Slot")
-                        .WithMany("SlotEligibilities")
-                        .HasForeignKey("SlotId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Position");
-
-                    b.Navigation("Slot");
-                });
-
-            modelBuilder.Entity("FantasyInformator.Database.Models.FantasyTeam", b =>
+            modelBuilder.Entity("FantasyInformator.Database.Models.FantasyTeam.FantasyTeam", b =>
                 {
                     b.Navigation("RosteredPlayers");
                 });
 
-            modelBuilder.Entity("FantasyInformator.Database.Models.Game", b =>
-                {
-                    b.Navigation("GameAppearances");
-                });
-
-            modelBuilder.Entity("FantasyInformator.Database.Models.GameAppearance", b =>
-                {
-                    b.Navigation("FantasyScores");
-                });
-
-            modelBuilder.Entity("FantasyInformator.Database.Models.League", b =>
+            modelBuilder.Entity("FantasyInformator.Database.Models.League.League", b =>
                 {
                     b.Navigation("LeagueInstances");
                 });
 
-            modelBuilder.Entity("FantasyInformator.Database.Models.LeagueInstance", b =>
+            modelBuilder.Entity("FantasyInformator.Database.Models.League.LeagueInstance", b =>
                 {
                     b.Navigation("FantasyScores");
 
@@ -822,7 +812,21 @@ namespace FantasyInformator.Database.Migrations
                     b.Navigation("PlayerSeasonStats");
                 });
 
-            modelBuilder.Entity("FantasyInformator.Database.Models.NflTeam", b =>
+            modelBuilder.Entity("FantasyInformator.Database.Models.Lineup.Slot", b =>
+                {
+                    b.Navigation("LeagueSlots");
+
+                    b.Navigation("RosteredPlayers");
+
+                    b.Navigation("SlotEligibilities");
+                });
+
+            modelBuilder.Entity("FantasyInformator.Database.Models.Nfl.Game", b =>
+                {
+                    b.Navigation("GameAppearances");
+                });
+
+            modelBuilder.Entity("FantasyInformator.Database.Models.Nfl.NflTeam", b =>
                 {
                     b.Navigation("AwayGames");
 
@@ -831,7 +835,19 @@ namespace FantasyInformator.Database.Migrations
                     b.Navigation("Players");
                 });
 
-            modelBuilder.Entity("FantasyInformator.Database.Models.Player", b =>
+            modelBuilder.Entity("FantasyInformator.Database.Models.Nfl.Season", b =>
+                {
+                    b.Navigation("Games");
+
+                    b.Navigation("LeagueInstances");
+                });
+
+            modelBuilder.Entity("FantasyInformator.Database.Models.Player.GameAppearance", b =>
+                {
+                    b.Navigation("FantasyScores");
+                });
+
+            modelBuilder.Entity("FantasyInformator.Database.Models.Player.Player", b =>
                 {
                     b.Navigation("GameAppearances");
 
@@ -840,25 +856,9 @@ namespace FantasyInformator.Database.Migrations
                     b.Navigation("PlayerSeasonStats");
                 });
 
-            modelBuilder.Entity("FantasyInformator.Database.Models.Position", b =>
+            modelBuilder.Entity("FantasyInformator.Database.Models.Player.Position", b =>
                 {
                     b.Navigation("PlayerPositions");
-
-                    b.Navigation("SlotEligibilities");
-                });
-
-            modelBuilder.Entity("FantasyInformator.Database.Models.Season", b =>
-                {
-                    b.Navigation("Games");
-
-                    b.Navigation("LeagueInstances");
-                });
-
-            modelBuilder.Entity("FantasyInformator.Database.Models.Slot", b =>
-                {
-                    b.Navigation("LeagueSlots");
-
-                    b.Navigation("RosteredPlayers");
 
                     b.Navigation("SlotEligibilities");
                 });

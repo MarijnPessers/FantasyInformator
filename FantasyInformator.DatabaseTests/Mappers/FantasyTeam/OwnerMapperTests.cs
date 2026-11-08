@@ -20,8 +20,18 @@ public class OwnerMapperTests
     [TestMethod]
     public void Map_Null_ReturnsNull()
     {
-        var result = OwnerMapper.Map(null);
+        var result = OwnerMapper.Map((DatabaseFantasyTeam.Owner?)null);
 
         Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void Map_ApplicationModel_MapsAllOwnFields()
+    {
+        var model = SourceFactory.Create<DatabaseFantasyTeam.Owner>().Map()!;
+
+        var result = model.Map();
+
+        MappedAssert.OwnFieldsEqual(result, model);
     }
 }

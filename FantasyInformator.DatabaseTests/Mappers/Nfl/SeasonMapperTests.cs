@@ -21,7 +21,7 @@ public class SeasonMapperTests
     [TestMethod]
     public void Map_Null_ReturnsNull()
     {
-        var result = SeasonMapper.Map(null);
+        var result = SeasonMapper.Map((DatabaseNfl.Season?)null);
 
         Assert.IsNull(result);
     }
@@ -40,5 +40,15 @@ public class SeasonMapperTests
         Assert.HasCount(2, result.LeagueInstances);
         Assert.AreSame(result, result.LeagueInstances[0].Season);
         Assert.AreSame(result, result.LeagueInstances[1].Season);
+    }
+
+    [TestMethod]
+    public void Map_ApplicationModel_MapsAllOwnFields()
+    {
+        var model = SourceFactory.Create<DatabaseNfl.Season>().Map()!;
+
+        var result = model.Map();
+
+        MappedAssert.OwnFieldsEqual(result, model);
     }
 }

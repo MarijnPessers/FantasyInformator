@@ -20,8 +20,18 @@ public class FantasyTeamMapperTests
     [TestMethod]
     public void Map_Null_ReturnsNull()
     {
-        var result = FantasyTeamMapper.Map(null);
+        var result = FantasyTeamMapper.Map((DatabaseFantasyTeam.FantasyTeam?)null);
 
         Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void Map_ApplicationModel_MapsAllOwnFields()
+    {
+        var model = SourceFactory.Create<DatabaseFantasyTeam.FantasyTeam>().Map()!;
+
+        var result = model.Map();
+
+        MappedAssert.OwnFieldsEqual(result, model);
     }
 }

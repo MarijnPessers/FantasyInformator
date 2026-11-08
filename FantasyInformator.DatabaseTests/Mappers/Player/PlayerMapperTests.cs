@@ -20,8 +20,18 @@ public class PlayerMapperTests
     [TestMethod]
     public void Map_Null_ReturnsNull()
     {
-        var result = PlayerMapper.Map(null);
+        var result = PlayerMapper.Map((DatabasePlayer.Player?)null);
 
         Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void Map_ApplicationModel_MapsAllOwnFields()
+    {
+        var model = SourceFactory.Create<DatabasePlayer.Player>().Map()!;
+
+        var result = model.Map();
+
+        MappedAssert.OwnFieldsEqual(result, model);
     }
 }

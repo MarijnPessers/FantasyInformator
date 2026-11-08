@@ -40,4 +40,12 @@ public static class GameAppearanceMapper
 
         return mapped;
     }
+
+    public static DatabasePlayer.GameAppearance Map(this AppPlayer.GameAppearance gameAppearance) =>
+        TrackedModelMapper.FillDatabase(gameAppearance, new DatabasePlayer.GameAppearance
+        {
+            PlayerId = gameAppearance.PlayerId,
+            GameId = gameAppearance.GameId,
+            IsHome = gameAppearance.IsHome,
+        });
 }

@@ -52,7 +52,7 @@ Every functionality is a separate project. Each project has a sibling test proje
 
 ## Change tracking
 
-- Every application model has a tracking state (`TrackingState`: New, Pending, Unchanged, Deleted) and an updated time (`TrackedModel`). The exception is `LastSleeperCall`, which has neither.
+- Every application model has a tracking state (`TrackingState`: New, Pending, Unchanged, Deleted) (`TrackedModel`). The exception is `LastSleeperCall`, which has none. The database models have no state: a record read from the database is mapped as Unchanged. Instead, every database model holds a created time and an updated time, for database administration only. They are not mapped to the application models.
 - The pending value is not part of the application models or the database models. It belongs to the state model, which is built when the app state is worked on. That model holds, per item, the current value, the pending value, the tracking state and the updated time. Bring this back into focus when starting on the state (see "Open").
 - Each item holds a current value and, only when it differs, a pending value. The current value is always Unchanged. The pending value is never equal to the current value.
 - A New item has only a pending value and stays New through further updates until it is saved.
@@ -61,6 +61,7 @@ Every functionality is a separate project. Each project has a sibling test proje
 - Items with a pending value get a slightly different color. A report icon button on a league or a player compares current with pending.
 - After a save, the pending value becomes the current value and is cleared.
 - Save writes only New, Pending and Deleted objects, one statement per changed object. A parent update does not update unchanged children. Unchanged objects are never sent to the database. Absence from a save never deletes anything. Only an object marked Deleted is deleted, and a delete cascades. A New complex object inserts records in all its tables.
+- The save takes a flat list of changed models and writes them in one transaction. If one fails, none is written, and the error goes up. A model type the save does not know throws. Entity Framework only writes: it is told per object to insert, update or delete, and it does not detect changes. `CreatedUtc` is set on insert only, `UpdatedUtc` on insert and update, from the system clock, one time per save.
 - Deletes: players, NFL teams, seasons, leagues, league instances, fantasy teams and owners are never deleted. Only rostered players, league slots, slot eligibility and player positions are. No table points to those, so a delete cascades to nothing. The cascade and restrict settings on the links stay as a safety net. If a game or game appearance ever has to be deleted (a cancelled game, a player listed by mistake), it is decided then.
 - Every object has an updated time, set when that object itself changes. An update that finds no differences changes nothing, and Save stays disabled.
 - Exception: the global lists (the players list, and later games) always get a new update time on an update. The players list is saved at once ("Rules for the whole application").

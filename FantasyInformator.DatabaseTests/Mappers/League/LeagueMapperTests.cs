@@ -20,7 +20,7 @@ public class LeagueMapperTests
     [TestMethod]
     public void Map_Null_ReturnsNull()
     {
-        var result = LeagueMapper.Map(null);
+        var result = LeagueMapper.Map((DatabaseLeague.League?)null);
 
         Assert.IsNull(result);
     }
@@ -37,5 +37,15 @@ public class LeagueMapperTests
         Assert.IsNotNull(result);
         Assert.HasCount(1, result.LeagueInstances);
         Assert.AreSame(result, result.LeagueInstances[0].League);
+    }
+
+    [TestMethod]
+    public void Map_ApplicationModel_MapsAllOwnFields()
+    {
+        var model = SourceFactory.Create<DatabaseLeague.League>().Map()!;
+
+        var result = model.Map();
+
+        MappedAssert.OwnFieldsEqual(result, model);
     }
 }

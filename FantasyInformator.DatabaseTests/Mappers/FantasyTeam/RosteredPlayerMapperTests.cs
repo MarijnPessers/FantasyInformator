@@ -20,8 +20,18 @@ public class RosteredPlayerMapperTests
     [TestMethod]
     public void Map_Null_ReturnsNull()
     {
-        var result = RosteredPlayerMapper.Map(null);
+        var result = RosteredPlayerMapper.Map((DatabaseFantasyTeam.RosteredPlayer?)null);
 
         Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void Map_ApplicationModel_MapsAllOwnFields()
+    {
+        var model = SourceFactory.Create<DatabaseFantasyTeam.RosteredPlayer>().Map()!;
+
+        var result = model.Map();
+
+        MappedAssert.OwnFieldsEqual(result, model);
     }
 }
