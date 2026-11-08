@@ -40,10 +40,10 @@ public class DotnetEfRunner(
     // needing the same secret in the Database project.
     private const string ConnectionOption = "--connection";
 
-    private static readonly string DatabaseProjectSetting =
+    private const string DatabaseProjectSetting =
         $"{MigratorSettings.SectionName}:{nameof(MigratorSettings.DatabaseProjectPath)}";
 
-    private static readonly string StartupProjectSetting =
+    private const string StartupProjectSetting =
         $"{MigratorSettings.SectionName}:{nameof(MigratorSettings.StartupProjectPath)}";
 
     private static readonly CompositeFormat FolderNotFoundFormat =
