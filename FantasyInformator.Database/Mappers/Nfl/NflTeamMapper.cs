@@ -7,39 +7,23 @@ namespace FantasyInformator.Database.Mappers.Nfl;
 
 public static class NflTeamMapper
 {
-    public static AppNfl.NflTeam? Map(this DatabaseNfl.NflTeam? nflTeam) =>
-        nflTeam.Map(new MappingContext());
-
-    public static AppNfl.NflTeam? Map(this DatabaseNfl.NflTeam? nflTeam, MappingContext context)
-    {
-        if (nflTeam is null)
-        {
-            return null;
-        }
-
-        if (context.TryGetMapped(nflTeam, out AppNfl.NflTeam? mapped))
-        {
-            return mapped;
-        }
-
-        mapped = TrackedModelMapper.Fill(nflTeam, new AppNfl.NflTeam
+    public static AppNfl.NflTeam Map(this DatabaseNfl.NflTeam nflTeam) =>
+        TrackedModelMapper.MapToAppModel(nflTeam, new AppNfl.NflTeam
         {
             ExternalId = nflTeam.ExternalId,
             Name = nflTeam.Name,
+            Players = [.. nflTeam.Players.Select(x => x.Map())],
+            HomeGames = [.. nflTeam.HomeGames.Select(x => x.Map())],
+            AwayGames = [.. nflTeam.AwayGames.Select(x => x.Map())],
         });
-        context.Register(nflTeam, mapped);
-
-        mapped.Players.AddRange(context.MapList(nflTeam.Players, PlayerMapper.Map));
-        mapped.HomeGames.AddRange(context.MapList(nflTeam.HomeGames, GameMapper.Map));
-        mapped.AwayGames.AddRange(context.MapList(nflTeam.AwayGames, GameMapper.Map));
-
-        return mapped;
-    }
 
     public static DatabaseNfl.NflTeam Map(this AppNfl.NflTeam nflTeam) =>
-        TrackedModelMapper.FillDatabase(nflTeam, new DatabaseNfl.NflTeam
+        TrackedModelMapper.MapToDbModel(nflTeam, new DatabaseNfl.NflTeam
         {
             ExternalId = nflTeam.ExternalId,
             Name = nflTeam.Name,
+            Players = [.. nflTeam.Players.Select(x => x.Map())],
+            HomeGames = [.. nflTeam.HomeGames.Select(x => x.Map())],
+            AwayGames = [.. nflTeam.AwayGames.Select(x => x.Map())],
         });
 }

@@ -9,36 +9,36 @@ The code-first database. It has its own database models and hand-written mappers
 ## Models and mappers
 
 - The database models are currently a copy of every application model, with the same folders and fields. The one difference: they have no state, and every model holds two dates, `CreatedUtc` and `UpdatedUtc`. The dates are for database administration only and are not mapped to the application models.
-- There is one static mapper per model. It turns a database model into an application model, and back. The way back copies only the model's own fields and ids, not its links.
-- Models link both ways: when one model holds another, the other holds it back. Mapping would go back and forth without end, so the mapper remembers what it has already mapped and reuses it.
+- There is one static mapper per model. It turns a database model into an application model, and back, in the same way.
+- A mapper maps the model itself and its children (its lists) by calling the mappers of the children. It never maps the link up to a parent, so mapping cannot loop.
 
 ## Tables
 
-The settings are in the configuration classes, one per group.
+The settings of the tables are in the `Context` folder, next to the `FantasyInformatorDbContext`, one `<Group>Schema` class per group, together with `ColumnSizes`. They are not models, but they define how the models behave in the database.
 
 The diagram is a copy of `models.drawio.svg` in the Models project.
 
-![Models](models.drawio.svg?t=20261108015821)
+![Models](models.drawio.svg?t=20261108115336)
 
 - `ExternalId` is unique where a model has one, and so are the pairs that must not repeat (for example a player on a roster).
 - The owner of a fantasy team and the player of a roster have no foreign key, because they can point to something not known. The columns are indexed.
 - Players, NFL teams, seasons, leagues, league instances, fantasy teams and owners are never deleted. Only rostered players, league slots, slot eligibility and player positions are. Nothing depends on those, so a delete cascades to nothing.
+
 ## EF commands
 
-Run them from the solution folder. The EF tool reads the connection string of the ef user from the user secrets.
+Run them from the solution folder. The startup project `FantasyInformator.App` registers the context, so the EF tool takes its settings from there. The app user may not change tables, so `database update` gets the connection string of the ef user with `--connection`.
 
 One time:
 
 ```
 dotnet tool install --global dotnet-ef
-dotnet user-secrets set "Database:ConnectionStringEF" "<connection string of the ef user>" --project FantasyInformator.Database
 ```
 
-After a change to the database models or `Configurations`:
+After a change to the database models or their configuration classes:
 
 ```
-dotnet ef migrations add <WhatChanged> --project FantasyInformator.Database
-dotnet ef database update --project FantasyInformator.Database
+dotnet ef migrations add <WhatChanged> --project FantasyInformator.Database --startup-project FantasyInformator.App
+dotnet ef database update --project FantasyInformator.Database --startup-project FantasyInformator.App --connection "<connection string of the ef user>"
 ```
 
 Instead of `database update` you can use `FantasyInformator.Migrator` (see its README).
@@ -57,4 +57,4 @@ Instead of `database update` you can use `FantasyInformator.Migrator` (see its R
 
 The Azure SQL server firewall must allow the PC's public IP address. Add it again when it changes.
 
-Tests: `FantasyInformator.DatabaseTests`.
+Tests: `FantasyInformator.Database.Tests`.

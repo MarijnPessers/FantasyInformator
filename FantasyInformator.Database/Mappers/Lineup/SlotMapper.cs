@@ -7,43 +7,25 @@ namespace FantasyInformator.Database.Mappers.Lineup;
 
 public static class SlotMapper
 {
-    public static AppLineup.Slot? Map(this DatabaseLineup.Slot? slot) =>
-        slot.Map(new MappingContext());
-
-    public static AppLineup.Slot? Map(this DatabaseLineup.Slot? slot, MappingContext context)
-    {
-        if (slot is null)
-        {
-            return null;
-        }
-
-        if (context.TryGetMapped(slot, out AppLineup.Slot? mapped))
-        {
-            return mapped;
-        }
-
-        mapped = TrackedModelMapper.Fill(slot, new AppLineup.Slot
+    public static AppLineup.Slot Map(this DatabaseLineup.Slot slot) =>
+        TrackedModelMapper.MapToAppModel(slot, new AppLineup.Slot
         {
             ExternalId = slot.ExternalId,
             Name = slot.Name,
             Abbreviation = slot.Abbreviation,
+            LeagueSlots = [.. slot.LeagueSlots.Select(x => x.Map())],
+            SlotEligibilities = [.. slot.SlotEligibilities.Select(x => x.Map())],
+            RosteredPlayers = [.. slot.RosteredPlayers.Select(x => x.Map())],
         });
-        context.Register(slot, mapped);
-
-        mapped.LeagueSlots.AddRange(context.MapList(slot.LeagueSlots, LeagueSlotMapper.Map));
-        mapped.SlotEligibilities.AddRange(
-            context.MapList(slot.SlotEligibilities, SlotEligibilityMapper.Map));
-        mapped.RosteredPlayers.AddRange(
-            context.MapList(slot.RosteredPlayers, RosteredPlayerMapper.Map));
-
-        return mapped;
-    }
 
     public static DatabaseLineup.Slot Map(this AppLineup.Slot slot) =>
-        TrackedModelMapper.FillDatabase(slot, new DatabaseLineup.Slot
+        TrackedModelMapper.MapToDbModel(slot, new DatabaseLineup.Slot
         {
             ExternalId = slot.ExternalId,
             Name = slot.Name,
             Abbreviation = slot.Abbreviation,
+            LeagueSlots = [.. slot.LeagueSlots.Select(x => x.Map())],
+            SlotEligibilities = [.. slot.SlotEligibilities.Select(x => x.Map())],
+            RosteredPlayers = [.. slot.RosteredPlayers.Select(x => x.Map())],
         });
 }

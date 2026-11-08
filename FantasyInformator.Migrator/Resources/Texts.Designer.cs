@@ -106,14 +106,14 @@ namespace FantasyInformator.Migrator.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Database project folder &apos;{0}&apos; was not found above {1}. Set Migrator:DatabaseProjectPath to the full path of the folder..
+        ///   Looks up a localized string similar to The project folder &apos;{0}&apos; was not found above {1}. Set {2} to the full path of the folder..
         /// </summary>
-        public static string DatabaseProjectFolderNotFound {
+        public static string ProjectFolderNotFound {
             get {
-                return ResourceManager.GetString("DatabaseProjectFolderNotFound", resourceCulture);
+                return ResourceManager.GetString("ProjectFolderNotFound", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Could not update the database:{0}{1}.
         /// </summary>

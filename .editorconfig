@@ -230,11 +230,11 @@ dotnet_naming_style.underscore_camel_case.required_prefix = _
 dotnet_naming_style.underscore_camel_case.capitalization = camel_case
 
 # Each handler is a partial class of its state, so it keeps the state's namespace instead of its folder's.
-[FantasyInformator/State/Handlers/**.cs]
+[FantasyInformator.App/State/Handlers/**.cs]
 dotnet_diagnostic.IDE0130.severity = none
 
 # A component must continue on its own thread after an await, or StateHasChanged fails.
-[FantasyInformator/Components/**.{cs,razor}]
+[FantasyInformator.App/Components/**.{cs,razor}]
 dotnet_diagnostic.CA2007.severity = none
 
 # Tests do not use ConfigureAwait(false).

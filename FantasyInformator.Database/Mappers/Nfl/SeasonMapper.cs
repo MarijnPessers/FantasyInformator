@@ -7,37 +7,19 @@ namespace FantasyInformator.Database.Mappers.Nfl;
 
 public static class SeasonMapper
 {
-    public static AppNfl.Season? Map(this DatabaseNfl.Season? season) =>
-        season.Map(new MappingContext());
-
-    public static AppNfl.Season? Map(this DatabaseNfl.Season? season, MappingContext context)
-    {
-        if (season is null)
-        {
-            return null;
-        }
-
-        if (context.TryGetMapped(season, out AppNfl.Season? mapped))
-        {
-            return mapped;
-        }
-
-        mapped = TrackedModelMapper.Fill(season, new AppNfl.Season
+    public static AppNfl.Season Map(this DatabaseNfl.Season season) =>
+        TrackedModelMapper.MapToAppModel(season, new AppNfl.Season
         {
             Year = season.Year,
+            LeagueInstances = [.. season.LeagueInstances.Select(x => x.Map())],
+            Games = [.. season.Games.Select(x => x.Map())],
         });
-        context.Register(season, mapped);
-
-        mapped.LeagueInstances.AddRange(
-            context.MapList(season.LeagueInstances, LeagueInstanceMapper.Map));
-        mapped.Games.AddRange(context.MapList(season.Games, GameMapper.Map));
-
-        return mapped;
-    }
 
     public static DatabaseNfl.Season Map(this AppNfl.Season season) =>
-        TrackedModelMapper.FillDatabase(season, new DatabaseNfl.Season
+        TrackedModelMapper.MapToDbModel(season, new DatabaseNfl.Season
         {
             Year = season.Year,
+            LeagueInstances = [.. season.LeagueInstances.Select(x => x.Map())],
+            Games = [.. season.Games.Select(x => x.Map())],
         });
 }

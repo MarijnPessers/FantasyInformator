@@ -14,4 +14,4 @@ The home and away team of a game are stubs that hold only the external id. Team 
 
 Source: the public nflverse games file on GitHub.
 
-Tests: `FantasyInformator.NflverseTests`.
+Tests: `FantasyInformator.Nflverse.Tests`.

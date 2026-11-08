@@ -6,37 +6,19 @@ namespace FantasyInformator.Database.Mappers.FantasyTeam;
 
 public static class OwnerMapper
 {
-    public static AppFantasyTeam.Owner? Map(this DatabaseFantasyTeam.Owner? owner) =>
-        owner.Map(new MappingContext());
-
-    public static AppFantasyTeam.Owner? Map(this DatabaseFantasyTeam.Owner? owner, MappingContext context)
-    {
-        if (owner is null)
-        {
-            return null;
-        }
-
-        if (context.TryGetMapped(owner, out AppFantasyTeam.Owner? mapped))
-        {
-            return mapped;
-        }
-
-        mapped = TrackedModelMapper.Fill(owner, new AppFantasyTeam.Owner
+    public static AppFantasyTeam.Owner Map(this DatabaseFantasyTeam.Owner owner) =>
+        TrackedModelMapper.MapToAppModel(owner, new AppFantasyTeam.Owner
         {
             ExternalId = owner.ExternalId,
             Name = owner.Name,
+            FantasyTeams = [.. owner.FantasyTeams.Select(x => x.Map())],
         });
-        context.Register(owner, mapped);
-
-        mapped.FantasyTeams.AddRange(context.MapList(owner.FantasyTeams, FantasyTeamMapper.Map));
-
-        return mapped;
-    }
 
     public static DatabaseFantasyTeam.Owner Map(this AppFantasyTeam.Owner owner) =>
-        TrackedModelMapper.FillDatabase(owner, new DatabaseFantasyTeam.Owner
+        TrackedModelMapper.MapToDbModel(owner, new DatabaseFantasyTeam.Owner
         {
             ExternalId = owner.ExternalId,
             Name = owner.Name,
+            FantasyTeams = [.. owner.FantasyTeams.Select(x => x.Map())],
         });
 }

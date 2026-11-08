@@ -37,4 +37,4 @@ The Sleeper models hold only the fields that are used. Some names equal an appli
 
 Gaps: the NFL team name (Sleeper gives only the abbreviation) and the kickoff time of a game (see `FantasyInformator.Nflverse`).
 
-Tests: `FantasyInformator.SleeperTests`.
+Tests: `FantasyInformator.Sleeper.Tests`.

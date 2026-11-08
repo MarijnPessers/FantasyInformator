@@ -32,9 +32,9 @@
     <value>  {0}. Back to the menu</value>
     <comment>Option that leaves the list of migrations. --- MigratorMenu.cs</comment>
   </data>
-  <data name="DatabaseProjectFolderNotFound" xml:space="preserve">
-    <value>The Database project folder '{0}' was not found above {1}. Set Migrator:DatabaseProjectPath to the full path of the folder.</value>
-    <comment>Error when the folder of the Database project cannot be found. --- DotnetEfRunner.cs</comment>
+  <data name="ProjectFolderNotFound" xml:space="preserve">
+    <value>The project folder '{0}' was not found above {1}. Set {2} to the full path of the folder.</value>
+    <comment>Error when the folder of the Database project or of the startup project cannot be found. --- DotnetEfRunner.cs</comment>
   </data>
   <data name="DatabaseUpdateFailed" xml:space="preserve">
     <value>Could not update the database:{0}{1}</value>

@@ -1,3 +1,4 @@
+using FantasyInformator.Database.Context;
 using FantasyInformator.Database.Mappers.FantasyTeam;
 using FantasyInformator.Database.Mappers.League;
 using FantasyInformator.Database.Mappers.Lineup;
@@ -35,6 +36,10 @@ public class DatabaseSaveService(
         var savedUtc = DateTime.UtcNow;
         await using var context = await contextFactory.CreateDbContextAsync(cancellationToken);
 
+        // Each changed model is in the list itself, so the children copied into a model must not be found and
+        // written a second time through its links.
+        context.ChangeTracker.AutoDetectChangesEnabled = false;
+
         foreach (var model in models)
         {
             Stage(context, model, savedUtc);
@@ -69,7 +74,7 @@ public class DatabaseSaveService(
         var databaseModel = MapToDatabase(model);
         databaseModel.CreatedUtc = savedUtc;
         databaseModel.UpdatedUtc = savedUtc;
-        _ = context.Add(databaseModel);
+        context.Entry(databaseModel).State = EntityState.Added;
     }
 
     private static void Update(FantasyInformatorDbContext context, AppTracking.TrackedModel model, DateTime savedUtc)
@@ -85,7 +90,7 @@ public class DatabaseSaveService(
     }
 
     private static void Delete(FantasyInformatorDbContext context, AppTracking.TrackedModel model) =>
-        context.Remove(MapToDatabase(model));
+        context.Entry(MapToDatabase(model)).State = EntityState.Deleted;
 
     private static DatabaseTracking.TrackedModel MapToDatabase(AppTracking.TrackedModel model) =>
         model switch

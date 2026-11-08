@@ -1,12 +1,14 @@
 <Solution>
+  <Folder Name="/tests/">
+    <Project Path="FantasyInformator.App.Tests/FantasyInformator.App.Tests.csproj" />
+    <Project Path="FantasyInformator.Database.Tests/FantasyInformator.Database.Tests.csproj" />
+    <Project Path="FantasyInformator.Nflverse.Tests/FantasyInformator.Nflverse.Tests.csproj" />
+    <Project Path="FantasyInformator.Sleeper.Tests/FantasyInformator.Sleeper.Tests.csproj" />
+  </Folder>
+  <Project Path="FantasyInformator.App/FantasyInformator.App.csproj" />
   <Project Path="FantasyInformator.Database/FantasyInformator.Database.csproj" />
-  <Project Path="FantasyInformator.DatabaseTests/FantasyInformator.DatabaseTests.csproj" />
   <Project Path="FantasyInformator.Migrator/FantasyInformator.Migrator.csproj" />
   <Project Path="FantasyInformator.Models/FantasyInformator.Models.csproj" />
   <Project Path="FantasyInformator.Nflverse/FantasyInformator.Nflverse.csproj" />
-  <Project Path="FantasyInformator.NflverseTests/FantasyInformator.NflverseTests.csproj" />
   <Project Path="FantasyInformator.Sleeper/FantasyInformator.Sleeper.csproj" />
-  <Project Path="FantasyInformator.SleeperTests/FantasyInformator.SleeperTests.csproj" />
-  <Project Path="FantasyInformator/FantasyInformator.csproj" />
-  <Project Path="FantasyInformatorTests/FantasyInformatorTests.csproj" />
 </Solution>

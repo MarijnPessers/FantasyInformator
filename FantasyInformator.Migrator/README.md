@@ -21,6 +21,7 @@ If something fails, the error is shown and the menu appears again.
   ```
 
 - The setting `Migrator:DatabaseProjectPath` in `appsettings.json`, the folder of the Database project. The default works. `appsettings.example.json` shows every key.
+- The setting `Migrator:StartupProjectPath`, the folder of the app that registers the database context (`FantasyInformator.App`). `dotnet ef` needs it as `--startup-project`, because the Database project has no way to create the context itself. The default works.
 - An IP address that the firewall of the Azure SQL server allows.
 
 ## Run

@@ -7,22 +7,8 @@ namespace FantasyInformator.Database.Mappers.Nfl;
 
 public static class GameMapper
 {
-    public static AppNfl.Game? Map(this DatabaseNfl.Game? game) =>
-        game.Map(new MappingContext());
-
-    public static AppNfl.Game? Map(this DatabaseNfl.Game? game, MappingContext context)
-    {
-        if (game is null)
-        {
-            return null;
-        }
-
-        if (context.TryGetMapped(game, out AppNfl.Game? mapped))
-        {
-            return mapped;
-        }
-
-        mapped = TrackedModelMapper.Fill(game, new AppNfl.Game
+    public static AppNfl.Game Map(this DatabaseNfl.Game game) =>
+        TrackedModelMapper.MapToAppModel(game, new AppNfl.Game
         {
             ExternalId = game.ExternalId,
             SeasonId = game.SeasonId,
@@ -30,20 +16,11 @@ public static class GameMapper
             HomeNflTeamId = game.HomeNflTeamId,
             AwayNflTeamId = game.AwayNflTeamId,
             KickoffUtc = game.KickoffUtc,
+            GameAppearances = [.. game.GameAppearances.Select(x => x.Map())],
         });
-        context.Register(game, mapped);
-
-        mapped.Season = game.Season.Map(context);
-        mapped.HomeNflTeam = game.HomeNflTeam.Map(context);
-        mapped.AwayNflTeam = game.AwayNflTeam.Map(context);
-        mapped.GameAppearances.AddRange(
-            context.MapList(game.GameAppearances, GameAppearanceMapper.Map));
-
-        return mapped;
-    }
 
     public static DatabaseNfl.Game Map(this AppNfl.Game game) =>
-        TrackedModelMapper.FillDatabase(game, new DatabaseNfl.Game
+        TrackedModelMapper.MapToDbModel(game, new DatabaseNfl.Game
         {
             ExternalId = game.ExternalId,
             SeasonId = game.SeasonId,
@@ -51,5 +28,6 @@ public static class GameMapper
             HomeNflTeamId = game.HomeNflTeamId,
             AwayNflTeamId = game.AwayNflTeamId,
             KickoffUtc = game.KickoffUtc,
+            GameAppearances = [.. game.GameAppearances.Select(x => x.Map())],
         });
 }

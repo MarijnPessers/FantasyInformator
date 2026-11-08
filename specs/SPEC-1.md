@@ -35,11 +35,11 @@ Every functionality is a separate project. Each project has a sibling test proje
 
 | Project | Purpose |
 |---------|---------|
-| `FantasyInformator` | Blazor app, front end only |
+| `FantasyInformator.App` | Blazor app, front end only |
 | `FantasyInformator.Models` | The application models |
 | `FantasyInformator.Sleeper` | Retrieval from Sleeper, with its own Sleeper models and mappers to the application models |
 | `FantasyInformator.Database` | Code-first database, its own database models, mappers to the application models, and the services to call |
-| `FantasyInformator.SleeperTests`, `FantasyInformator.DatabaseTests`, `FantasyInformatorTests` | Test projects |
+| `FantasyInformator.Sleeper.Tests`, `FantasyInformator.Database.Tests`, `FantasyInformator.App.Tests` | Test projects |
 
 - Mappers live in the project that maps to the application models, and are written by hand. No AutoMapper. Every mapper has tests.
 - More projects may follow. Candidates: a State project for the state classes and handlers, and a project for slot logic. Decide when the code asks for it.
@@ -128,7 +128,7 @@ The application can be used by anyone. Everything specific to a person or a PC i
 - `Database:ConnectionStringEF`: the connection string of the `ef` user, used for migrations.
 - `Database:FailedSaveQueueFolder`: the folder of the failed-save queue.
 
-Each project has its own settings class (`DatabaseOptions`, `SleeperOptions`) and checks it when the application starts. `appsettings.json` holds the default values for everything else. `appsettings.example.json` shows every key. Someone who puts their own values in `appsettings.json` has chosen that themselves. No path is written in code.
+Each project has its own settings class (`DatabaseSettings`, `SleeperSettings`) and checks it when the application starts. `appsettings.json` holds the default values for everything else. `appsettings.example.json` shows every key. Someone who puts their own values in `appsettings.json` has chosen that themselves. No path is written in code.
 
 .NET loads user secrets by default only in the Development environment. Not verified for .NET 10.
 
@@ -149,7 +149,7 @@ Each item gets its own mini-grill when it is started.
 - Wins and losses and matchups (a matchup is between two rosters in the same league). Records are defined when matchups are fetched.
 - Claude in the application: reads the stored data, gathers its own data and makes recommendations (Anthropic API, separate billing).
 - Failed saves: the only retry is for a save of data that cannot be fetched again until a timeout has passed (for example the players list, locked after a fetch). When it fails, it is written as a JSON file in a queue folder. Name the files by UTC timestamp down to microseconds so the names are unique. A retry button processes the queued files in chronological order. The folder comes from configuration in user secrets. The database is not expected to be offline much.
-- Finding players to pick up: AI searches the internet for available players, and the stored rosters of all teams in a league show which of them are already taken.
+- Finding players to pick up: AI searches the internet for available players, and the stored rosters of all teams in a league show which of them are already taken. A player who is on no team in a league (a free agent: all players minus the rostered ones) must also be scorable for that league. For example, when a running back is needed, AI suggests good players that are still free, and the application fetches their scoring. The application cannot browse the internet itself, so it needs a source it can call. Whether Sleeper has one (for example stats or trending players) is not verified.
 - Comparing team rosters, for example to find which team is heavy in a position when looking for a trade.
 - Putting the application online, with security.
 - Other data sources if Sleeper lacks something.

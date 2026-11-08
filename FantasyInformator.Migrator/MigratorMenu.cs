@@ -1,6 +1,6 @@
 using System.Data.Common;
 using System.Globalization;
-using FantasyInformator.Database;
+using FantasyInformator.Database.Context;
 using FantasyInformator.Migrator.Resources;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;

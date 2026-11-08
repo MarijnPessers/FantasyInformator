@@ -1,5 +1,7 @@
-using FantasyInformator.Database;
+using FantasyInformator.Database.Context;
+using FantasyInformator.Database.Settings;
 using FantasyInformator.Migrator;
+using FantasyInformator.Migrator.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -11,11 +13,11 @@ var configuration = new ConfigurationBuilder()
     .Build();
 
 var databaseOptions = configuration
-    .GetSection(DatabaseOptions.SectionName)
-    .Get<DatabaseOptions>() ?? new DatabaseOptions();
+    .GetSection(DatabaseSettings.SectionName)
+    .Get<DatabaseSettings>() ?? new DatabaseSettings();
 var migratorOptions = configuration
-    .GetSection(MigratorOptions.SectionName)
-    .Get<MigratorOptions>() ?? new MigratorOptions();
+    .GetSection(MigratorSettings.SectionName)
+    .Get<MigratorSettings>() ?? new MigratorSettings();
 
 // The serverless database pauses itself, so the first connection can fail while it wakes up.
 var contextOptions = new DbContextOptionsBuilder<FantasyInformatorDbContext>()
@@ -24,7 +26,10 @@ var contextOptions = new DbContextOptionsBuilder<FantasyInformatorDbContext>()
 
 await using var context = new FantasyInformatorDbContext(contextOptions);
 
-var dotnetEfRunner = new DotnetEfRunner(migratorOptions.DatabaseProjectPath, databaseOptions.ConnectionStringEF);
+var dotnetEfRunner = new DotnetEfRunner(
+    migratorOptions.DatabaseProjectPath,
+    migratorOptions.StartupProjectPath,
+    databaseOptions.ConnectionStringEF);
 var menu = new MigratorMenu(context, dotnetEfRunner);
 
 await menu.RunAsync();

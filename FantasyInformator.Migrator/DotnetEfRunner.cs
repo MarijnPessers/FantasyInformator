@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
 using FantasyInformator.Migrator.Resources;
+using FantasyInformator.Migrator.Settings;
 
 namespace FantasyInformator.Migrator;
 
@@ -10,10 +11,14 @@ namespace FantasyInformator.Migrator;
 public record DotnetEfResult(int ExitCode, string Output);
 
 /// <summary>
-/// Runs the <c>dotnet ef</c> command line tool against the Database project. Migrations are created through the
-/// tool, because it builds the project first, so the new migration files match the current models.
+/// Runs the <c>dotnet ef</c> command line tool against the Database project, with the startup project that registers
+/// the context. Migrations are created through the tool, because it builds the project first, so the new migration
+/// files match the current models.
 /// </summary>
-public class DotnetEfRunner(string databaseProjectPath, string connectionString)
+public class DotnetEfRunner(
+    string databaseProjectPath,
+    string startupProjectPath,
+    string connectionString)
 {
     public const string AddMigrationCommand = "add";
     public const string HasPendingModelChangesCommand = "has-pending-model-changes";
@@ -29,13 +34,20 @@ public class DotnetEfRunner(string databaseProjectPath, string connectionString)
     private const string DatabaseGroup = "database";
     private const string UpdateCommand = "update";
     private const string ProjectOption = "--project";
+    private const string StartupProjectOption = "--startup-project";
 
     // The Migrator already holds the connection string in its own user secrets, so the tool gets it here instead of
     // needing the same secret in the Database project.
     private const string ConnectionOption = "--connection";
 
+    private static readonly string DatabaseProjectSetting =
+        $"{MigratorSettings.SectionName}:{nameof(MigratorSettings.DatabaseProjectPath)}";
+
+    private static readonly string StartupProjectSetting =
+        $"{MigratorSettings.SectionName}:{nameof(MigratorSettings.StartupProjectPath)}";
+
     private static readonly CompositeFormat FolderNotFoundFormat =
-        CompositeFormat.Parse(Texts.DatabaseProjectFolderNotFound);
+        CompositeFormat.Parse(Texts.ProjectFolderNotFound);
 
     public Task<DotnetEfResult> RunMigrationsCommandAsync(string command, params string[] commandArguments) =>
         RunAsync([MigrationsGroup, command, .. commandArguments]);
@@ -64,6 +76,8 @@ public class DotnetEfRunner(string databaseProjectPath, string connectionString)
 
         startInfo.ArgumentList.Add(ProjectOption);
         startInfo.ArgumentList.Add(ResolveDatabaseProjectPath());
+        startInfo.ArgumentList.Add(StartupProjectOption);
+        startInfo.ArgumentList.Add(ResolveProjectPath(startupProjectPath, StartupProjectSetting));
 
         using var process = Process.Start(startInfo)
             ?? throw new InvalidOperationException(Texts.DotnetNotStarted);
@@ -79,18 +93,21 @@ public class DotnetEfRunner(string databaseProjectPath, string connectionString)
         return new DotnetEfResult(process.ExitCode, output.Trim());
     }
 
-    public string ResolveDatabaseProjectPath()
+    public string ResolveDatabaseProjectPath() =>
+        ResolveProjectPath(databaseProjectPath, DatabaseProjectSetting);
+
+    private static string ResolveProjectPath(string projectPath, string settingName)
     {
-        if (Path.IsPathRooted(databaseProjectPath))
+        if (Path.IsPathRooted(projectPath))
         {
-            return databaseProjectPath;
+            return projectPath;
         }
 
         // The working folder depends on how the program is started (the solution folder, the project folder or a bin
         // folder), so a relative path is looked up from the folder of the program upwards.
         for (var folder = new DirectoryInfo(AppContext.BaseDirectory); folder is not null; folder = folder.Parent)
         {
-            var candidate = Path.Combine(folder.FullName, databaseProjectPath);
+            var candidate = Path.Combine(folder.FullName, projectPath);
 
             if (Directory.Exists(candidate))
             {
@@ -102,8 +119,9 @@ public class DotnetEfRunner(string databaseProjectPath, string connectionString)
             string.Format(
                 CultureInfo.CurrentCulture,
                 FolderNotFoundFormat,
-                databaseProjectPath,
-                AppContext.BaseDirectory));
+                projectPath,
+                AppContext.BaseDirectory,
+                settingName));
     }
 
     private static string ResolveDotnetPath()
