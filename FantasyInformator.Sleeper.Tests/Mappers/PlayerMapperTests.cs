@@ -1,4 +1,5 @@
 using AutoFixture;
+using FantasyInformator.Models.Enums;
 using FantasyInformator.Sleeper.Mappers;
 using SleeperModels = FantasyInformator.Sleeper.Services.Models;
 
@@ -9,6 +10,7 @@ public class PlayerMapperTests
 {
     private const string RunningBackCode = "RB";
     private const string WideReceiverCode = "WR";
+    private const string UnknownStatus = "SomeOtherStatus";
 
     private readonly Fixture _fixture = new();
 
@@ -33,6 +35,28 @@ public class PlayerMapperTests
         var result = PlayerMapper.ToPlayer(player);
 
         Assert.IsNull(result.CurrentNflTeam);
+    }
+
+    [TestMethod]
+    [DataRow(InjuryStatuses.InjuredReserve, InjuryStatus.IR, true)]
+    [DataRow(InjuryStatuses.PhysicallyUnableToPerform, InjuryStatus.PUP, true)]
+    [DataRow(InjuryStatuses.Out, InjuryStatus.OUT, true)]
+    [DataRow(InjuryStatuses.Questionable, InjuryStatus.Q, false)]
+    [DataRow(InjuryStatuses.Doubtful, InjuryStatus.D, false)]
+    [DataRow(UnknownStatus, InjuryStatus.None, false)]
+    [DataRow(null, InjuryStatus.None, false)]
+    public void ToPlayer_InjuryStatus_MapsStatusAndIrEligibility(
+        string? injuryStatus,
+        InjuryStatus expectedStatus,
+        bool expectedIrEligible)
+    {
+        var player = _fixture.Create<SleeperModels.Player>();
+        player.InjuryStatus = injuryStatus;
+
+        var result = PlayerMapper.ToPlayer(player);
+
+        Assert.AreEqual(expectedStatus, result.InjuryStatus);
+        Assert.AreEqual(expectedIrEligible, result.IsIrEligible);
     }
 
     [TestMethod]

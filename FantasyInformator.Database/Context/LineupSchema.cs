@@ -1,3 +1,4 @@
+using FantasyInformator.Database.Context.Seed;
 using FantasyInformator.Database.Models.Lineup;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,7 @@ public static class LineupSchema
             _ = slot.Property(x => x.Name).HasMaxLength(ColumnSizes.Name);
             _ = slot.Property(x => x.Abbreviation).HasMaxLength(ColumnSizes.Abbreviation);
             _ = slot.HasIndex(x => x.ExternalId).IsUnique();
+            _ = slot.HasData(LineupSeed.Slots);
         });
 
         _ = modelBuilder.Entity<LeagueSlot>(leagueSlot =>
@@ -44,6 +46,8 @@ public static class LineupSchema
                 .WithMany(s => s.SlotEligibilities)
                 .HasForeignKey(se => se.SlotId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            _ = slotEligibility.HasData(LineupSeed.Eligibilities);
         });
     }
 }

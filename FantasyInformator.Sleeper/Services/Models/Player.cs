@@ -20,4 +20,7 @@ public class Player
 
     /// <summary>The NFL team abbreviation, for example "KC". Null without an NFL team.</summary>
     public string? Team { get; set; }
+
+    /// <summary>The injury status, for example "IR", "PUP" or "Out". Null for a player without one.</summary>
+    public string? InjuryStatus { get; set; }
 }

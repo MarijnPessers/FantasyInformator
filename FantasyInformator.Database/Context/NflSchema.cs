@@ -1,3 +1,4 @@
+using FantasyInformator.Database.Context.Seed;
 using FantasyInformator.Database.Models.Nfl;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ public static class NflSchema
             _ = nflTeam.Property(x => x.ExternalId).HasMaxLength(ColumnSizes.ExternalId);
             _ = nflTeam.Property(x => x.Name).HasMaxLength(ColumnSizes.Name);
             _ = nflTeam.HasIndex(x => x.ExternalId).IsUnique();
+            _ = nflTeam.HasData(NflSeed.Teams);
         });
 
         _ = modelBuilder.Entity<Game>(game =>

@@ -1,4 +1,5 @@
 
+using FantasyInformator.Models.Enums;
 using FantasyInformator.Models.FantasyTeam;
 using FantasyInformator.Models.Nfl;
 using FantasyInformator.Models.Scoring;
@@ -16,6 +17,15 @@ public class Player : TrackedModel
     public Guid? CurrentNflTeamId { get; set; }
 
     public NflTeam? CurrentNflTeam { get; set; }
+
+    public InjuryStatus InjuryStatus { get; set; }
+
+    /// <summary>
+    /// True when the player may be moved to an IR slot: the injury status is IR, PUP or OUT.
+    /// Not stored: worked out from the injury status.
+    /// </summary>
+    public bool IsIrEligible =>
+        InjuryStatus is InjuryStatus.IR or InjuryStatus.PUP or InjuryStatus.OUT;
 
     public List<PlayerPosition> PlayerPositions { get; init; } = [];
 

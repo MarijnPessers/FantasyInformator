@@ -1,3 +1,4 @@
+using FantasyInformator.Database.Context.Seed;
 using FantasyInformator.Database.Models.Player;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,7 @@ public static class PlayerSchema
         {
             _ = player.Property(x => x.ExternalId).HasMaxLength(ColumnSizes.ExternalId);
             _ = player.Property(x => x.Name).HasMaxLength(ColumnSizes.Name);
+            _ = player.Property(x => x.InjuryStatus).HasConversion<string>().HasMaxLength(ColumnSizes.InjuryStatus);
             _ = player.HasIndex(x => x.ExternalId).IsUnique();
             _ = player.Ignore(x => x.RosteredPlayers);
 
@@ -26,6 +28,7 @@ public static class PlayerSchema
             _ = position.Property(x => x.Name).HasMaxLength(ColumnSizes.Name);
             _ = position.Property(x => x.Abbreviation).HasMaxLength(ColumnSizes.Abbreviation);
             _ = position.HasIndex(x => x.Abbreviation).IsUnique();
+            _ = position.HasData(PlayerSeed.Positions);
         });
 
         _ = modelBuilder.Entity<PlayerPosition>(playerPosition =>

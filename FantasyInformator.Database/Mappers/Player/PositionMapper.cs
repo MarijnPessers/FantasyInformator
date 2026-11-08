@@ -12,6 +12,7 @@ public static class PositionMapper
         {
             Name = position.Name,
             Abbreviation = position.Abbreviation,
+            IsDominant = position.IsDominant,
             PlayerPositions = [.. position.PlayerPositions.Select(x => x.Map())],
             SlotEligibilities = [.. position.SlotEligibilities.Select(x => x.Map())],
         });
@@ -21,6 +22,7 @@ public static class PositionMapper
         {
             Name = position.Name,
             Abbreviation = position.Abbreviation,
+            IsDominant = position.IsDominant,
             PlayerPositions = [.. position.PlayerPositions.Select(x => x.Map())],
             SlotEligibilities = [.. position.SlotEligibilities.Select(x => x.Map())],
         });

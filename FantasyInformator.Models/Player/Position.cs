@@ -13,6 +13,12 @@ public class Position : TrackedModel
 
     public string Abbreviation { get; set; } = string.Empty;
 
+    /// <summary>
+    /// True when this position wins over the other positions of a player: a player with a dominant position counts
+    /// only as his dominant positions, such as DL or DE.
+    /// </summary>
+    public bool IsDominant { get; set; }
+
     public List<PlayerPosition> PlayerPositions { get; init; } = [];
 
     public List<SlotEligibility> SlotEligibilities { get; init; } = [];

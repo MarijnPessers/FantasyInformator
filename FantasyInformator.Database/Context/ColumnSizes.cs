@@ -14,6 +14,8 @@ public static class ColumnSizes
 
     public const int CallName = 100;
 
+    public const int InjuryStatus = 16;
+
     /// <summary>
     /// Digits in total of a score. Fantasy points have two decimals; averages and the median get four.
     /// </summary>

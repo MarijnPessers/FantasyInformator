@@ -18,6 +18,7 @@ public static class PlayerMapper
             CurrentNflTeam = player.Team is null
             ? null
             : new NflTeam { ExternalId = player.Team },
+            InjuryStatus = InjuryStatuses.ToInjuryStatus(player.InjuryStatus),
         };
 
     /// <summary>

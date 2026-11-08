@@ -21,14 +21,15 @@ public interface IPlayerService
     /// through the <c>NflTeam</c> with that abbreviation as <c>ExternalId</c></item>
     /// <item><c>position</c> and <c>fantasy_positions</c>: <c>Position</c> (an unknown position is added)
     /// and <c>PlayerPosition</c></item>
+    /// <item><c>injury_status</c>: <c>Player.InjuryStatus</c> (the statuses "IR", "PUP", "Out", "Questionable" and
+    /// "Doubtful"; any other status or none gives <c>None</c>)</item>
     /// </list>
     /// <para>Not used: <c>hashtag</c>, <c>depth_chart_position</c>, <c>depth_chart_order</c>, <c>status</c>,
     /// <c>sport</c>, <c>number</c>, <c>search_first_name</c>, <c>search_last_name</c>, <c>search_full_name</c>,
-    /// <c>search_rank</c>, <c>injury_start_date</c>, <c>injury_status</c>, <c>practice_participation</c>,
+    /// <c>search_rank</c>, <c>injury_start_date</c>, <c>practice_participation</c>,
     /// <c>weight</c>, <c>height</c>, <c>age</c>, <c>college</c>, <c>birth_country</c>, <c>years_exp</c>,
     /// and the ids at other sites (<c>sportradar_id</c>, <c>fantasy_data_id</c>, <c>stats_id</c>, <c>espn_id</c>,
-    /// <c>rotowire_id</c>, <c>rotoworld_id</c>, <c>yahoo_id</c>).
-    /// <c>injury_status</c> and <c>years_exp</c> are needed later for the IR and TAX rules.</para>
+    /// <c>rotowire_id</c>, <c>rotoworld_id</c>, <c>yahoo_id</c>).</para>
     /// </remarks>
     Task<IReadOnlyDictionary<string, Player>> GetPlayersAsync(CancellationToken cancellationToken);
 

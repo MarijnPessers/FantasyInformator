@@ -13,6 +13,8 @@ public class Position : TrackedModel
 
     public string Abbreviation { get; set; } = string.Empty;
 
+    public bool IsDominant { get; set; }
+
     public List<PlayerPosition> PlayerPositions { get; init; } = [];
 
     public List<SlotEligibility> SlotEligibilities { get; init; } = [];

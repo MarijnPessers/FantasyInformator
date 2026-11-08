@@ -15,9 +15,9 @@ Some models also have an `ExternalId`, a separate value used only for matching r
 
 The diagram is `models.drawio.svg`. The base fields are not drawn.
 
-Each box has three columns: the field name, its type (with the length for text and the digits for decimals), and its key. `PK` is the primary key, `FK` a link to another table and `UK` a value that must be unique.
+Each box has three columns: the field name, its type (with the length for text and the digits for decimals), and its key. `PK` is the primary key, `FK` a link to another table and `UK` a value that must be unique. `get` marks a read-only value that is worked out and not stored.
 
-![Models](models.drawio.svg?t=20261108013718)
+![Models](models.drawio.svg?t=20261108134927)
 
 ## What the diagram shows
 
@@ -36,8 +36,8 @@ Each coloured block is a group of models that belong together.
 
 ### Player (yellow)
 
-- **Player:** a real football player. Without an NFL team, the current team is empty.
-- **Position:** what a player plays, such as QB or LB.
+- **Player:** a real football player. Without an NFL team, the current team is empty. The injury status is one of None, Q, D, OUT, IR and PUP (the enum `InjuryStatus`, each value with its full name in the code). The read-only `IsIrEligible` is true for IR, PUP and OUT, and those let the player move to an IR slot. Q and D are shown only and do not keep the player out of the lineup.
+- **Position:** what a player plays, such as QB or LB. A dominant position (DL and DE) wins over the other positions of a player: a player with a dominant position counts only as his dominant positions. For example a LB & DE player will only count as a DL.
 - **Player position:** links a player to the positions they play. A player has at least one.
 - **Game appearance:** a player took part in a game, for the home or the away team.
 

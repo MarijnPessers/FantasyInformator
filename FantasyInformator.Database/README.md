@@ -16,9 +16,9 @@ The code-first database. It has its own database models and hand-written mappers
 
 The settings of the tables are in the `Context` folder, next to the `FantasyInformatorDbContext`, one `<Group>Schema` class per group, together with `ColumnSizes`. They are not models, but they define how the models behave in the database.
 
-The diagram is a copy of `models.drawio.svg` in the Models project.
+The diagram is a copy of `models.drawio.svg` in the Models project, without the read-only values (such as `IsIrEligible`), because the database does not store them.
 
-![Models](models.drawio.svg?t=20261108115336)
+![Models](models.drawio.svg?t=20261108134927)
 
 - `ExternalId` is unique where a model has one, and so are the pairs that must not repeat (for example a player on a roster).
 - The owner of a fantasy team and the player of a roster have no foreign key, because they can point to something not known. The columns are indexed.
