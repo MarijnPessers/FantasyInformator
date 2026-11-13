@@ -13,7 +13,7 @@ public class NflScheduleMapperTests
     private readonly Fixture _fixture = new();
 
     [TestMethod]
-    public void ToGame_SummerGame_ConvertsEasternDaylightTimeToUtc()
+    public void ToGame_ShouldConvertEasternDaylightTimeToUtc_WhenGameIsInSummer()
     {
         var game = CreateGame(new DateOnly(2025, 9, 4), new TimeOnly(20, 20));
 
@@ -23,7 +23,7 @@ public class NflScheduleMapperTests
     }
 
     [TestMethod]
-    public void ToGame_WinterGame_ConvertsEasternStandardTimeToUtc()
+    public void ToGame_ShouldConvertEasternStandardTimeToUtc_WhenGameIsInWinter()
     {
         var game = CreateGame(new DateOnly(2025, 12, 7), new TimeOnly(13, 0));
 
@@ -33,7 +33,7 @@ public class NflScheduleMapperTests
     }
 
     [TestMethod]
-    public void ToGame_TimeSkippedByDaylightSavingTime_Throws()
+    public void ToGame_ShouldThrow_WhenTimeIsSkippedByDaylightSavingTime()
     {
         var game = CreateGame(new DateOnly(2025, 3, 9), new TimeOnly(2, 30));
 
@@ -41,7 +41,7 @@ public class NflScheduleMapperTests
     }
 
     [TestMethod]
-    public void ToGame_MapsWeekAndTeams()
+    public void ToGame_ShouldMapWeekAndTeams_WhenScheduleGameIsGiven()
     {
         var game = CreateGame(new DateOnly(2025, 9, 7), new TimeOnly(13, 0));
         game.Week = _fixture.Create<int>();
@@ -54,7 +54,7 @@ public class NflScheduleMapperTests
     }
 
     [TestMethod]
-    public void ToGame_TeamCodeThatDiffersFromSleeper_UsesSleeperCode()
+    public void ToGame_ShouldUseSleeperCode_WhenTeamCodeDiffersFromSleeper()
     {
         var game = CreateGame(new DateOnly(2025, 9, 7), new TimeOnly(13, 0));
         game.HomeTeam = NflverseRamsCode;
@@ -64,6 +64,24 @@ public class NflScheduleMapperTests
 
         Assert.AreEqual(SleeperRamsCode, result.HomeNflTeam!.ExternalId);
         Assert.AreEqual(SleeperRamsCode, result.AwayNflTeam!.ExternalId);
+    }
+
+    [TestMethod]
+    public void ToGame_ShouldThrow_WhenHomeTeamIsEmpty()
+    {
+        var game = CreateGame(new DateOnly(2025, 9, 7), new TimeOnly(13, 0));
+        game.HomeTeam = string.Empty;
+
+        _ = Assert.ThrowsExactly<ArgumentException>(() => NflScheduleMapper.ToGame(game));
+    }
+
+    [TestMethod]
+    public void ToGame_ShouldThrow_WhenAwayTeamIsEmpty()
+    {
+        var game = CreateGame(new DateOnly(2025, 9, 7), new TimeOnly(13, 0));
+        game.AwayTeam = string.Empty;
+
+        _ = Assert.ThrowsExactly<ArgumentException>(() => NflScheduleMapper.ToGame(game));
     }
 
     private NflverseModels.Game CreateGame(DateOnly gameday, TimeOnly gametime) =>

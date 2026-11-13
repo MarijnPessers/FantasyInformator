@@ -7,7 +7,7 @@ namespace FantasyInformator.Database.Tests.Mappers.Lineup;
 public class LeagueSlotMapperTests
 {
     [TestMethod]
-    public void Map_MapsAllFieldsAndChildren()
+    public void Map_ShouldMapAllFieldsAndChildren_WhenDatabaseModelIsGiven()
     {
         var leagueSlot = SourceFactory.Create<DatabaseLineup.LeagueSlot>();
 
@@ -18,7 +18,7 @@ public class LeagueSlotMapperTests
     }
 
     [TestMethod]
-    public void Map_ApplicationModel_MapsAllFieldsAndChildren()
+    public void Map_ShouldMapAllFieldsAndChildren_WhenApplicationModelIsGiven()
     {
         var model = SourceFactory.Create<DatabaseLineup.LeagueSlot>().Map();
 

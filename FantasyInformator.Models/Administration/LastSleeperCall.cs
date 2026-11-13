@@ -7,7 +7,7 @@ namespace FantasyInformator.Models.Administration;
 public class LastSleeperCall
 {
     /// <summary>The name of the call, such as the players list. This is the key.</summary>
-    public string CallName { get; set; } = string.Empty;
+    public required string CallName { get; set; }
 
     public DateTime CalledAtUtc { get; set; }
 }

@@ -7,7 +7,7 @@ namespace FantasyInformator.Database.Tests.Mappers.League;
 public class LeagueInstanceMapperTests
 {
     [TestMethod]
-    public void Map_MapsAllFieldsAndChildren()
+    public void Map_ShouldMapAllFieldsAndChildren_WhenDatabaseModelIsGiven()
     {
         var leagueInstance = SourceFactory.Create<DatabaseLeague.LeagueInstance>();
 
@@ -18,7 +18,7 @@ public class LeagueInstanceMapperTests
     }
 
     [TestMethod]
-    public void Map_ApplicationModel_MapsAllFieldsAndChildren()
+    public void Map_ShouldMapAllFieldsAndChildren_WhenApplicationModelIsGiven()
     {
         var model = SourceFactory.Create<DatabaseLeague.LeagueInstance>().Map();
 

@@ -7,8 +7,6 @@ public sealed partial class LeagueListState : State<LeagueListState>
 {
     public List<League> Leagues { get; private set; } = [];
 
-    public override void Initialize()
-    {
+    public override void Initialize() =>
         Leagues = [];
-    }
 }

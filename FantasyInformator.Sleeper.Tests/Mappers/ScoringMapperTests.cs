@@ -10,7 +10,7 @@ public class ScoringMapperTests
     private readonly Fixture _fixture = new();
 
     [TestMethod]
-    public void ToFantasyScores_KeepsPointsNullAndZeroApart()
+    public void ToFantasyScores_ShouldKeepNullAndZeroApart_WhenPointsAreNullOrZero()
     {
         List<string> playerIds = [.. _fixture.CreateMany<string>(3)];
         var matchup = new SleeperModels.Matchup
@@ -34,12 +34,23 @@ public class ScoringMapperTests
     }
 
     [TestMethod]
-    public void ToFantasyScores_NoPlayers_ReturnsEmptyList()
+    public void ToFantasyScores_ShouldReturnEmptyList_WhenThereAreNoPlayers()
     {
         var matchup = new SleeperModels.Matchup();
 
         var result = ScoringMapper.ToFantasyScores(matchup);
 
         Assert.IsEmpty(result);
+    }
+
+    [TestMethod]
+    public void ToFantasyScores_ShouldThrow_WhenPlayerIdIsEmpty()
+    {
+        var matchup = new SleeperModels.Matchup
+        {
+            PlayersPoints = new Dictionary<string, double?> { [string.Empty] = 0 },
+        };
+
+        _ = Assert.ThrowsExactly<ArgumentException>(() => ScoringMapper.ToFantasyScores(matchup));
     }
 }

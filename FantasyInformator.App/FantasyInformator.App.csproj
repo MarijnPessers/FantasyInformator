@@ -14,7 +14,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="TimeWarp.State" Version="11.0.3" />
+    <PackageReference Include="TimeWarp.State" Version="12.0.0-beta.8" />
     <PackageReference Include="SonarAnalyzer.CSharp" Version="10.35.0.4138">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -26,5 +26,23 @@
     <ProjectReference Include="..\FantasyInformator.Models\FantasyInformator.Models.csproj" />
     <ProjectReference Include="..\FantasyInformator.Sleeper\FantasyInformator.Sleeper.csproj" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <TailwindVersion>v4.3.5</TailwindVersion>
+    <TailwindFolder>$(MSBuildProjectDirectory)\.tailwind\$(TailwindVersion)</TailwindFolder>
+    <TailwindExe>$(TailwindFolder)\tailwindcss-windows-x64.exe</TailwindExe>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <TailwindInput Include="Styles\tailwind.css;Components\**\*.razor;Components\**\*.cs" />
+  </ItemGroup>
+
+  <Target Name="DownloadTailwind" Condition="!Exists('$(TailwindExe)')">
+    <DownloadFile SourceUrl="https://github.com/tailwindlabs/tailwindcss/releases/download/$(TailwindVersion)/tailwindcss-windows-x64.exe" DestinationFolder="$(TailwindFolder)" />
+  </Target>
+
+  <Target Name="BuildTailwind" DependsOnTargets="DownloadTailwind" BeforeTargets="BeforeBuild" Inputs="@(TailwindInput)" Outputs="wwwroot\tailwind.css">
+    <Exec Command="&quot;$(TailwindExe)&quot; -i Styles\tailwind.css -o wwwroot\tailwind.css --minify" WorkingDirectory="$(MSBuildProjectDirectory)" />
+  </Target>
 
 </Project>

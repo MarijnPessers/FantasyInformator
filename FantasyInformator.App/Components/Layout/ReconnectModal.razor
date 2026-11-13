@@ -1,30 +1,44 @@
 ﻿<script type="module" src="@Assets["Components/Layout/ReconnectModal.razor.js"]"></script>
 
-<dialog id="components-reconnect-modal" data-nosnippet>
-    <div class="components-reconnect-container">
-        <div class="components-rejoining-animation" aria-hidden="true">
-            <div></div>
-            <div></div>
+<dialog id="components-reconnect-modal" data-nosnippet
+        class="mx-auto my-[20vh] w-80 rounded-lg border-0 bg-white p-8 opacity-0
+               shadow-[0_3px_6px_2px_rgba(0,0,0,0.3)]
+               transition-[display,overlay] transition-discrete duration-500
+               animate-reconnect-modal-close open:animate-reconnect-modal-open
+               [&.components-reconnect-failed]:block [&.components-reconnect-retrying]:block
+               backdrop:bg-black/40 backdrop:opacity-100 backdrop:animate-reconnect-backdrop">
+    <div class="flex flex-col items-center gap-4">
+        <div class="relative hidden size-20
+                    in-[.components-reconnect-retrying]:block in-[.components-reconnect-show]:block"
+             aria-hidden="true">
+            <div class="absolute rounded-full border-3 border-[#0087ff] animate-rejoining"></div>
+            <div class="absolute rounded-full border-3 border-[#0087ff] animate-rejoining
+                        [animation-delay:-0.5s]"></div>
         </div>
-        <p class="components-reconnect-first-attempt-visible">
+        <p class="hidden text-center in-[.components-reconnect-show]:block">
             Rejoining the server...
         </p>
-        <p class="components-reconnect-repeated-attempt-visible">
+        <p class="hidden text-center in-[.components-reconnect-retrying]:block">
             Rejoin failed... trying again in <span id="components-seconds-to-next-attempt"></span> seconds.
         </p>
-        <p class="components-reconnect-failed-visible">
+        <p class="hidden text-center in-[.components-reconnect-failed]:block">
             Failed to rejoin.<br />Please retry or reload the page.
         </p>
-        <button id="components-reconnect-button" class="components-reconnect-failed-visible">
+        <button id="components-reconnect-button"
+                class="hidden rounded border-0 bg-[#6b9ed2] px-6 py-1 text-white
+                       hover:bg-[#3b6ea2] active:bg-[#6b9ed2] in-[.components-reconnect-failed]:block">
             Retry
         </button>
-        <p class="components-pause-visible">
+        <p class="hidden text-center in-[.components-reconnect-paused]:block">
             The session has been paused by the server.
         </p>
-        <p class="components-resume-failed-visible">
+        <p class="hidden text-center in-[.components-reconnect-resume-failed]:block">
             Failed to resume the session.<br />Please retry or reload the page.
         </p>
-        <button id="components-resume-button" class="components-pause-visible components-resume-failed-visible">
+        <button id="components-resume-button"
+                class="hidden rounded border-0 bg-[#6b9ed2] px-6 py-1 text-white hover:bg-[#3b6ea2]
+                       active:bg-[#6b9ed2]
+                       in-[.components-reconnect-paused]:block in-[.components-reconnect-resume-failed]:block">
             Resume
         </button>
     </div>

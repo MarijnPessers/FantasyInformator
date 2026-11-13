@@ -9,9 +9,9 @@ namespace FantasyInformator.Database.Models.Player;
 /// </summary>
 public class Position : TrackedModel
 {
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
 
-    public string Abbreviation { get; set; } = string.Empty;
+    public required string Abbreviation { get; set; }
 
     public bool IsDominant { get; set; }
 

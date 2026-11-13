@@ -6,6 +6,7 @@ using FantasyInformator.Database.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 
 namespace FantasyInformator.Database.Extensions;
@@ -27,11 +28,12 @@ public static class DatabaseServiceCollectionExtensions
     }
 
     /// <summary>
-    /// Registers the context factory, the save service and the read services. A factory is used instead of one
-    /// shared context, because a Blazor Server circuit lives long and a context must not.
+    /// Registers the clock, the context factory, the save service and the read services. A factory is used instead
+    /// of one shared context, because a Blazor Server circuit lives long and a context must not.
     /// </summary>
     public static IServiceCollection AddDatabaseServices(this IServiceCollection services)
     {
+        services.TryAddSingleton(TimeProvider.System);
         _ = services.AddDbContextFactory<FantasyInformatorDbContext>((serviceProvider, builder) =>
             builder.UseSqlServer(
                 serviceProvider.GetRequiredService<IOptions<DatabaseSettings>>().Value.ConnectionStringApp));

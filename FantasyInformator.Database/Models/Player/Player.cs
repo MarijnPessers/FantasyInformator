@@ -9,9 +9,9 @@ namespace FantasyInformator.Database.Models.Player;
 
 public class Player : TrackedModel
 {
-    public string ExternalId { get; set; } = string.Empty;
+    public required string ExternalId { get; set; }
 
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
 
     /// <summary>Null when the player has no NFL team.</summary>
     public Guid? CurrentNflTeamId { get; set; }

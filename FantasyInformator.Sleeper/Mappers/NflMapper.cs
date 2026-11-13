@@ -21,9 +21,14 @@ public static class NflMapper
     /// <summary>
     /// The schedule gives only the day, so <c>KickoffUtc</c> is midnight UTC of that day until the time of day
     /// from the nflverse schedule replaces it. The season is not on the schedule game; the caller sets it.
+    /// Throws when a team code is empty.
     /// </summary>
-    public static Game ToGame(SleeperModels.Game game) =>
-        new()
+    public static Game ToGame(SleeperModels.Game game)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(game.Home);
+        ArgumentException.ThrowIfNullOrEmpty(game.Away);
+
+        return new()
         {
             ExternalId = game.GameId,
             Week = game.Week,
@@ -31,4 +36,5 @@ public static class NflMapper
             HomeNflTeam = new NflTeam { ExternalId = game.Home },
             AwayNflTeam = new NflTeam { ExternalId = game.Away },
         };
+    }
 }

@@ -12,26 +12,40 @@ namespace FantasyInformator.Sleeper.Mappers;
 /// </summary>
 public static class LeagueMapper
 {
-    public static League ToLeague(SleeperModels.League league) =>
-        new()
+    /// <summary>Throws when the name of the league is empty.</summary>
+    public static League ToLeague(SleeperModels.League league)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(league.Name);
+
+        return new()
         {
             Name = league.Name,
         };
+    }
 
-    /// <summary>Throws when the season of the league is not a number.</summary>
-    public static LeagueInstance ToLeagueInstance(SleeperModels.League league) =>
-        new()
+    /// <summary>Throws when the league id is empty or the season of the league is not a number.</summary>
+    public static LeagueInstance ToLeagueInstance(SleeperModels.League league)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(league.LeagueId);
+
+        return new()
         {
             ExternalId = league.LeagueId,
             Season = new Season { Year = int.Parse(league.Season, CultureInfo.InvariantCulture) },
         };
+    }
 
     /// <summary>
     /// Counts how often each slot occurs in <c>roster_positions</c>, and adds IR and taxi from the settings.
-    /// A slot the league does not have is not returned.
+    /// A slot the league does not have is not returned. Throws when a slot code is empty.
     /// </summary>
     public static List<LeagueSlot> ToLeagueSlots(SleeperModels.League league)
     {
+        foreach (var slotCode in league.RosterPositions)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(slotCode);
+        }
+
         List<(string Code, int Count)> slotCounts = [.. league.RosterPositions
             .GroupBy(s => s)
             .Select(g => (Code: g.Key, Count: g.Count()))];

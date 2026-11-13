@@ -6,9 +6,11 @@
 ## Build output
 bin/
 obj/
+.tailwind/
 
 ## Claude
 claudeTmp/
+.claude/scratch/
 *.local.md
 *.local.json
 

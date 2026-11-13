@@ -17,7 +17,7 @@ public class LeagueMapperTests
     private readonly Fixture _fixture = new();
 
     [TestMethod]
-    public void ToLeague_MapsName()
+    public void ToLeague_ShouldMapName_WhenLeagueIsGiven()
     {
         var league = _fixture.Create<SleeperModels.League>();
 
@@ -27,7 +27,16 @@ public class LeagueMapperTests
     }
 
     [TestMethod]
-    public void ToLeagueInstance_MapsExternalIdAndSeasonYear()
+    public void ToLeague_ShouldThrow_WhenNameIsEmpty()
+    {
+        var league = _fixture.Create<SleeperModels.League>();
+        league.Name = string.Empty;
+
+        _ = Assert.ThrowsExactly<ArgumentException>(() => LeagueMapper.ToLeague(league));
+    }
+
+    [TestMethod]
+    public void ToLeagueInstance_ShouldMapExternalIdAndSeasonYear_WhenLeagueIsGiven()
     {
         var league = _fixture.Create<SleeperModels.League>();
         league.Season = "2025";
@@ -39,7 +48,7 @@ public class LeagueMapperTests
     }
 
     [TestMethod]
-    public void ToLeagueInstance_SeasonNotANumber_Throws()
+    public void ToLeagueInstance_ShouldThrow_WhenSeasonIsNotANumber()
     {
         var league = _fixture.Create<SleeperModels.League>();
         league.Season = _fixture.Create<string>();
@@ -48,7 +57,17 @@ public class LeagueMapperTests
     }
 
     [TestMethod]
-    public void ToLeagueSlots_CountsEachRosterPosition()
+    public void ToLeagueInstance_ShouldThrow_WhenLeagueIdIsEmpty()
+    {
+        var league = _fixture.Create<SleeperModels.League>();
+        league.LeagueId = string.Empty;
+        league.Season = "2025";
+
+        _ = Assert.ThrowsExactly<ArgumentException>(() => LeagueMapper.ToLeagueInstance(league));
+    }
+
+    [TestMethod]
+    public void ToLeagueSlots_ShouldCountEachRosterPosition_WhenLeagueIsGiven()
     {
         var league = new SleeperModels.League
         {
@@ -65,7 +84,7 @@ public class LeagueMapperTests
     }
 
     [TestMethod]
-    public void ToLeagueSlots_ReserveAndTaxiSlots_AreAdded()
+    public void ToLeagueSlots_ShouldAddReserveAndTaxiSlots_WhenLeagueHasThem()
     {
         var league = new SleeperModels.League
         {
@@ -81,7 +100,7 @@ public class LeagueMapperTests
     }
 
     [TestMethod]
-    public void ToLeagueSlots_NoReserveAndNoTaxi_AreNotReturned()
+    public void ToLeagueSlots_ShouldNotReturnReserveAndTaxiSlots_WhenLeagueHasNone()
     {
         var league = new SleeperModels.League
         {
@@ -92,6 +111,14 @@ public class LeagueMapperTests
         var result = LeagueMapper.ToLeagueSlots(league);
 
         Assert.HasCount(1, result);
+    }
+
+    [TestMethod]
+    public void ToLeagueSlots_ShouldThrow_WhenSlotCodeIsEmpty()
+    {
+        var league = new SleeperModels.League { RosterPositions = [string.Empty] };
+
+        _ = Assert.ThrowsExactly<ArgumentException>(() => LeagueMapper.ToLeagueSlots(league));
     }
 
     private static int CountOf(List<LeagueSlot> leagueSlots, string slotCode) =>

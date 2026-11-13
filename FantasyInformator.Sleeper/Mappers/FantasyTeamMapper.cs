@@ -12,28 +12,44 @@ namespace FantasyInformator.Sleeper.Mappers;
 /// </summary>
 public static class FantasyTeamMapper
 {
-    public static Owner ToOwner(SleeperModels.User user) =>
-        new()
+    /// <summary>Throws when the user id is empty.</summary>
+    public static Owner ToOwner(SleeperModels.User user)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(user.UserId);
+
+        return new()
         {
             ExternalId = user.UserId,
             Name = user.DisplayName,
         };
+    }
 
-    public static Owner ToOwner(SleeperModels.LeagueUser leagueUser) =>
-        new()
+    /// <summary>Throws when the user id is empty.</summary>
+    public static Owner ToOwner(SleeperModels.LeagueUser leagueUser)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(leagueUser.UserId);
+
+        return new()
         {
             ExternalId = leagueUser.UserId,
             Name = leagueUser.DisplayName,
         };
+    }
 
     /// <summary>
     /// The caller finds the league user whose id equals <c>owner_id</c> of the roster. The team name is empty
-    /// when there is no such user or the user never set a team name.
+    /// when there is no such user or the user never set a team name. Throws when the owner id is empty.
     /// </summary>
     public static FantasyTeam ToFantasyTeam(
         SleeperModels.Roster roster,
-        SleeperModels.LeagueUser? leagueUser) =>
-        new()
+        SleeperModels.LeagueUser? leagueUser)
+    {
+        if (roster.OwnerId is not null)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(roster.OwnerId);
+        }
+
+        return new()
         {
             ExternalId = roster.RosterId.ToString(CultureInfo.InvariantCulture),
             Owner = roster.OwnerId is null
@@ -41,17 +57,29 @@ public static class FantasyTeamMapper
                 : new Owner { ExternalId = roster.OwnerId },
             Name = leagueUser?.Metadata.TeamName ?? string.Empty,
         };
+    }
 
     /// <summary>
     /// Gives every player on the roster the slot he is in. A starter takes the slot at his place in the
     /// league's <c>roster_positions</c> without the bench; that <c>starters</c> follows that order is not verified.
     /// A player on <c>reserve</c> is in IR, one on <c>taxi</c> in TAX, and every other player is on the bench.
-    /// Throws when a starter's place is beyond the starting slots of the league.
+    /// Throws when a player id or a slot code is empty, or when a starter's place is beyond the starting slots of
+    /// the league.
     /// </summary>
     public static List<RosteredPlayer> ToRosteredPlayers(
         SleeperModels.Roster roster,
         IReadOnlyList<string> rosterPositions)
     {
+        foreach (var playerId in roster.Players)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(playerId);
+        }
+
+        foreach (var slotCode in rosterPositions)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(slotCode);
+        }
+
         List<string> startingSlots = [.. rosterPositions.Where(x => x != SlotCodes.Bench)];
 
         return [.. roster.Players

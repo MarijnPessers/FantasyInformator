@@ -5,7 +5,7 @@ namespace FantasyInformator.Models.FantasyTeam;
 
 public class Owner : TrackedModel
 {
-    public string ExternalId { get; set; } = string.Empty;
+    public required string ExternalId { get; set; }
 
     public string Name { get; set; } = string.Empty;
 

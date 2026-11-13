@@ -3,6 +3,10 @@
 A downloaded copy of Microsoft's official list of .NET code-style rules (IDE0001 and up): the suggestions Visual Studio
 gives for C# code. Everything below the end-of-header line is the original document, unchanged.
 
+After a new download, check that the severity list still matches `.editorconfig`.
+
+This is the only copy of this list in the solution. Other files refer to it; never copy it.
+
 - Source: https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/
 - Raw file: https://raw.githubusercontent.com/dotnet/docs/main/docs/fundamentals/code-analysis/style-rules/index.md
 
@@ -11,6 +15,18 @@ To update the contents below this header, run this from the repository root in P
 ```powershell
 $file = 'docs/dotnet-code-style-rules.md'; $header = ((Get-Content $file -Raw) -split '(?m)^<!-- end of header -->\r?$', 2)[0]; $body = (Invoke-WebRequest 'https://raw.githubusercontent.com/dotnet/docs/main/docs/fundamentals/code-analysis/style-rules/index.md' -UseBasicParsing).Content; Set-Content $file ($header + "<!-- end of header -->`n`n" + $body) -NoNewline -Encoding utf8
 ```
+
+## Severity in this project
+
+Set in `.editorconfig`.
+
+| Rule | Files | Severity |
+|------|-------|----------|
+| All style rules (IDE) | `*.{cs,razor}` | warning |
+| All style rules (IDE) | `**/Migrations/**` | none |
+| IDE0130 | `FantasyInformator.App/State/Handlers/**.cs` | none |
+| IDE2006 | `*.{cs,razor}` | none |
+| IDE3000 | `*.{cs,razor}` | none |
 
 <!-- end of header -->
 

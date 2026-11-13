@@ -27,6 +27,8 @@ The schedule and weekly stats calls are unofficial, so they can change or be blo
 
 A service takes and returns only application models. The Sleeper models hold only the fields that are used and stay inside this project; the service maps them before it returns. Some names equal an application model, so a mapper needs a namespace alias.
 
+No field of a Sleeper model is required; each gets a default instead, such as an empty text. Sleeper decides what it sends, and a field that must be there would make reading the whole answer fail when Sleeper leaves it out. The check happens in the mapper instead (see below).
+
 Not yet changed to return application models: the league users and the rosters.
 
 ## Mappers
@@ -34,6 +36,7 @@ Not yet changed to return application models: the league users and the rosters.
 - A link to another record is a stub that holds only its key. A later step swaps it for the real record.
 - A mapper does not set the id, the state or the update time.
 - A mapper that cannot read its input throws.
+- A mapper throws when a value that an application model always needs is empty, such as the id of a player or the code of a slot. A value the application can do without, such as a team name, may stay empty.
 - A starter's slot follows from its place in the roster positions list. Not verified.
 - The schedule mapper sets the kickoff to midnight UTC of the game day, until nflverse gives the time.
 

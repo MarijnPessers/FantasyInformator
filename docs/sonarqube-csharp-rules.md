@@ -5,6 +5,10 @@ Visual Studio. "On by default (Sonar way)" says whether the package switches the
 this project" also takes the `dotnet_diagnostic.Sxxx.severity` lines in the `.editorconfig` into account. Everything
 below the end-of-header line is generated from SonarSource's own rule files and the `.editorconfig`.
 
+After a new download, apply this project's settings from `.editorconfig` again.
+
+This is the only copy of this list in the solution. Other files refer to it; never copy it.
+
 - Source: https://rules.sonarsource.com/csharp
 - Raw files: https://github.com/SonarSource/sonar-dotnet/tree/master/analyzers/rspec/cs
 
@@ -17,8 +21,10 @@ $header = ((Get-Content $file -Raw) -split '(?m)^<!-- end of header -->\r?$', 2)
 $tree = Invoke-RestMethod 'https://api.github.com/repos/SonarSource/sonar-dotnet/git/trees/master:analyzers/rspec/cs'
 $sonarWay = (Invoke-RestMethod "$repo/Sonar_way_profile.json").ruleKeys
 $overrides = @{}
+$section = ''
 Get-Content '.editorconfig' | ForEach-Object {
-    if ($_ -match '^dotnet_diagnostic\.(S\d+)\.severity\s*=\s*(\S+)') { $overrides[$Matches[1]] = $Matches[2] }
+    if ($_ -match '^\[(.+)\]') { $section = $Matches[1] }
+    elseif ($section -eq '*.{cs,razor}' -and $_ -match '^dotnet_diagnostic\.(S\d+)\.severity\s*=\s*(\S+)') { $overrides[$Matches[1]] = $Matches[2] }
 }
 $rows = $tree.tree.path | Where-Object { $_ -match '^S\d+\.json$' } | Sort-Object { [int]($_ -replace '\D') } | ForEach-Object {
     $rule = Invoke-RestMethod "$repo/$_"

@@ -1,7 +1,38 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Solution Items/Claude/">
+    <File Path="CLAUDE.local.md" />
+    <File Path=".claude/settings.local.json" />
+    <File Path=".claude/hooks/block-outside-solution.ps1" />
+    <File Path=".claude/hooks/wip-check.ps1" />
+    <File Path=".claude/skills/grillme/SKILL.md" />
+    <File Path=".claude/skills/handoff/SKILL.md" />
+  </Folder>
+  <Folder Name="/Solution Items/Docs/">
+    <File Path="docs/dotnet-code-style-rules.md" />
+    <File Path="docs/sonarqube-csharp-rules.md" />
+  </Folder>
+  <Folder Name="/Solution Items/Specs/">
+    <File Path="specs/index.spec.md" />
+  </Folder>
+  <Folder Name="/Solution Items/Specs/fleeting/">
+    <File Path="specs/fleeting/readme-developmental.spec.md" />    <File Path="specs/fleeting/steps.spec.md" />
+  </Folder>
+  <Folder Name="/Solution Items/Specs/persistent/">
+    <File Path="specs/persistent/codingpreferences.spec.md" />
+    <File Path="specs/persistent/design.spec.md" />
+    <File Path="specs/persistent/nugetcheck.spec.md" />
+    <File Path="specs/persistent/readme-images.spec.md" />
+    <File Path="specs/persistent/roadmap.spec.md" />
+  </Folder>
   <Folder Name="/tests/">
     <Project Path="FantasyInformator.App.Tests/FantasyInformator.App.Tests.csproj" />
     <Project Path="FantasyInformator.Database.Tests/FantasyInformator.Database.Tests.csproj" />
+    <Project Path="FantasyInformator.Migrator.Tests/FantasyInformator.Migrator.Tests.csproj" />
     <Project Path="FantasyInformator.Nflverse.Tests/FantasyInformator.Nflverse.Tests.csproj" />
     <Project Path="FantasyInformator.Sleeper.Tests/FantasyInformator.Sleeper.Tests.csproj" />
     <Project Path="FantasyInformator.State.Tests/FantasyInformator.State.Tests.csproj" />

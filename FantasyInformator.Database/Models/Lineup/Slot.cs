@@ -8,11 +8,11 @@ namespace FantasyInformator.Database.Models.Lineup;
 public class Slot : TrackedModel
 {
     /// <summary>The Sleeper code of the slot, such as SUPER_FLEX.</summary>
-    public string ExternalId { get; set; } = string.Empty;
+    public required string ExternalId { get; set; }
 
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
 
-    public string Abbreviation { get; set; } = string.Empty;
+    public required string Abbreviation { get; set; }
 
     public List<LeagueSlot> LeagueSlots { get; init; } = [];
 

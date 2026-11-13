@@ -6,7 +6,7 @@ namespace FantasyInformator.Models.FantasyTeam;
 
 public class FantasyTeam : TrackedModel
 {
-    public string ExternalId { get; set; } = string.Empty;
+    public required string ExternalId { get; set; }
 
     /// <summary>Null when the team has no owner.</summary>
     public Guid? OwnerId { get; set; }

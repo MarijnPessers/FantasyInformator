@@ -5,9 +5,9 @@ namespace FantasyInformator.Database.Models.Nfl;
 
 public class NflTeam : TrackedModel
 {
-    public string ExternalId { get; set; } = string.Empty;
+    public required string ExternalId { get; set; }
 
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
 
     public List<Player.Player> Players { get; init; } = [];
 

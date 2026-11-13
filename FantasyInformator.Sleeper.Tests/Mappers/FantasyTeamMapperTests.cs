@@ -16,7 +16,7 @@ public class FantasyTeamMapperTests
     private readonly Fixture _fixture = new();
 
     [TestMethod]
-    public void ToOwner_User_MapsExternalIdAndName()
+    public void ToOwner_ShouldMapExternalIdAndName_WhenUserIsGiven()
     {
         var user = _fixture.Create<SleeperModels.User>();
 
@@ -27,7 +27,7 @@ public class FantasyTeamMapperTests
     }
 
     [TestMethod]
-    public void ToOwner_LeagueUser_MapsExternalIdAndName()
+    public void ToOwner_ShouldMapExternalIdAndName_WhenLeagueUserIsGiven()
     {
         var leagueUser = _fixture.Create<SleeperModels.LeagueUser>();
 
@@ -38,7 +38,25 @@ public class FantasyTeamMapperTests
     }
 
     [TestMethod]
-    public void ToFantasyTeam_MapsExternalIdOwnerAndTeamName()
+    public void ToOwner_ShouldThrow_WhenUserIdIsEmpty()
+    {
+        var user = _fixture.Create<SleeperModels.User>();
+        user.UserId = string.Empty;
+
+        _ = Assert.ThrowsExactly<ArgumentException>(() => FantasyTeamMapper.ToOwner(user));
+    }
+
+    [TestMethod]
+    public void ToOwner_ShouldThrow_WhenLeagueUserIdIsEmpty()
+    {
+        var leagueUser = _fixture.Create<SleeperModels.LeagueUser>();
+        leagueUser.UserId = string.Empty;
+
+        _ = Assert.ThrowsExactly<ArgumentException>(() => FantasyTeamMapper.ToOwner(leagueUser));
+    }
+
+    [TestMethod]
+    public void ToFantasyTeam_ShouldMapExternalIdOwnerAndTeamName_WhenRosterAndLeagueUserAreGiven()
     {
         var roster = _fixture.Create<SleeperModels.Roster>();
         roster.RosterId = 7;
@@ -52,7 +70,7 @@ public class FantasyTeamMapperTests
     }
 
     [TestMethod]
-    public void ToFantasyTeam_NoOwnerAndNoLeagueUser_OwnerIsNullAndNameIsEmpty()
+    public void ToFantasyTeam_ShouldLeaveOwnerNullAndNameEmpty_WhenThereIsNoOwnerAndNoLeagueUser()
     {
         var roster = _fixture.Create<SleeperModels.Roster>();
         roster.OwnerId = null;
@@ -64,7 +82,7 @@ public class FantasyTeamMapperTests
     }
 
     [TestMethod]
-    public void ToFantasyTeam_LeagueUserWithoutTeamName_NameIsEmpty()
+    public void ToFantasyTeam_ShouldLeaveNameEmpty_WhenLeagueUserHasNoTeamName()
     {
         var roster = _fixture.Create<SleeperModels.Roster>();
         var leagueUser = _fixture.Create<SleeperModels.LeagueUser>();
@@ -76,7 +94,16 @@ public class FantasyTeamMapperTests
     }
 
     [TestMethod]
-    public void ToRosteredPlayers_GivesEachPlayerHisSlot()
+    public void ToFantasyTeam_ShouldThrow_WhenOwnerIdIsEmpty()
+    {
+        var roster = _fixture.Create<SleeperModels.Roster>();
+        roster.OwnerId = string.Empty;
+
+        _ = Assert.ThrowsExactly<ArgumentException>(() => FantasyTeamMapper.ToFantasyTeam(roster, null));
+    }
+
+    [TestMethod]
+    public void ToRosteredPlayers_ShouldGiveEachPlayerTheirSlot_WhenRosterIsGiven()
     {
         List<string> playerIds = [.. _fixture.CreateMany<string>(5)];
         var roster = new SleeperModels.Roster
@@ -101,13 +128,33 @@ public class FantasyTeamMapperTests
     }
 
     [TestMethod]
-    public void ToRosteredPlayers_MoreStartersThanStartingSlots_Throws()
+    public void ToRosteredPlayers_ShouldThrow_WhenThereAreMoreStartersThanStartingSlots()
     {
         List<string> playerIds = [.. _fixture.CreateMany<string>(2)];
         var roster = new SleeperModels.Roster { Players = playerIds, Starters = playerIds };
         List<string> rosterPositions = [QuarterbackCode, BenchCode];
 
         _ = Assert.ThrowsExactly<ArgumentOutOfRangeException>(
+            () => FantasyTeamMapper.ToRosteredPlayers(roster, rosterPositions));
+    }
+
+    [TestMethod]
+    public void ToRosteredPlayers_ShouldThrow_WhenPlayerIdIsEmpty()
+    {
+        var roster = new SleeperModels.Roster { Players = [string.Empty] };
+        List<string> rosterPositions = [QuarterbackCode, BenchCode];
+
+        _ = Assert.ThrowsExactly<ArgumentException>(
+            () => FantasyTeamMapper.ToRosteredPlayers(roster, rosterPositions));
+    }
+
+    [TestMethod]
+    public void ToRosteredPlayers_ShouldThrow_WhenSlotCodeIsEmpty()
+    {
+        var roster = new SleeperModels.Roster { Players = [_fixture.Create<string>()] };
+        List<string> rosterPositions = [string.Empty, BenchCode];
+
+        _ = Assert.ThrowsExactly<ArgumentException>(
             () => FantasyTeamMapper.ToRosteredPlayers(roster, rosterPositions));
     }
 }

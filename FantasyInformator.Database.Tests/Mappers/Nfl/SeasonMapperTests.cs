@@ -7,7 +7,7 @@ namespace FantasyInformator.Database.Tests.Mappers.Nfl;
 public class SeasonMapperTests
 {
     [TestMethod]
-    public void Map_MapsAllFieldsAndChildren()
+    public void Map_ShouldMapAllFieldsAndChildren_WhenDatabaseModelIsGiven()
     {
         var season = SourceFactory.Create<DatabaseNfl.Season>();
 
@@ -18,7 +18,7 @@ public class SeasonMapperTests
     }
 
     [TestMethod]
-    public void Map_ApplicationModel_MapsAllFieldsAndChildren()
+    public void Map_ShouldMapAllFieldsAndChildren_WhenApplicationModelIsGiven()
     {
         var model = SourceFactory.Create<DatabaseNfl.Season>().Map();
 

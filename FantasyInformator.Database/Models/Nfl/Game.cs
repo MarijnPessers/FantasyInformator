@@ -6,7 +6,7 @@ namespace FantasyInformator.Database.Models.Nfl;
 
 public class Game : TrackedModel
 {
-    public string ExternalId { get; set; } = string.Empty;
+    public required string ExternalId { get; set; }
 
     public Guid SeasonId { get; set; }
 

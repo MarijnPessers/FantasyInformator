@@ -11,7 +11,7 @@ public class Position : TrackedModel
 {
     public string Name { get; set; } = string.Empty;
 
-    public string Abbreviation { get; set; } = string.Empty;
+    public required string Abbreviation { get; set; }
 
     /// <summary>
     /// True when this position wins over the other positions of a player: a player with a dominant position counts

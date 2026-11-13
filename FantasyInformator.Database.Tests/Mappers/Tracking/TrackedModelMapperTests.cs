@@ -12,13 +12,14 @@ public class TrackedModelMapperTests
     private readonly Fixture _fixture = new();
 
     [TestMethod]
-    public void MapToAppModel_CopiesIdAndReturnsTheModel()
+    public void MapToAppModel_ShouldCopyIdAndReturnTheModel_WhenDatabaseModelIsGiven()
     {
         var databaseLeague = new DatabaseLeague.League
         {
             Id = _fixture.Create<Guid>(),
+            Name = _fixture.Create<string>(),
         };
-        var league = new AppLeague.League();
+        var league = new AppLeague.League { Name = _fixture.Create<string>() };
 
         var result = TrackedModelMapper.MapToAppModel(databaseLeague, league);
 
@@ -27,10 +28,10 @@ public class TrackedModelMapperTests
     }
 
     [TestMethod]
-    public void MapToAppModel_SetsStateToUnchanged()
+    public void MapToAppModel_ShouldSetStateToUnchanged_WhenModelIsNew()
     {
-        var databaseLeague = new DatabaseLeague.League();
-        var league = new AppLeague.League { State = AppEnums.TrackingState.New };
+        var databaseLeague = new DatabaseLeague.League { Name = _fixture.Create<string>() };
+        var league = new AppLeague.League { Name = _fixture.Create<string>(), State = AppEnums.TrackingState.New };
 
         var result = TrackedModelMapper.MapToAppModel(databaseLeague, league);
 

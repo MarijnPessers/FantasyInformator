@@ -7,7 +7,7 @@ namespace FantasyInformator.Database.Tests.Mappers.Administration;
 public class LastSleeperCallMapperTests
 {
     [TestMethod]
-    public void Map_MapsAllFieldsAndLinks()
+    public void Map_ShouldMapAllFieldsAndLinks_WhenDatabaseModelIsGiven()
     {
         var lastSleeperCall = SourceFactory.Create<DatabaseAdministration.LastSleeperCall>();
 
@@ -18,7 +18,7 @@ public class LastSleeperCallMapperTests
     }
 
     [TestMethod]
-    public void Map_Null_ReturnsNull()
+    public void Map_ShouldReturnNull_WhenModelIsNull()
     {
         var result = LastSleeperCallMapper.Map(null);
 

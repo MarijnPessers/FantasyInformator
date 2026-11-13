@@ -15,7 +15,7 @@ public class PlayerMapperTests
     private readonly Fixture _fixture = new();
 
     [TestMethod]
-    public void ToPlayer_MapsExternalIdNameAndTeam()
+    public void ToPlayer_ShouldMapExternalIdNameAndTeam_WhenPlayerIsGiven()
     {
         var player = _fixture.Create<SleeperModels.Player>();
 
@@ -27,7 +27,7 @@ public class PlayerMapperTests
     }
 
     [TestMethod]
-    public void ToPlayer_NoTeam_NflTeamIsNull()
+    public void ToPlayer_ShouldLeaveNflTeamNull_WhenPlayerHasNoTeam()
     {
         var player = _fixture.Create<SleeperModels.Player>();
         player.Team = null;
@@ -38,6 +38,24 @@ public class PlayerMapperTests
     }
 
     [TestMethod]
+    public void ToPlayer_ShouldThrow_WhenPlayerIdIsEmpty()
+    {
+        var player = _fixture.Create<SleeperModels.Player>();
+        player.PlayerId = string.Empty;
+
+        _ = Assert.ThrowsExactly<ArgumentException>(() => PlayerMapper.ToPlayer(player));
+    }
+
+    [TestMethod]
+    public void ToPlayer_ShouldThrow_WhenTeamIsEmpty()
+    {
+        var player = _fixture.Create<SleeperModels.Player>();
+        player.Team = string.Empty;
+
+        _ = Assert.ThrowsExactly<ArgumentException>(() => PlayerMapper.ToPlayer(player));
+    }
+
+    [TestMethod]
     [DataRow(InjuryStatuses.InjuredReserve, InjuryStatus.IR, true)]
     [DataRow(InjuryStatuses.PhysicallyUnableToPerform, InjuryStatus.PUP, true)]
     [DataRow(InjuryStatuses.Out, InjuryStatus.OUT, true)]
@@ -45,7 +63,7 @@ public class PlayerMapperTests
     [DataRow(InjuryStatuses.Doubtful, InjuryStatus.D, false)]
     [DataRow(UnknownStatus, InjuryStatus.None, false)]
     [DataRow(null, InjuryStatus.None, false)]
-    public void ToPlayer_InjuryStatus_MapsStatusAndIrEligibility(
+    public void ToPlayer_ShouldMapStatusAndIrEligibility_WhenInjuryStatusIsGiven(
         string? injuryStatus,
         InjuryStatus expectedStatus,
         bool expectedIrEligible)
@@ -60,7 +78,7 @@ public class PlayerMapperTests
     }
 
     [TestMethod]
-    public void ToPlayerPositions_PositionAlsoInFantasyPositions_ReturnsEachOnce()
+    public void ToPlayerPositions_ShouldReturnEachOnce_WhenPositionIsAlsoInFantasyPositions()
     {
         var player = new SleeperModels.Player
         {
@@ -75,7 +93,7 @@ public class PlayerMapperTests
     }
 
     [TestMethod]
-    public void ToPlayerPositions_NoPosition_UsesFantasyPositions()
+    public void ToPlayerPositions_ShouldUseFantasyPositions_WhenThereIsNoPosition()
     {
         var player = new SleeperModels.Player
         {
@@ -90,7 +108,19 @@ public class PlayerMapperTests
     }
 
     [TestMethod]
-    public void ToGameAppearance_TeamIsHomeTeam_IsHomeIsTrue()
+    public void ToPlayerPositions_ShouldThrow_WhenPositionCodeIsEmpty()
+    {
+        var player = new SleeperModels.Player
+        {
+            Position = null,
+            FantasyPositions = [string.Empty],
+        };
+
+        _ = Assert.ThrowsExactly<ArgumentException>(() => PlayerMapper.ToPlayerPositions(player));
+    }
+
+    [TestMethod]
+    public void ToGameAppearance_ShouldSetIsHomeToTrue_WhenTeamIsHomeTeam()
     {
         var game = CreateGame();
         var statLine = _fixture.Create<SleeperModels.StatLine>();
@@ -104,7 +134,7 @@ public class PlayerMapperTests
     }
 
     [TestMethod]
-    public void ToGameAppearance_TeamIsAwayTeam_IsHomeIsFalse()
+    public void ToGameAppearance_ShouldSetIsHomeToFalse_WhenTeamIsAwayTeam()
     {
         var game = CreateGame();
         var statLine = _fixture.Create<SleeperModels.StatLine>();
@@ -113,6 +143,16 @@ public class PlayerMapperTests
         var result = PlayerMapper.ToGameAppearance(statLine, game);
 
         Assert.IsFalse(result.IsHome);
+    }
+
+    [TestMethod]
+    public void ToGameAppearance_ShouldThrow_WhenPlayerIdIsEmpty()
+    {
+        var game = CreateGame();
+        var statLine = _fixture.Create<SleeperModels.StatLine>();
+        statLine.PlayerId = string.Empty;
+
+        _ = Assert.ThrowsExactly<ArgumentException>(() => PlayerMapper.ToGameAppearance(statLine, game));
     }
 
     private SleeperModels.Game CreateGame() =>

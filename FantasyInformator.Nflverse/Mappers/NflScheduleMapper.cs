@@ -16,14 +16,19 @@ public static class NflScheduleMapper
     /// The kickoff in the file is Eastern time, so it is converted to UTC. The teams are stubs that hold only the
     /// <c>ExternalId</c>, written as Sleeper writes the code. The caller matches the game to the Sleeper game by
     /// week and teams. Throws when the time does not exist in Eastern time
-    /// (the hour skipped when the clocks go forward).
+    /// (the hour skipped when the clocks go forward), or when a team code is empty.
     /// </summary>
-    public static Game ToGame(NflverseModels.Game game) =>
-        new()
+    public static Game ToGame(NflverseModels.Game game)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(game.HomeTeam);
+        ArgumentException.ThrowIfNullOrEmpty(game.AwayTeam);
+
+        return new()
         {
             Week = game.Week,
             KickoffUtc = TimeZoneInfo.ConvertTimeToUtc(game.Gameday.ToDateTime(game.Gametime), EasternTimeZone),
             HomeNflTeam = new NflTeam { ExternalId = TeamCodes.ToSleeperCode(game.HomeTeam) },
             AwayNflTeam = new NflTeam { ExternalId = TeamCodes.ToSleeperCode(game.AwayTeam) },
         };
+    }
 }

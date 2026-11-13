@@ -10,7 +10,7 @@ public class NflMapperTests
     private readonly Fixture _fixture = new();
 
     [TestMethod]
-    public void ToSeason_MapsYearAndCurrentWeek()
+    public void ToSeason_ShouldMapYearAndCurrentWeek_WhenStateIsGiven()
     {
         var state = new SleeperModels.State { Season = "2025", Week = _fixture.Create<int>() };
 
@@ -21,7 +21,7 @@ public class NflMapperTests
     }
 
     [TestMethod]
-    public void ToSeason_SeasonNotANumber_Throws()
+    public void ToSeason_ShouldThrow_WhenSeasonIsNotANumber()
     {
         var state = new SleeperModels.State { Season = _fixture.Create<string>() };
 
@@ -29,7 +29,7 @@ public class NflMapperTests
     }
 
     [TestMethod]
-    public void ToGame_MapsExternalIdWeekTeamsAndKickoffAtMidnightUtc()
+    public void ToGame_ShouldMapExternalIdWeekTeamsAndKickoffAtMidnightUtc_WhenGameIsGiven()
     {
         var game = new SleeperModels.Game
         {
@@ -47,5 +47,21 @@ public class NflMapperTests
         Assert.AreEqual(new DateTime(2025, 9, 7, 0, 0, 0, DateTimeKind.Utc), result.KickoffUtc);
         Assert.AreEqual(game.Home, result.HomeNflTeam!.ExternalId);
         Assert.AreEqual(game.Away, result.AwayNflTeam!.ExternalId);
+    }
+
+    [TestMethod]
+    public void ToGame_ShouldThrow_WhenHomeTeamIsEmpty()
+    {
+        var game = new SleeperModels.Game { Home = string.Empty, Away = _fixture.Create<string>() };
+
+        _ = Assert.ThrowsExactly<ArgumentException>(() => NflMapper.ToGame(game));
+    }
+
+    [TestMethod]
+    public void ToGame_ShouldThrow_WhenAwayTeamIsEmpty()
+    {
+        var game = new SleeperModels.Game { Home = _fixture.Create<string>(), Away = string.Empty };
+
+        _ = Assert.ThrowsExactly<ArgumentException>(() => NflMapper.ToGame(game));
     }
 }

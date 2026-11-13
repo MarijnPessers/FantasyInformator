@@ -14,3 +14,10 @@ References `FantasyInformator.Models`, `FantasyInformator.Sleeper` and `FantasyI
 
 Settings that belong to a person or PC come from .NET user secrets: the Sleeper username, the database connection string and the failed-save queue folder.
 Tests: `FantasyInformator.App.Tests`.
+
+## Styling
+
+- All CSS comes from Tailwind. Write it in `Styles/tailwind.css`. Each build turns that file into `wwwroot/tailwind.css`, which is never edited by hand.
+- The first build downloads the Tailwind program (about 110 MB) into `.tailwind/`.
+- With hot reload, a new Tailwind class only shows after the next build. To see it right away, run this in the App folder: `.tailwind\v4.3.5\tailwindcss-windows-x64.exe -i Styles\tailwind.css -o wwwroot\tailwind.css --watch`.
+- To update Tailwind, change `TailwindVersion` in the project file.

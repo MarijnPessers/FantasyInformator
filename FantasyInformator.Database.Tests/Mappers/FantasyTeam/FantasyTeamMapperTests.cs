@@ -7,7 +7,7 @@ namespace FantasyInformator.Database.Tests.Mappers.FantasyTeam;
 public class FantasyTeamMapperTests
 {
     [TestMethod]
-    public void Map_MapsAllFieldsAndChildren()
+    public void Map_ShouldMapAllFieldsAndChildren_WhenDatabaseModelIsGiven()
     {
         var fantasyTeam = SourceFactory.Create<DatabaseFantasyTeam.FantasyTeam>();
 
@@ -18,7 +18,7 @@ public class FantasyTeamMapperTests
     }
 
     [TestMethod]
-    public void Map_ApplicationModel_MapsAllFieldsAndChildren()
+    public void Map_ShouldMapAllFieldsAndChildren_WhenApplicationModelIsGiven()
     {
         var model = SourceFactory.Create<DatabaseFantasyTeam.FantasyTeam>().Map();
 

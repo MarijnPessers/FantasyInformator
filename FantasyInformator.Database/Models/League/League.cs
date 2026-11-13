@@ -5,7 +5,7 @@ namespace FantasyInformator.Database.Models.League;
 
 public class League : TrackedModel
 {
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
 
     public List<LeagueInstance> LeagueInstances { get; init; } = [];
 }

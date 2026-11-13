@@ -7,7 +7,7 @@ namespace FantasyInformator.Database.Tests.Mappers.Lineup;
 public class SlotEligibilityMapperTests
 {
     [TestMethod]
-    public void Map_MapsAllFieldsAndChildren()
+    public void Map_ShouldMapAllFieldsAndChildren_WhenDatabaseModelIsGiven()
     {
         var slotEligibility = SourceFactory.Create<DatabaseLineup.SlotEligibility>();
 
@@ -18,7 +18,7 @@ public class SlotEligibilityMapperTests
     }
 
     [TestMethod]
-    public void Map_ApplicationModel_MapsAllFieldsAndChildren()
+    public void Map_ShouldMapAllFieldsAndChildren_WhenApplicationModelIsGiven()
     {
         var model = SourceFactory.Create<DatabaseLineup.SlotEligibility>().Map();
 

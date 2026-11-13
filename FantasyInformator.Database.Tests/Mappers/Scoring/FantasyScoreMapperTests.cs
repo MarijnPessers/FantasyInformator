@@ -7,7 +7,7 @@ namespace FantasyInformator.Database.Tests.Mappers.Scoring;
 public class FantasyScoreMapperTests
 {
     [TestMethod]
-    public void Map_MapsAllFieldsAndChildren()
+    public void Map_ShouldMapAllFieldsAndChildren_WhenDatabaseModelIsGiven()
     {
         var fantasyScore = SourceFactory.Create<DatabaseScoring.FantasyScore>();
 
@@ -18,7 +18,7 @@ public class FantasyScoreMapperTests
     }
 
     [TestMethod]
-    public void Map_ApplicationModel_MapsAllFieldsAndChildren()
+    public void Map_ShouldMapAllFieldsAndChildren_WhenApplicationModelIsGiven()
     {
         var model = SourceFactory.Create<DatabaseScoring.FantasyScore>().Map();
 

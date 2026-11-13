@@ -17,9 +17,9 @@ dotnet_analyzer_diagnostic.category-Style.severity = warning
 dotnet_diagnostic.IDE3000.severity = none
 
 # --- SonarQube rules that are off by default (see docs/sonarqube-csharp-rules.md) ---
-# CLAUDE.md: no magic numbers.
+# No magic numbers.
 dotnet_diagnostic.S109.severity = warning
-# CLAUDE.md: always curly braces, one statement per line, no optional parameters, no default value initializers.
+# Always curly braces, one statement per line, no optional parameters, no default value initializers.
 dotnet_diagnostic.S121.severity = warning
 dotnet_diagnostic.S122.severity = warning
 dotnet_diagnostic.S2360.severity = warning
@@ -54,9 +54,9 @@ dotnet_diagnostic.S1541.severity = none
 dotnet_diagnostic.CA1062.severity = none
 # An app, not a shared library: List<T> stays, for ForEach, RemoveAll, AddRange, Find and the indexer.
 dotnet_diagnostic.CA1002.severity = none
-# CLAUDE.md: never internal; a type is public or private.
+# Never internal; a type is public or private.
 dotnet_diagnostic.CA1515.severity = none
-# CLAUDE.md: each action and handler is nested in its state's partial class.
+# Each action and handler is nested in its state's partial class.
 dotnet_diagnostic.CA1034.severity = none
 # Many false alarms (e.g. a disposable handed on or returned by a helper); disposing is checked by hand.
 dotnet_diagnostic.CA2000.severity = none
@@ -90,7 +90,7 @@ csharp_style_namespace_declarations = file_scoped
 dotnet_style_namespace_match_folder = true
 csharp_style_prefer_top_level_statements = true
 
-# --- expression bodies (the line ends after =>, see CLAUDE.md) ---
+# --- expression bodies (the line ends after =>) ---
 csharp_style_expression_bodied_constructors = true
 csharp_style_expression_bodied_methods = true
 csharp_style_expression_bodied_operators = true
@@ -104,7 +104,7 @@ csharp_style_expression_bodied_local_functions = true
 dotnet_style_require_accessibility_modifiers = for_non_interface_members
 dotnet_style_readonly_field = true
 csharp_prefer_static_local_function = true
-# CLAUDE.md: never put static on a lambda.
+# Never put static on a lambda.
 csharp_prefer_static_anonymous_function = false
 csharp_style_prefer_readonly_struct = true
 csharp_style_prefer_readonly_struct_member = true
@@ -148,7 +148,7 @@ csharp_style_prefer_simple_property_accessors = true
 csharp_style_prefer_labeled_jump_statements = true
 csharp_style_implicit_object_creation_when_type_is_apparent = true
 csharp_style_conditional_delegate_call = true
-# CLAUDE.md: an unused return value gets a discard (_ =).
+# An unused return value gets a discard (_ =).
 csharp_style_unused_value_expression_statement_preference = discard_variable
 csharp_style_unused_value_assignment_preference = discard_variable
 
@@ -166,7 +166,7 @@ dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity
 dotnet_style_parentheses_in_other_binary_operators = always_for_clarity
 dotnet_style_parentheses_in_other_operators = never_if_unnecessary
 
-# --- blank lines (CLAUDE.md: never 2 blank lines in a row, no blank line after { or before }) ---
+# --- blank lines (never 2 blank lines in a row, no blank line after { or before }) ---
 dotnet_style_allow_multiple_blank_lines_experimental = false
 csharp_style_allow_embedded_statements_on_same_line_experimental = false
 csharp_style_allow_blank_lines_between_consecutive_braces_experimental = false
@@ -174,7 +174,7 @@ dotnet_style_allow_statement_immediately_after_block_experimental = false
 csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental = false
 csharp_style_allow_blank_line_after_token_in_conditional_expression_experimental = false
 csharp_style_allow_blank_line_after_token_in_arrow_expression_clause_experimental = true
-# Against the CLAUDE.md layout: the line ends after =>, the expression goes on the next line.
+# Against the layout used here: the line ends after =>, the expression goes on the next line.
 dotnet_diagnostic.IDE2006.severity = none
 
 # --- naming ---
@@ -186,7 +186,7 @@ dotnet_naming_rule.types_are_pascal_case.symbols = types
 dotnet_naming_rule.types_are_pascal_case.style = pascal_case
 dotnet_naming_rule.types_are_pascal_case.severity = warning
 
-# CLAUDE.md: a method that returns a Task ends in Async (framework-fixed names such as Handle are overrides).
+# A method that returns a Task ends in Async (framework-fixed names such as Handle are overrides).
 dotnet_naming_rule.async_methods_end_in_async.symbols = async_methods
 dotnet_naming_rule.async_methods_end_in_async.style = suffix_async
 dotnet_naming_rule.async_methods_end_in_async.severity = warning
@@ -203,7 +203,7 @@ dotnet_naming_rule.private_static_readonly_fields_are_pascal_case.symbols = priv
 dotnet_naming_rule.private_static_readonly_fields_are_pascal_case.style = pascal_case
 dotnet_naming_rule.private_static_readonly_fields_are_pascal_case.severity = warning
 
-# CLAUDE.md: private fields are _camelCase.
+# Private fields are _camelCase.
 dotnet_naming_rule.private_fields_are_underscore_camel_case.symbols = private_fields
 dotnet_naming_rule.private_fields_are_underscore_camel_case.style = underscore_camel_case
 dotnet_naming_rule.private_fields_are_underscore_camel_case.severity = warning

@@ -7,7 +7,7 @@ namespace FantasyInformator.Database.Tests.Mappers.Player;
 public class PlayerMapperTests
 {
     [TestMethod]
-    public void Map_MapsAllFieldsAndChildren()
+    public void Map_ShouldMapAllFieldsAndChildren_WhenDatabaseModelIsGiven()
     {
         var player = SourceFactory.Create<DatabasePlayer.Player>();
 
@@ -18,7 +18,7 @@ public class PlayerMapperTests
     }
 
     [TestMethod]
-    public void Map_ApplicationModel_MapsAllFieldsAndChildren()
+    public void Map_ShouldMapAllFieldsAndChildren_WhenApplicationModelIsGiven()
     {
         var model = SourceFactory.Create<DatabasePlayer.Player>().Map();
 

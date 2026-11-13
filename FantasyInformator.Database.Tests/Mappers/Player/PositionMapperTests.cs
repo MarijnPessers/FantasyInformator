@@ -7,7 +7,7 @@ namespace FantasyInformator.Database.Tests.Mappers.Player;
 public class PositionMapperTests
 {
     [TestMethod]
-    public void Map_MapsAllFieldsAndChildren()
+    public void Map_ShouldMapAllFieldsAndChildren_WhenDatabaseModelIsGiven()
     {
         var position = SourceFactory.Create<DatabasePlayer.Position>();
 
@@ -18,7 +18,7 @@ public class PositionMapperTests
     }
 
     [TestMethod]
-    public void Map_ApplicationModel_MapsAllFieldsAndChildren()
+    public void Map_ShouldMapAllFieldsAndChildren_WhenApplicationModelIsGiven()
     {
         var model = SourceFactory.Create<DatabasePlayer.Position>().Map();
 

@@ -28,12 +28,13 @@ public interface IDatabaseSaveService
 }
 
 public class DatabaseSaveService(
-    IDbContextFactory<FantasyInformatorDbContext> contextFactory)
+    IDbContextFactory<FantasyInformatorDbContext> contextFactory,
+    TimeProvider timeProvider)
     : IDatabaseSaveService
 {
     public async Task SaveAsync(IEnumerable<AppTracking.TrackedModel> models, CancellationToken cancellationToken)
     {
-        var savedUtc = DateTime.UtcNow;
+        var savedUtc = timeProvider.GetUtcNow().UtcDateTime;
         await using var context = await contextFactory.CreateDbContextAsync(cancellationToken);
 
         // Each changed model is in the list itself, so the children copied into a model must not be found and

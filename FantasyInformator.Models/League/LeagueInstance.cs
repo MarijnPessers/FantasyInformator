@@ -9,7 +9,7 @@ namespace FantasyInformator.Models.League;
 /// <summary>A league in one season. This is the one that has the Sleeper league id.</summary>
 public class LeagueInstance : TrackedModel
 {
-    public string ExternalId { get; set; } = string.Empty;
+    public required string ExternalId { get; set; }
 
     public Guid LeagueId { get; set; }
 

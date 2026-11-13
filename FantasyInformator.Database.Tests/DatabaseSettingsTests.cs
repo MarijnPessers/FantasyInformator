@@ -10,7 +10,7 @@ public class DatabaseSettingsTests
     private readonly Fixture _fixture = new();
 
     [TestMethod]
-    public void Validate_ConnectionStringAppFilled_IsValid()
+    public void Validate_ShouldBeValid_WhenConnectionStringAppIsFilled()
     {
         var options = new DatabaseSettings { ConnectionStringApp = _fixture.Create<string>() };
 
@@ -22,7 +22,7 @@ public class DatabaseSettingsTests
     [TestMethod]
     [DataRow("")]
     [DataRow(" ")]
-    public void Validate_ConnectionStringAppBlank_ReportsConnectionStringApp(string connectionString)
+    public void Validate_ShouldReportConnectionStringApp_WhenConnectionStringAppIsBlank(string connectionString)
     {
         var options = new DatabaseSettings { ConnectionStringApp = connectionString };
 
@@ -33,7 +33,7 @@ public class DatabaseSettingsTests
     }
 
     [TestMethod]
-    public void Validate_ConnectionStringEFBlank_IsValid()
+    public void Validate_ShouldBeValid_WhenConnectionStringEFIsBlank()
     {
         var options = new DatabaseSettings
         {

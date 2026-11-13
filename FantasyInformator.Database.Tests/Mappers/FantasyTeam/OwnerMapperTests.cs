@@ -7,7 +7,7 @@ namespace FantasyInformator.Database.Tests.Mappers.FantasyTeam;
 public class OwnerMapperTests
 {
     [TestMethod]
-    public void Map_MapsAllFieldsAndChildren()
+    public void Map_ShouldMapAllFieldsAndChildren_WhenDatabaseModelIsGiven()
     {
         var owner = SourceFactory.Create<DatabaseFantasyTeam.Owner>();
 
@@ -18,7 +18,7 @@ public class OwnerMapperTests
     }
 
     [TestMethod]
-    public void Map_ApplicationModel_MapsAllFieldsAndChildren()
+    public void Map_ShouldMapAllFieldsAndChildren_WhenApplicationModelIsGiven()
     {
         var model = SourceFactory.Create<DatabaseFantasyTeam.Owner>().Map();
 

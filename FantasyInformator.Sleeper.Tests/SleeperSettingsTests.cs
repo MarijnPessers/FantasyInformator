@@ -10,7 +10,7 @@ public class SleeperSettingsTests
     private readonly Fixture _fixture = new();
 
     [TestMethod]
-    public void Validate_UsernameFilled_IsValid()
+    public void Validate_ShouldBeValid_WhenUsernameIsFilled()
     {
         var options = new SleeperSettings { Username = _fixture.Create<string>() };
 
@@ -22,7 +22,7 @@ public class SleeperSettingsTests
     [TestMethod]
     [DataRow("")]
     [DataRow(" ")]
-    public void Validate_UsernameBlank_ReportsUsername(string username)
+    public void Validate_ShouldReportUsername_WhenUsernameIsBlank(string username)
     {
         var options = new SleeperSettings { Username = username };
 
