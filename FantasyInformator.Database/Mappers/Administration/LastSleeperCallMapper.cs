@@ -1,4 +1,4 @@
-using AppAdministration = FantasyInformator.Models.Administration;
+using AppAdministration = FantasyInformator.Domain.Administration;
 using DatabaseAdministration = FantasyInformator.Database.Models.Administration;
 
 namespace FantasyInformator.Database.Mappers.Administration;

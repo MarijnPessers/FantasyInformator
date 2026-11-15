@@ -1,5 +1,5 @@
-using AppEnums = FantasyInformator.Models.Enums;
-using AppTracking = FantasyInformator.Models.Tracking;
+using AppEnums = FantasyInformator.Domain.Enums;
+using AppTracking = FantasyInformator.Domain.Tracking;
 using DatabaseTracking = FantasyInformator.Database.Models.Tracking;
 
 namespace FantasyInformator.Database.Mappers.Tracking;

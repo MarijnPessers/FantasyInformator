@@ -1,5 +1,5 @@
 using FantasyInformator.Database.Mappers.Tracking;
-using AppLeague = FantasyInformator.Models.League;
+using AppLeague = FantasyInformator.Domain.League;
 using DatabaseLeague = FantasyInformator.Database.Models.League;
 
 namespace FantasyInformator.Database.Mappers.League;

@@ -1,12 +1,17 @@
 # READMEs
 
+## Choosing a visual
+
+- Make a simple visual with Markdown itself first, such as a Mermaid diagram or a table. When a visual looks complex, ask whether to draw it in draw.io or to try Markdown first.
+- An image file that a README shows sits in the same folder as that README and shows up in the IDE: in its project, or in the solution items for the solution README.
+
 ## Images in the READMEs
 
 Visual Studio caches images in the README preview. Every image link in a README ends with `?t=` and a UTC timestamp, for example `models.drawio.svg?t=20261105003433`. Each time you change a README that holds such a link, or the image file it points to, set the timestamp to the current UTC time in the format `yyyyMMddHHmmss`. Do not use a version number.
 
 ## Diagram
 
-The models diagram is `FantasyInformator.Models/models.drawio.svg`, shown in the Models README.
+The models diagram is `FantasyInformator.Domain/models.drawio.svg`, shown in the Models README.
 
 - Every box lists `Id` first and, when the model has one, `ExternalId` second.
 - Every line has only 90-degree corners. The exception is a line between two tables directly above and below each other: it is one straight line.

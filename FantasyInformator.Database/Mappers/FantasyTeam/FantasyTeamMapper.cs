@@ -1,5 +1,5 @@
 using FantasyInformator.Database.Mappers.Tracking;
-using AppFantasyTeam = FantasyInformator.Models.FantasyTeam;
+using AppFantasyTeam = FantasyInformator.Domain.FantasyTeam;
 using DatabaseFantasyTeam = FantasyInformator.Database.Models.FantasyTeam;
 
 namespace FantasyInformator.Database.Mappers.FantasyTeam;

@@ -1,5 +1,5 @@
 using FantasyInformator.Database.Mappers.Tracking;
-using AppLineup = FantasyInformator.Models.Lineup;
+using AppLineup = FantasyInformator.Domain.Lineup;
 using DatabaseLineup = FantasyInformator.Database.Models.Lineup;
 
 namespace FantasyInformator.Database.Mappers.Lineup;

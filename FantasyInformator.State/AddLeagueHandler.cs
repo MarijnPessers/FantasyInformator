@@ -1,4 +1,4 @@
-using FantasyInformator.Models.League;
+using FantasyInformator.Domain.League;
 using TimeWarp.Mediator;
 using TimeWarp.State;
 

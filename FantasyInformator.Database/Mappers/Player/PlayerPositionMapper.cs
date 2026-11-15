@@ -1,5 +1,5 @@
 using FantasyInformator.Database.Mappers.Tracking;
-using AppPlayer = FantasyInformator.Models.Player;
+using AppPlayer = FantasyInformator.Domain.Player;
 using DatabasePlayer = FantasyInformator.Database.Models.Player;
 
 namespace FantasyInformator.Database.Mappers.Player;

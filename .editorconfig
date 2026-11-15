@@ -64,7 +64,7 @@ dotnet_diagnostic.CA2000.severity = none
 dotnet_diagnostic.CA2007.severity = none
 # A C#-only app: a name that is a keyword in another .NET language (e.g. Step in Visual Basic) is no problem.
 dotnet_diagnostic.CA1716.severity = none
-# A model has the same name as its group namespace (League in FantasyInformator.Models.League). The mappers use aliases.
+# A model has the same name as its group namespace (League in FantasyInformator.Domain.League). The mappers use aliases.
 dotnet_diagnostic.CA1724.severity = none
 
 # --- this. and predefined types ---

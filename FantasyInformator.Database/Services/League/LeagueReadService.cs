@@ -2,8 +2,8 @@ using FantasyInformator.Database.Context;
 using FantasyInformator.Database.Mappers.League;
 using FantasyInformator.Database.Mappers.Player;
 using Microsoft.EntityFrameworkCore;
-using AppLeague = FantasyInformator.Models.League;
-using AppPlayer = FantasyInformator.Models.Player;
+using AppLeague = FantasyInformator.Domain.League;
+using AppPlayer = FantasyInformator.Domain.Player;
 
 namespace FantasyInformator.Database.Services.League;
 

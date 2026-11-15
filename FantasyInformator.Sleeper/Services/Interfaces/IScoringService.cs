@@ -1,4 +1,4 @@
-using FantasyInformator.Models.Scoring;
+using FantasyInformator.Domain.Scoring;
 
 namespace FantasyInformator.Sleeper.Services.Interfaces;
 

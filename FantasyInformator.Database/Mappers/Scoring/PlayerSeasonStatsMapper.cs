@@ -1,5 +1,5 @@
 using FantasyInformator.Database.Mappers.Tracking;
-using AppScoring = FantasyInformator.Models.Scoring;
+using AppScoring = FantasyInformator.Domain.Scoring;
 using DatabaseScoring = FantasyInformator.Database.Models.Scoring;
 
 namespace FantasyInformator.Database.Mappers.Scoring;

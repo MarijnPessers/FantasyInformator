@@ -1,7 +1,7 @@
 using AutoFixture;
 using FantasyInformator.Database.Mappers.Tracking;
-using AppEnums = FantasyInformator.Models.Enums;
-using AppLeague = FantasyInformator.Models.League;
+using AppEnums = FantasyInformator.Domain.Enums;
+using AppLeague = FantasyInformator.Domain.League;
 using DatabaseLeague = FantasyInformator.Database.Models.League;
 
 namespace FantasyInformator.Database.Tests.Mappers.Tracking;

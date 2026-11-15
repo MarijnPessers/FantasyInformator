@@ -1,6 +1,6 @@
 using FantasyInformator.Database.Mappers.Player;
 using FantasyInformator.Database.Mappers.Tracking;
-using AppNfl = FantasyInformator.Models.Nfl;
+using AppNfl = FantasyInformator.Domain.Nfl;
 using DatabaseNfl = FantasyInformator.Database.Models.Nfl;
 
 namespace FantasyInformator.Database.Mappers.Nfl;

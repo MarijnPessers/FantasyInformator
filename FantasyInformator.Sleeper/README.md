@@ -2,7 +2,7 @@
 
 Retrieval from Sleeper. It has its own models for what Sleeper returns and hand-written mappers to the application models. Only the service interfaces exist so far.
 
-- References `FantasyInformator.Models`.
+- References `FantasyInformator.Domain`.
 - The username comes from the user secrets (required).
 - Nothing is called unless a button is pressed. Before the first call of a session, the NFL state call gives the season and week. They are kept in state and never saved.
 - The leagues update calls only the user-leagues endpoint. The players update calls the rosters endpoint once, which gives player ids only. Owners come from the league-users endpoint.
@@ -41,5 +41,3 @@ Not yet changed to return application models: the league users and the rosters.
 - The schedule mapper sets the kickoff to midnight UTC of the game day, until nflverse gives the time.
 
 Gaps: the NFL team name (Sleeper gives only the abbreviation) and the kickoff time of a game (see `FantasyInformator.Nflverse`).
-
-Tests: `FantasyInformator.Sleeper.Tests`.

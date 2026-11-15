@@ -1,5 +1,5 @@
-using FantasyInformator.Models.Nfl;
-using FantasyInformator.Models.Player;
+using FantasyInformator.Domain.Nfl;
+using FantasyInformator.Domain.Player;
 using SleeperModels = FantasyInformator.Sleeper.Services.Models;
 
 namespace FantasyInformator.Sleeper.Mappers;

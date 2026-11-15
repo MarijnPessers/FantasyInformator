@@ -1,4 +1,4 @@
-using FantasyInformator.Models.Nfl;
+using FantasyInformator.Domain.Nfl;
 using NflverseModels = FantasyInformator.Nflverse.Services.Models;
 
 namespace FantasyInformator.Nflverse.Mappers;

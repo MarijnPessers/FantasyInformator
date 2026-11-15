@@ -1,4 +1,4 @@
-using FantasyInformator.Models.Enums;
+using FantasyInformator.Domain.Enums;
 
 namespace FantasyInformator.Sleeper.Mappers;
 

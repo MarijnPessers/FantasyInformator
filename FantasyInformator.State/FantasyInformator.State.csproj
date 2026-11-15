@@ -16,7 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FantasyInformator.Models\FantasyInformator.Models.csproj" />
+    <ProjectReference Include="..\FantasyInformator.Domain\FantasyInformator.Domain.csproj" />
+    <ProjectReference Include="..\FantasyInformator.Logic\FantasyInformator.Logic.csproj" />
+    <ProjectReference Include="..\FantasyInformator.Shared\FantasyInformator.Shared.csproj" />
   </ItemGroup>
 
 </Project>

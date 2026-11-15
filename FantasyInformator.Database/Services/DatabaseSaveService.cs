@@ -6,14 +6,14 @@ using FantasyInformator.Database.Mappers.Nfl;
 using FantasyInformator.Database.Mappers.Player;
 using FantasyInformator.Database.Mappers.Scoring;
 using Microsoft.EntityFrameworkCore;
-using AppEnums = FantasyInformator.Models.Enums;
-using AppFantasyTeam = FantasyInformator.Models.FantasyTeam;
-using AppLeague = FantasyInformator.Models.League;
-using AppLineup = FantasyInformator.Models.Lineup;
-using AppNfl = FantasyInformator.Models.Nfl;
-using AppPlayer = FantasyInformator.Models.Player;
-using AppScoring = FantasyInformator.Models.Scoring;
-using AppTracking = FantasyInformator.Models.Tracking;
+using AppEnums = FantasyInformator.Domain.Enums;
+using AppFantasyTeam = FantasyInformator.Domain.FantasyTeam;
+using AppLeague = FantasyInformator.Domain.League;
+using AppLineup = FantasyInformator.Domain.Lineup;
+using AppNfl = FantasyInformator.Domain.Nfl;
+using AppPlayer = FantasyInformator.Domain.Player;
+using AppScoring = FantasyInformator.Domain.Scoring;
+using AppTracking = FantasyInformator.Domain.Tracking;
 using DatabaseTracking = FantasyInformator.Database.Models.Tracking;
 
 namespace FantasyInformator.Database.Services;
@@ -27,14 +27,11 @@ public interface IDatabaseSaveService
     Task SaveAsync(IEnumerable<AppTracking.TrackedModel> models, CancellationToken cancellationToken);
 }
 
-public class DatabaseSaveService(
-    IDbContextFactory<FantasyInformatorDbContext> contextFactory,
-    TimeProvider timeProvider)
-    : IDatabaseSaveService
+public class DatabaseSaveService(IDbContextFactory<FantasyInformatorDbContext> contextFactory) : IDatabaseSaveService
 {
     public async Task SaveAsync(IEnumerable<AppTracking.TrackedModel> models, CancellationToken cancellationToken)
     {
-        var savedUtc = timeProvider.GetUtcNow().UtcDateTime;
+        var savedUtc = DateTime.UtcNow;
         await using var context = await contextFactory.CreateDbContextAsync(cancellationToken);
 
         // Each changed model is in the list itself, so the children copied into a model must not be found and

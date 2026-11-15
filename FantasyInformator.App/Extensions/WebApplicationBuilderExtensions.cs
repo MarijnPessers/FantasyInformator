@@ -1,5 +1,4 @@
-using FantasyInformator.Database.Extensions;
-using FantasyInformator.Sleeper.Extensions;
+using FantasyInformator.State.Extensions;
 
 namespace FantasyInformator.App.Extensions;
 
@@ -9,12 +8,6 @@ public static class WebApplicationBuilderExtensions
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();
 
-    public static void LoadConfiguration(this WebApplicationBuilder builder)
-    {
-        _ = builder.Services.AddDatabaseOptions(builder.Configuration);
-        _ = builder.Services.AddSleeperOptions(builder.Configuration);
-    }
-
     public static void AddAppServices(this WebApplicationBuilder builder) =>
-        builder.Services.AddDatabaseServices();
+        builder.Services.AddStateServices(builder.Configuration);
 }

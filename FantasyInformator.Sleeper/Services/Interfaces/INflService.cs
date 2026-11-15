@@ -1,4 +1,4 @@
-using FantasyInformator.Models.Nfl;
+using FantasyInformator.Domain.Nfl;
 
 namespace FantasyInformator.Sleeper.Services.Interfaces;
 

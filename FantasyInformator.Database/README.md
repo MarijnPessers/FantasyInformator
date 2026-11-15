@@ -1,8 +1,8 @@
 # FantasyInformator.Database
 
-The code-first database. It has its own database models and hand-written mappers to the application models. The tables match the diagram in the [Models README](../FantasyInformator.Models/README.md).
+The code-first database. It has its own database models and hand-written mappers to the application models. The tables match the diagram in the [Models README](../FantasyInformator.Domain/README.md).
 
-- References `FantasyInformator.Models`. Uses Entity Framework Core.
+- References `FantasyInformator.Domain`. Uses Entity Framework Core.
 - Target: Azure SQL Database.
 - The connection strings and the failed-save queue folder are in .NET user secrets. One connection string is for the user that reads and writes while the application runs (required), the other for the user that changes tables (migrations only). This one can be copied and used by migration software.
 
@@ -56,5 +56,3 @@ Instead of `database update` you can use `FantasyInformator.Migrator` (see its R
 ## Firewall
 
 The Azure SQL server firewall must allow the PC's public IP address. Add it again when it changes.
-
-Tests: `FantasyInformator.Database.Tests`.

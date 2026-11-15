@@ -1,5 +1,5 @@
-using FantasyInformator.Models.Player;
-using FantasyInformator.Models.Scoring;
+using FantasyInformator.Domain.Player;
+using FantasyInformator.Domain.Scoring;
 using SleeperModels = FantasyInformator.Sleeper.Services.Models;
 
 namespace FantasyInformator.Sleeper.Mappers;

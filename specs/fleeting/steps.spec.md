@@ -1,45 +1,15 @@
 # Steps
 
-This file is the to-do list that carries work from one session to the next.
+## Goal
 
-- When a step is done, remove it from the list. When new work comes up, add it. Keep the list short.
-- The design decisions are in `specs/SPEC-1.md`. The READMEs describe the projects.
-
-## State
-
-The solution structure is set up, the NuGet packages are added and the solution builds. The application models (with their diagram in the Models README) and the settings classes per project are built. The Sleeper and Nflverse projects (Nflverse gives the kickoff times) have service interfaces, their own models and hand-written mappers to the application models, with tests, but no HTTP implementations yet (see their READMEs). The Database project has database models (a copy of the application models), mappers from them to the application models with tests, and the EF context with its table settings. The first migration is not created yet. The state model and the screens are not built yet. The design session (grilling) is finished.
+- First milestone: retrieve and show the roster of each league.
+- No security is needed while it runs locally. Security is added if it is ever put online.
+- The database is the source of truth.
 
 ## Next steps
 
-1. The developer finishes the Azure SQL free-tier database and puts `Database:ConnectionStringApp`, `Database:ConnectionStringEF`, `Sleeper:Username` and `Database:FailedSaveQueueFolder` in .NET user secrets. Claude never reads them.
-2. Sleeper and Nflverse projects: implement the service interfaces (HTTP clients), starting with the user-leagues call, with tests (MSTest, AutoFixture).
-3. Database project: the developer creates the first migration with the EF commands in the Database README, only when asked. After that: the services that read and save, the mappers from the application models to the database models (not written yet), and the seed data (slots, positions, slot eligibility and NFL team names, which the developer gives).
-4. Overview screen in the Blazor project. Start with the state model that holds the current and pending values (see "Change tracking" and "Open" in the spec). Then: season tabs, the update and save buttons, the report modal, a constant warning while a position has no slot link, using TimeWarp.State.
-
-## Open points
-
-Open points to settle on the way:
-
-- Whether TimeWarp.State actions and handlers can live in a project other than the Blazor app (not verified).
-- Whether a State project or a slot-logic project is needed.
-- How the same league is matched across seasons. The Sleeper docs list `previous_league_id` on a league without describing it. Check that it links a league to the previous season, then drop the name matching.
-- Gaps in what Sleeper gives: `NflTeam.Name` (only an abbreviation, to be seeded). The kickoff time of a `Game` comes from the nflverse schedule (`FantasyInformator.Nflverse`).
-- The per-player points in the matchups call (`players_points`) are not in the Sleeper docs. Check them in a live response.
-- Two lines in the diagram are not connected to a table. Connect or delete them in draw.io.
-- Whether the database users `ef`, `app` and `claude` exist yet (the developer creates them).
-- The mappers return stubs for links to other records (only the key is filled). A later step must swap the stubs for the real records.
-- `specs/SPEC-1.md` does not list the Nflverse project, the matchups call or the EF context yet.
-- The new code (mappers, Nflverse project, Database models, mappers and EF context) has not been built or tested yet. Build and run the tests first.
-- The spelling of the name: `FantasyInformator` is used everywhere, the developer once wrote "Fantasy Informator".
-
-## Suggested tools
-
-Matt Pocock's skills that fit this project. Mention them when the matching step starts.
-
-- `grill-with-docs`: grilling that also updates a glossary and decision records.
-- `domain-modeling`: record the terms (update, save, season, pending value) and the big choices (own change tracking).
-- `tdd`: for the change tracking and the mappers.
-- `prototype`: to try the overview screen and the state model first.
-- `research`: to check TimeWarp.State across projects.
-- `to-spec` and `to-tickets`: need an issue tracker, which the project does not have yet.
-- `implement`, `wayfinder`, `handoff` and `retro`: for building, planning large work, passing on a session and improving the setup.
+1. ✅ Create `FantasyInformator.Shared`, `FantasyInformator.Shared.Tests` and `FantasyInformator.Tests` (the flow tests).
+2. Write the flow tests of the players update, as described in `players-update.spec.md`.
+3. Build the players update until those tests pass.
+4. Implement the services, and the state alongside them.
+5. Implement the front end.

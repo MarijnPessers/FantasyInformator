@@ -22,9 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FantasyInformator.Database\FantasyInformator.Database.csproj" />
-    <ProjectReference Include="..\FantasyInformator.Models\FantasyInformator.Models.csproj" />
-    <ProjectReference Include="..\FantasyInformator.Sleeper\FantasyInformator.Sleeper.csproj" />
+    <ProjectReference Include="..\FantasyInformator.Domain\FantasyInformator.Domain.csproj" />
+    <ProjectReference Include="..\FantasyInformator.Shared\FantasyInformator.Shared.csproj" />
+    <ProjectReference Include="..\FantasyInformator.State\FantasyInformator.State.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

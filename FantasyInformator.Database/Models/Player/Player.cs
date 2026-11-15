@@ -3,7 +3,7 @@ using FantasyInformator.Database.Models.FantasyTeam;
 using FantasyInformator.Database.Models.Nfl;
 using FantasyInformator.Database.Models.Scoring;
 using FantasyInformator.Database.Models.Tracking;
-using FantasyInformator.Models.Enums;
+using FantasyInformator.Domain.Enums;
 
 namespace FantasyInformator.Database.Models.Player;
 

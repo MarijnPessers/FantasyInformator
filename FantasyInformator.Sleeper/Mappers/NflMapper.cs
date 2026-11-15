@@ -1,5 +1,5 @@
 using System.Globalization;
-using FantasyInformator.Models.Nfl;
+using FantasyInformator.Domain.Nfl;
 using SleeperModels = FantasyInformator.Sleeper.Services.Models;
 
 namespace FantasyInformator.Sleeper.Mappers;

@@ -16,12 +16,31 @@ Every functionality is a separate project. A project's README holds its details.
 
 | Project | Purpose |
 |---------|---------|
-| [FantasyInformator.App](FantasyInformator.App/README.md) | Blazor front end |
-| [FantasyInformator.Models](FantasyInformator.Models/README.md) | The application models |
+| [FantasyInformator.App](FantasyInformator.App/README.md) | Blazor front end. It tells State what to change. |
+| [FantasyInformator.State](FantasyInformator.State/README.md) | Holds the data the app shows, changes it and marks what changed. |
+| [FantasyInformator.Logic](FantasyInformator.Logic/README.md) | Fetches data from Sleeper and nflverse, reads and writes the database, and decides when to save. |
+| [FantasyInformator.Domain](FantasyInformator.Domain/README.md) | The application models, known to every project |
+| [FantasyInformator.Shared](FantasyInformator.Shared/README.md) | The application's own library of shared functionality, such as the progress reports every project uses to report errors and progress |
 | [FantasyInformator.Sleeper](FantasyInformator.Sleeper/README.md) | Retrieval from Sleeper |
 | [FantasyInformator.Nflverse](FantasyInformator.Nflverse/README.md) | Kickoff times from nflverse |
 | [FantasyInformator.Database](FantasyInformator.Database/README.md) | Code-first database |
 | [FantasyInformator.Migrator](FantasyInformator.Migrator/README.md) | Creates and applies the database migrations |
-| [FantasyInformator.State](FantasyInformator.State/README.md) | The state classes, actions and handlers |
+| [FantasyInformator.Tests](FantasyInformator.Tests/README.md) | Tests of chosen flows through State and Logic, with stand-ins for Sleeper and the database |
 
-Each project except Models has a test project with the same name plus `.Tests`. The models hold no logic, so they have none. The tests use MSTest and AutoFixture.
+A project with its own models (Sleeper, Nflverse, Database) holds the mappers between those models and Domain, so no other project needs to know its models.
+
+Each project except Domain has a test project with the same name plus `.Tests`. Domain holds only models and no logic, so it has no tests. `FantasyInformator.Tests` holds tests of chosen flows through State and Logic, with stand-ins for Sleeper and the database. The tests use MSTest and AutoFixture.
+
+## How the projects connect
+
+```mermaid
+flowchart LR
+    Domain ~~~ Shared
+    App --> State --> Logic
+    Logic --> Sleeper & Nflverse & Database
+    Migrator --> Database
+```
+
+An arrow points from a project to a project it uses.
+
+Domain and Shared stand apart: most projects use them, so their arrows are left out.

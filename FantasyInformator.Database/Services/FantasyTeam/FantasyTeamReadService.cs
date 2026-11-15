@@ -1,7 +1,7 @@
 using FantasyInformator.Database.Context;
 using FantasyInformator.Database.Mappers.Player;
 using Microsoft.EntityFrameworkCore;
-using AppPlayer = FantasyInformator.Models.Player;
+using AppPlayer = FantasyInformator.Domain.Player;
 
 namespace FantasyInformator.Database.Services.FantasyTeam;
 
