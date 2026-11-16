@@ -20,6 +20,11 @@ public record ProgressReport(
     public DateTime CreatedUtc { get; init; } = DateTime.UtcNow;
 
     /// <summary>
+    /// The name of the action that was running when the report was made, or <see langword="null"/> when none was.
+    /// </summary>
+    public string? ActivityName { get; } = Activity.Current?.OperationName;
+
+    /// <summary>
     /// The trace of the action that was running when the report was made, or <see langword="null"/> when none was.
     /// </summary>
     public ActivityTraceId? TraceId { get; } = Activity.Current?.TraceId;

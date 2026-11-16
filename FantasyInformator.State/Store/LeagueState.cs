@@ -1,9 +1,9 @@
-using FantasyInformator.Domain.League;
+using FantasyInformator.Database.Models.League;
 using TimeWarp.State;
 
-namespace FantasyInformator.State;
+namespace FantasyInformator.State.Store;
 
-public sealed partial class LeagueListState : State<LeagueListState>
+public sealed partial class LeagueState : State<LeagueState>
 {
     public List<League> Leagues { get; private set; } = [];
 

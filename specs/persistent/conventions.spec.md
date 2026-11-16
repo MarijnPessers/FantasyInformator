@@ -25,13 +25,14 @@ Only the coding decisions that the existing code, `CLAUDE.local.md`, the SonarQu
 
 ## State
 
-- TimeWarp.State 12 (11.x depends on MediatR). `ISender` sends an action and `IStore.GetState<T>()` reads a state outside a component. A plain service container registers it with `AddTimeWarpState(x => x.Assemblies = [...])`.
+- TimeWarp.State 12 (11.x depends on MediatR). Everything about it is in `timewarp-state.spec.md`.
 
 ## Errors, calls and timeouts
 
 - Errors:
   - No project throws an expected failure to its caller.
   - Each project catches only the specific errors it expects, such as `HttpRequestException` or `DbException`, and reports them through `IProgress<ProgressReport>`. State sends the add-report action instead.
+  - A call that runs out of its total time is an expected error: Polly's `TimeoutRejectedException` is caught and reported.
   - A catch of every error (`Exception`) is never used: an unexpected error is a bug and still throws, so it shows.
 - A fetch, from a service or from the database, returns a list: empty when there's nothing, one or more items when there's data, `null` when it failed. A save (insert, update or delete) returns `true` or `false`. Logic answers State the same way.
 - Progress reports:
@@ -43,19 +44,20 @@ Only the coding decisions that the existing code, `CLAUDE.local.md`, the SonarQu
 - A progress report holds a severity (`LogLevel`), a header, a message, whether to show it to the user, and the exception, if there is one. It sets its own `CreatedUtc`, from `DateTime.UtcNow`, and its own trace ID when it's made. A test can set `CreatedUtc` itself.
 - The App shows a progress report when its severity is at or above the display level, or when it's marked to show to the user. The display level is an App setting and defaults to `Warning`.
 - Tracing:
-  - Each action a page sends gets its own trace. State starts an `Activity` for it in a TimeWarp pipeline behavior.
+  - Each action a page sends gets its own trace. The behavior `TraceBehavior` runs around every action and starts an `Activity` for it, named after the action. A test checks that the State project declares it.
   - The activity is created directly (`new Activity(...).Start()`), because `ActivitySource` only creates one when something listens.
   - An action sent while no action is running starts a new trace, so it doesn't pick up the Blazor connection's activity. An action sent while another one runs stays in that trace.
   - The trace ID follows every async call by itself, parallel ones too. No method passes it as a parameter.
-  - A progress report takes the current trace ID when it's made.
+  - A progress report takes the current trace ID and activity name when it's made.
   - The App can group reports by trace ID. How it shows a group is decided later.
 - Every call to a service or the database is async and takes a `CancellationToken`. Steps that need each other's result run one after another, and the rest may run in parallel. After a failure, Logic decides per feature whether the action stops or goes on.
 - Web clients are written by hand with `IHttpClientFactory` and `System.Text.Json`, without Refit.
 - Retries:
   - Web calls retry through `Microsoft.Extensions.Http.Resilience`, database calls through `Microsoft.Extensions.Resilience`. Both use Polly.
   - The app doesn't use EF's own retry.
+  - No circuit breaker and no rate limiter: the app has one user.
   - Limited calls never retry, such as the players fetch and the players save.
-  - Database writes a waiting players file before each of its calls.
+  - Before each of its calls, Database tries to save a waiting players file into the database.
 - After a timeout:
   1. The attempt's cancellation token is cancelled.
   2. The call is awaited until it ends.
@@ -72,7 +74,7 @@ Only the coding decisions that the existing code, `CLAUDE.local.md`, the SonarQu
   - Each attempt wraps the whole call and gets its own context from the factory.
   - Database recognizes temporary SQL errors by its own list of SQL error numbers. EF's list (`SqlServerTransientExceptionDetector`) is internal API that may change without notice, so it isn't used.
   - SqlClient can report an accepted cancel as a `SqlException` ("Operation cancelled by user") instead of an `OperationCanceledException` (SqlClient issue #26). When the attempt's token was cancelled, Database treats that `SqlException` as an accepted cancel.
-  - A retry can't double an insert that went through anyway: the unique indexes on `ExternalId` make the second insert fail.
+  - A save inserts a row only when its unique key isn't in the database yet, and updates it otherwise. So a retry of a save that already went through updates the row instead of failing.
   - The Migrator keeps EF's own retry.
 
 ## Classes

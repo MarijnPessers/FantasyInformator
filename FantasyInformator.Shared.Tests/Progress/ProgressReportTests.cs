@@ -42,6 +42,26 @@ public class ProgressReportTests
         Assert.IsNull(report.TraceId);
     }
 
+    [TestMethod]
+    public void ActivityName_ShouldBeTheNameOfTheRunningActivity_WhenAnActivityRuns()
+    {
+        using var activity = new Activity(_fixture.Create<string>()).Start();
+
+        var report = CreateReport();
+
+        Assert.AreEqual(activity.OperationName, report.ActivityName);
+    }
+
+    [TestMethod]
+    public void ActivityName_ShouldBeNull_WhenNoActivityRuns()
+    {
+        Activity.Current = null;
+
+        var report = CreateReport();
+
+        Assert.IsNull(report.ActivityName);
+    }
+
     private ProgressReport CreateReport() =>
         new(
             _fixture.Create<LogLevel>(),

@@ -1,8 +1,10 @@
 using AutoFixture;
-using FantasyInformator.Domain.League;
+using FantasyInformator.Database.Models.League;
+using FantasyInformator.State.Store;
 using Microsoft.Extensions.DependencyInjection;
 using TimeWarp.Mediator;
 using TimeWarp.State;
+using static FantasyInformator.State.Store.LeagueState;
 
 namespace FantasyInformator.State.Tests;
 
@@ -17,14 +19,15 @@ public class LeagueListStateTests
     public async Task AddLeagueAction_ShouldAddTheLeagueToTheState_WhenSentWithoutBlazorAsync()
     {
         var services = new ServiceCollection();
-        _ = services.AddTimeWarpState(x => x.Assemblies = [typeof(LeagueListState).Assembly]);
+        _ = services.AddGeneratedMediator<ClientPipeline>();
+        _ = services.AddTimeWarpState(x => x.Assemblies = [typeof(LeagueState).Assembly]);
         await using var serviceProvider = services.BuildServiceProvider();
         var league = new League { Name = _fixture.Create<string>() };
-        var sender = serviceProvider.GetRequiredService<ISender>();
+        var sender = serviceProvider.GetRequiredService<ISender<ClientPipeline>>();
         var store = serviceProvider.GetRequiredService<IStore>();
 
-        await sender.Send(new LeagueListState.AddLeagueAction(league), TestContext.CancellationToken);
+        await sender.Send(new AddLeagueAction(league), TestContext.CancellationToken);
 
-        Assert.AreEqual(league.Name, store.GetState<LeagueListState>().Leagues.Single().Name);
+        Assert.AreEqual(league.Name, store.GetState<LeagueState>().Leagues.Single().Name);
     }
 }

@@ -12,6 +12,7 @@ Read a spec file only when its "Read when" fits the current task, or when Marijn
 | `persistent/nugetcheck.spec.md` | NuGet check: the date the prerelease packages were last checked for a newer stable version. | At the start of each session. |
 | `persistent/readme-images.spec.md` | Rules for README visuals: Markdown before draw.io, where image files go, the timestamp on image links, and how the models diagram (draw.io) is drawn and kept in sync. | Adding or changing a visual in a README. |
 | `persistent/roadmap.spec.md` | Roadmap: the features still to come. | Planning or designing a new feature. |
+| `persistent/timewarp-state.spec.md` | TimeWarp.State and TimeWarp.Mediator: version in use, where to look, registering, pipelines, states, actions and handlers, behaviors, tracing, Blazor, other packages. | Needing to know anything about TimeWarp.State. |
 
 ## Keeping the specs up to date
 
@@ -25,8 +26,15 @@ Read a spec file only when its "Read when" fits the current task, or when Marijn
 
 ## WIP files
 
-- When asked about WIP files, or to load one without a number, list each file as `<filename>: <first line>`, unnumbered. On a number, read `specs/WIP/WIP_<number>.spec.md`, then show only the request for "implement" to delete it. Never renumber WIP files.
+- Never read a WIP file, except `WIP_<number>.spec.md` after Marijn gives its number.
+- When asked about WIP files, or to load one without a number, list each file as `<filename>: <first line>`, unnumbered. On a number, read `specs/WIP/WIP_<number>.spec.md` and work through its items. Mark each item ✅ in the file as soon as it's done; that needs no "implement". When every item is done, offer to delete the file. Never renumber WIP files.
+- When `/handoff` runs while a WIP file exists, ask whether to write a new WIP file or update the existing one.
 
 ## NuGet check
 
 - If `persistent/nugetcheck.spec.md` is missing, or its last-check date is 14 or more days ago, look up every prerelease NuGet package (a version with a suffix like `-beta`, `-preview` or `-rc`). Suggest an update for each one that has a newer stable version. Then write today's date in the file; that needs no "implement".
+
+## TimeWarp.State
+
+- When you need to know something about TimeWarp.State, read `persistent/timewarp-state.spec.md` first. Look on the web only when it doesn't hold the answer.
+- Add every new fact to that spec, with its source. Writing to it needs no "implement".

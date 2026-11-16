@@ -13,16 +13,18 @@
     <File Path="docs/sonarqube-csharp-rules.md" />
   </Folder>
   <Folder Name="/Solution Items/Specs/">
-    <File Path="specs/index.spec.md" />
+    <File Path="Specs/index.spec.md" />
   </Folder>
   <Folder Name="/Solution Items/Specs/fleeting/">
-    <File Path="specs/fleeting/players-update.spec.md" />
-    <File Path="specs/fleeting/steps.spec.md" />
+    <File Path="Specs/fleeting/players-update.spec.md" />
+    <File Path="Specs/fleeting/steps.spec.md" />
   </Folder>
   <Folder Name="/Solution Items/Specs/persistent/">
-    <File Path="specs/persistent/conventions.spec.md" />    <File Path="specs/persistent/nugetcheck.spec.md" />
-    <File Path="specs/persistent/readme-images.spec.md" />
-    <File Path="specs/persistent/roadmap.spec.md" />
+    <File Path="Specs/persistent/conventions.spec.md" />    
+    <File Path="Specs/persistent/nugetcheck.spec.md" />
+    <File Path="Specs/persistent/readme-images.spec.md" />
+    <File Path="Specs/persistent/roadmap.spec.md" />
+    <File Path="Specs/persistent/timewarp-state.spec.md" />
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="FantasyInformator.App.Tests/FantasyInformator.App.Tests.csproj" />

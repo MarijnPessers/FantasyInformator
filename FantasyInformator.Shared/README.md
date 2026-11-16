@@ -19,7 +19,7 @@ The application's own library of shared functionality. Each functionality that i
   - a header and a message
   - whether the user must see it
   - when it was made
-  - the trace ID of the action it belongs to
+  - the trace ID and name of the action it belongs to
   - the error itself, if there was one
 - Every report goes to one place per user session: the progress state. The screen reads it and shows the reports that matter, such as warnings and errors.
 - The part that gets `null` or `false` back doesn't wait for the report. It can trust that the report has arrived or will arrive, and decides by itself whether to stop or go on.
