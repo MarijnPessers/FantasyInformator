@@ -2,6 +2,8 @@
 
 A console program with a menu to manage the database migrations of `FantasyInformator.Database`.
 
+[[_TOC_]]
+
 ## What it does
 
 - **Create a migration:** asks for a name and creates it. If the model has no changes, nothing is created.

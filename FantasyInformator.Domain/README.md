@@ -2,6 +2,8 @@
 
 The application's own models.
 
+[[_TOC_]]
+
 ## Change tracking
 
 Every model except `LastSleeperCall` has two base fields:
@@ -60,4 +62,4 @@ Each coloured block is a group of models that belong together.
 
 ### Administration (grey)
 
-- **Last Sleeper call:** the last time a call was made, kept per call name, which is its key. It has no `Id`.
+- **Last Sleeper call:** the last time a call was made, kept per call name, which is its key. It exists for limited calls: calls that may only be made once per time period, such as the players list. It has no `Id`.

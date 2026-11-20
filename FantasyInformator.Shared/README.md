@@ -2,6 +2,8 @@
 
 The application's own library of shared functionality. Each functionality that is added here gets its own explanation below, describing what it does.
 
+[[_TOC_]]
+
 ## Functionality
 
 - Progress reporting: how a part of the application reports errors and progress, instead of stopping with an error. The report is built. The class that receives reports, the progress state and the screen part are not.

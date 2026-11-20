@@ -13,6 +13,8 @@ References `FantasyInformator.Domain` and `FantasyInformator.State` (the latter 
 
 Settings that belong to a person or PC come from .NET user secrets: the Sleeper username, the database connection string and the failed-save queue folder.
 
+[[_TOC_]]
+
 ## Styling
 
 - All CSS comes from Tailwind. Write it in `Styles/tailwind.css`. Each build turns that file into `wwwroot/tailwind.css`, which is never edited by hand.

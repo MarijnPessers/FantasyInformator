@@ -9,6 +9,8 @@ Retrieval from Sleeper. It has its own models for what Sleeper returns and hand-
 - The players list is fetched only when needed and locked for a while after a fetch.
 - If a call fails, the rest of the application keeps working.
 
+[[_TOC_]]
+
 ## Sleeper endpoints
 
 Official, public, no token. Stay under the call limit per minute. The players call returns a large answer, so it is fetched rarely. The per-player points in the matchups call are not in the docs and not yet seen live.

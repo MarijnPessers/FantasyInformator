@@ -2,6 +2,8 @@
 
 A personal application to manage multiple fantasy football teams on [Sleeper](https://sleeper.com). It runs locally on a PC and keeps its data in an Azure SQL database.
 
+[[_TOC_]]
+
 ## What it can do
 
 - Keep several fantasy teams (Sleeper leagues) side by side, per season.
