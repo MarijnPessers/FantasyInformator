@@ -5,7 +5,7 @@ using FantasyInformator.Domain.Enums;
 namespace FantasyInformator.Database.Mappers;
 
 /// <summary>
-/// Maps the fields every entity has: the id and the state. Each mapper ends with a call to it.
+/// Maps the fields every entity has: the id and the state.
 /// </summary>
 internal static class BaseEntityMapper
 {

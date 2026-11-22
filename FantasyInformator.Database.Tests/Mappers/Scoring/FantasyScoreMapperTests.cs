@@ -6,12 +6,20 @@ namespace FantasyInformator.Database.Tests.Mappers.Scoring;
 [TestClass]
 public class FantasyScoreMapperTests
 {
+    private FantasyScoreMapper _mapper = null!;
+
+    [TestInitialize]
+    public void Initialize()
+    {
+        _mapper = new FantasyScoreMapper();
+    }
+
     [TestMethod]
     public void Map_ShouldMapAllFieldsAndChildren_WhenDatabaseModelIsGiven()
     {
         var fantasyScore = SourceFactory.Create<FantasyScoreDb>();
 
-        var result = FantasyScoreMapper.Map(fantasyScore);
+        var result = _mapper.Map(fantasyScore);
 
         Assert.IsNotNull(result);
         MappedAssert.Equal(fantasyScore, result);
@@ -20,9 +28,9 @@ public class FantasyScoreMapperTests
     [TestMethod]
     public void Map_ShouldMapAllFieldsAndChildren_WhenApplicationModelIsGiven()
     {
-        var model = SourceFactory.Create<FantasyScoreDb>().Map();
+        var model = _mapper.Map(SourceFactory.Create<FantasyScoreDb>());
 
-        var result = model.Map();
+        var result = _mapper.Map(model);
 
         MappedAssert.Equal(result, model);
     }

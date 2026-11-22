@@ -6,12 +6,20 @@ namespace FantasyInformator.Database.Tests.Mappers.Players;
 [TestClass]
 public class GameAppearanceMapperTests
 {
+    private GameAppearanceMapper _mapper = null!;
+
+    [TestInitialize]
+    public void Initialize()
+    {
+        _mapper = new GameAppearanceMapper();
+    }
+
     [TestMethod]
     public void Map_ShouldMapAllFieldsAndChildren_WhenDatabaseModelIsGiven()
     {
         var gameAppearance = SourceFactory.Create<GameAppearanceDb>();
 
-        var result = GameAppearanceMapper.Map(gameAppearance);
+        var result = _mapper.Map(gameAppearance);
 
         Assert.IsNotNull(result);
         MappedAssert.Equal(gameAppearance, result);
@@ -20,9 +28,9 @@ public class GameAppearanceMapperTests
     [TestMethod]
     public void Map_ShouldMapAllFieldsAndChildren_WhenApplicationModelIsGiven()
     {
-        var model = SourceFactory.Create<GameAppearanceDb>().Map();
+        var model = _mapper.Map(SourceFactory.Create<GameAppearanceDb>());
 
-        var result = model.Map();
+        var result = _mapper.Map(model);
 
         MappedAssert.Equal(result, model);
     }

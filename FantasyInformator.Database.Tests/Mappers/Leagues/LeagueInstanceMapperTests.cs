@@ -6,12 +6,20 @@ namespace FantasyInformator.Database.Tests.Mappers.Leagues;
 [TestClass]
 public class LeagueInstanceMapperTests
 {
+    private LeagueInstanceMapper _mapper = null!;
+
+    [TestInitialize]
+    public void Initialize()
+    {
+        _mapper = new LeagueInstanceMapper();
+    }
+
     [TestMethod]
     public void Map_ShouldMapAllFieldsAndChildren_WhenDatabaseModelIsGiven()
     {
         var leagueInstance = SourceFactory.Create<LeagueInstanceDb>();
 
-        var result = LeagueInstanceMapper.Map(leagueInstance);
+        var result = _mapper.Map(leagueInstance);
 
         Assert.IsNotNull(result);
         MappedAssert.Equal(leagueInstance, result);
@@ -20,9 +28,9 @@ public class LeagueInstanceMapperTests
     [TestMethod]
     public void Map_ShouldMapAllFieldsAndChildren_WhenApplicationModelIsGiven()
     {
-        var model = SourceFactory.Create<LeagueInstanceDb>().Map();
+        var model = _mapper.Map(SourceFactory.Create<LeagueInstanceDb>());
 
-        var result = model.Map();
+        var result = _mapper.Map(model);
 
         MappedAssert.Equal(result, model);
     }

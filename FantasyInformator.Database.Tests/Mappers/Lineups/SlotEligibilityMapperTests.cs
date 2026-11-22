@@ -6,12 +6,20 @@ namespace FantasyInformator.Database.Tests.Mappers.Lineups;
 [TestClass]
 public class SlotEligibilityMapperTests
 {
+    private SlotEligibilityMapper _mapper = null!;
+
+    [TestInitialize]
+    public void Initialize()
+    {
+        _mapper = new SlotEligibilityMapper();
+    }
+
     [TestMethod]
     public void Map_ShouldMapAllFieldsAndChildren_WhenDatabaseModelIsGiven()
     {
         var slotEligibility = SourceFactory.Create<SlotEligibilityDb>();
 
-        var result = SlotEligibilityMapper.Map(slotEligibility);
+        var result = _mapper.Map(slotEligibility);
 
         Assert.IsNotNull(result);
         MappedAssert.Equal(slotEligibility, result);
@@ -20,9 +28,9 @@ public class SlotEligibilityMapperTests
     [TestMethod]
     public void Map_ShouldMapAllFieldsAndChildren_WhenApplicationModelIsGiven()
     {
-        var model = SourceFactory.Create<SlotEligibilityDb>().Map();
+        var model = _mapper.Map(SourceFactory.Create<SlotEligibilityDb>());
 
-        var result = model.Map();
+        var result = _mapper.Map(model);
 
         MappedAssert.Equal(result, model);
     }

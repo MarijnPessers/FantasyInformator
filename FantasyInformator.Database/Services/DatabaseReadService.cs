@@ -33,12 +33,12 @@ internal interface IDatabaseReadService
 /// Example: all PlayerDb, without the team of each player.
 /// </item>
 /// <item>
-/// The Map method copies the database models into models.
-/// Example: the Map method in PlayerMapper copies all PlayerDb into Players.
+/// The mapper copies the database models into models.
+/// Example: PlayerMapper copies all PlayerDb into Players.
 /// </item>
 /// </list>
-/// Finding the database model and the Map method by name is slow, so it is done on the first call and remembered after
-/// that in <see cref="ReadAllAsyncMethods"/> and <see cref="MapMethods"/>.
+/// Finding the database model by name is slow, so it is done on the first call and remembered after that in
+/// <see cref="ReadAllAsyncMethods"/>.
 /// </summary>
 internal sealed class DatabaseReadService(IDbContextFactory<FantasyInformatorDbContext> contextFactory) : IDatabaseReadService
 {
@@ -50,13 +50,6 @@ internal sealed class DatabaseReadService(IDbContextFactory<FantasyInformatorDbC
     /// Example: the <c>ReadAllAsync&lt;Player, PlayerDb&gt;()</c> method.
     /// </summary>
     private static readonly ConcurrentDictionary<Type, Delegate> ReadAllAsyncMethods = new();
-
-    /// <summary>
-    /// A list of Map methods, one per pair of model and database model.
-    /// Finding a Map method by name is slow, so each one is found once and kept here.
-    /// Example: the Map method that copies PlayerDb into Player.
-    /// </summary>
-    private static readonly ConcurrentDictionary<(Type Database, Type Model), Delegate> MapMethods = new();
 
     /// <summary>
     /// Read as ReadAll + MethodInfo: the information (MethodInfo) about the method
@@ -88,7 +81,7 @@ internal sealed class DatabaseReadService(IDbContextFactory<FantasyInformatorDbC
     /// <summary>
     /// Does the actual reading. It needs the model and its database model, so it only runs through the Func that
     /// <see cref="CreateReadAllAsyncMethod{TModel}"/> makes. It reads all data from the table and copies it into models
-    /// with the Map method. It is public only so <see cref="ReadAllMethodInfo"/> can find it without reading private
+    /// with its mapper. It is public only so <see cref="ReadAllMethodInfo"/> can find it without reading private
     /// methods; the class is internal, so nothing outside this project can call it.
     /// Example: set to Player and PlayerDb, it reads all PlayerDb and returns them as Players.
     /// </summary>
@@ -100,13 +93,13 @@ internal sealed class DatabaseReadService(IDbContextFactory<FantasyInformatorDbC
         // Example: all PlayerDb.
         var list = await GetAllAsync<TDatabaseModel>(cancellationToken);
 
-        // Step 2: find the Map method that copies the table data into models.
-        // Example: PlayerDb into Player.
-        var mapper = FindMapMethod<TDatabaseModel, TModel>();
+        // Step 2: find the mapper that copies the table data into models.
+        // Example: PlayerMapper, for PlayerDb into Player.
+        var mapper = MapperLookup.Find<TModel, TDatabaseModel>();
 
-        // Step 3: the Map method copies the database models into models.
+        // Step 3: the mapper copies the database models into models.
         // Example: all PlayerDb become Players.
-        return mapper(list);
+        return mapper.Map(list);
     }
 
     /// <summary>
@@ -138,17 +131,4 @@ internal sealed class DatabaseReadService(IDbContextFactory<FantasyInformatorDbC
             .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
-
-    /// <summary>
-    /// Copying table data into models needs the Map method for that pair. It is found once and kept in
-    /// <see cref="MapMethods"/>. <see cref="MapMethods"/> holds it as a Delegate, which is not type specific, so it is
-    /// cast to the Func for this pair. Throws when there is none or more than one.
-    /// Example: the Map method that copies a list of PlayerDb into a list of Players.
-    /// </summary>
-    private static Func<IEnumerable<TDatabaseModel>, IEnumerable<TModel>> FindMapMethod<TDatabaseModel, TModel>() =>
-        (Func<IEnumerable<TDatabaseModel>, IEnumerable<TModel>>)MapMethods.GetOrAdd(
-            (typeof(TDatabaseModel), typeof(TModel)),
-            _ => MapperLookup
-                .Find([typeof(IEnumerable<TDatabaseModel>)], typeof(IEnumerable<TModel>))
-                .CreateDelegate<Func<IEnumerable<TDatabaseModel>, IEnumerable<TModel>>>());
 }

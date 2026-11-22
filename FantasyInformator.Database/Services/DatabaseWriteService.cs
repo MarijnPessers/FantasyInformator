@@ -27,8 +27,8 @@ internal interface IDatabaseWriteService
 
 /// <summary>
 /// Without this class every model would need its own save method, such as SavePlayers, SaveLeagues and SaveTeams.
-/// This class saves any model with one method, <see cref="SaveAll{TModel}"/>, and finds the database model and the Map
-/// method by itself.
+/// This class saves any model with one method, <see cref="SaveAll{TModel}"/>, and finds the database model and the
+/// mapper by itself.
 /// Example: <c>SaveAll&lt;Player&gt;(players)</c> copies each Player into a PlayerDb and saves it.
 /// </summary>
 internal sealed class DatabaseWriteService(IDbContextFactory<FantasyInformatorDbContext> contextFactory) : IDatabaseWriteService
@@ -41,13 +41,6 @@ internal sealed class DatabaseWriteService(IDbContextFactory<FantasyInformatorDb
     /// Example: the <c>SaveAllAsync&lt;Player, PlayerDb&gt;()</c> method.
     /// </summary>
     private static readonly ConcurrentDictionary<Type, Delegate> SaveAllAsyncMethods = new();
-
-    /// <summary>
-    /// A list of Map methods, one per pair of model and database model.
-    /// Finding a Map method by name is slow, so each one is found once and kept here.
-    /// Example: the Map method that copies a Player into a PlayerDb.
-    /// </summary>
-    private static readonly ConcurrentDictionary<(Type Model, Type Database), Delegate> MapMethods = new();
 
     /// <summary>
     /// Read as SaveAll + MethodInfo: the information (MethodInfo) about the method
@@ -90,7 +83,7 @@ internal sealed class DatabaseWriteService(IDbContextFactory<FantasyInformatorDb
     /// <summary>
     /// <see cref="SaveAll{TModel}"/> only finds this method for a model; this method does the saving. It needs the model
     /// and its database model, so it only runs through the Func that <see cref="CreateSaveAllAsyncMethod{TModel}"/>
-    /// makes. It copies each changed model into its database model with the Map method, finds the New ones that are
+    /// makes. It copies each changed model into its database model with its mapper, finds the New ones that are
     /// already in the database with <see cref="FindDatabaseIdsAsync{TDatabaseModel}"/>, marks each one to be added,
     /// updated or removed by its state, and then saves them all at once. It is public only so
     /// <see cref="SaveAllMethodInfo"/> can find it without reading private methods; the class is internal, so nothing
@@ -101,13 +94,13 @@ internal sealed class DatabaseWriteService(IDbContextFactory<FantasyInformatorDb
         where TModel : BaseEntity
         where TDatabaseModel : BaseEntityDb
     {
-        var mapper = FindMapMethod<TModel, TDatabaseModel>();
+        var mapper = MapperLookup.Find<TModel, TDatabaseModel>();
         var savedUtc = DateTime.UtcNow;
 
         // Unchanged models are never saved, so only the other ones are copied into database models.
         var changes = models
             .Where(x => x.State is not AppEnums.TrackingState.Unchanged)
-            .Select(x => (x.State, DatabaseModel: mapper(x)))
+            .Select(x => (x.State, DatabaseModel: mapper.Map(x)))
             .ToList();
 
         await using var context = await contextFactory.CreateDbContextAsync(cancellationToken);
@@ -253,19 +246,6 @@ internal sealed class DatabaseWriteService(IDbContextFactory<FantasyInformatorDb
     /// </summary>
     private static object?[] GetUniqueKeyValues(BaseEntityDb databaseModel, List<PropertyInfo> uniqueKeyProperties) =>
         [.. uniqueKeyProperties.Select(x => x.GetValue(databaseModel))];
-
-    /// <summary>
-    /// Copying a model into its database model needs the Map method for that pair. It is found once and kept in
-    /// <see cref="MapMethods"/>, and cast from Delegate to the Func for this pair. Throws when there is none or more
-    /// than one.
-    /// Example: the Map method that copies a Player into a PlayerDb.
-    /// </summary>
-    private static Func<TModel, TDatabaseModel> FindMapMethod<TModel, TDatabaseModel>() =>
-        (Func<TModel, TDatabaseModel>)MapMethods.GetOrAdd(
-            (typeof(TModel), typeof(TDatabaseModel)),
-            _ => MapperLookup
-                .Find([typeof(TModel)], typeof(TDatabaseModel))
-                .CreateDelegate<Func<TModel, TDatabaseModel>>());
 
     private static void Stage(
         FantasyInformatorDbContext context,

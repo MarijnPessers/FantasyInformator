@@ -6,12 +6,20 @@ namespace FantasyInformator.Database.Tests.Mappers.Nfl;
 [TestClass]
 public class SeasonMapperTests
 {
+    private SeasonMapper _mapper = null!;
+
+    [TestInitialize]
+    public void Initialize()
+    {
+        _mapper = new SeasonMapper();
+    }
+
     [TestMethod]
     public void Map_ShouldMapAllFieldsAndChildren_WhenDatabaseModelIsGiven()
     {
         var season = SourceFactory.Create<SeasonDb>();
 
-        var result = SeasonMapper.Map(season);
+        var result = _mapper.Map(season);
 
         Assert.IsNotNull(result);
         MappedAssert.Equal(season, result);
@@ -20,9 +28,9 @@ public class SeasonMapperTests
     [TestMethod]
     public void Map_ShouldMapAllFieldsAndChildren_WhenApplicationModelIsGiven()
     {
-        var model = SourceFactory.Create<SeasonDb>().Map();
+        var model = _mapper.Map(SourceFactory.Create<SeasonDb>());
 
-        var result = model.Map();
+        var result = _mapper.Map(model);
 
         MappedAssert.Equal(result, model);
     }

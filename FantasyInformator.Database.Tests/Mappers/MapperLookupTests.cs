@@ -5,10 +5,10 @@ using FantasyInformator.Domain;
 namespace FantasyInformator.Database.Tests.Mappers;
 
 /// <summary>
-/// Reading and saving find their Map method by what goes in and what comes out while the program runs. A missing one
+/// Reading and saving find their mapper by the two models it copies between while the program runs. A missing one
 /// would only fail the first time that model is read or saved, so these tests check every model at once.
-/// Example: reading Players needs a Map method from a list of PlayerDb to a list of Players, and saving Players needs a
-/// Map method from a Player to a PlayerDb.
+/// Example: reading Players needs a mapper that copies a PlayerDb into a Player, and saving Players needs a mapper that
+/// copies a Player into a PlayerDb.
 /// </summary>
 [TestClass]
 public class MapperLookupTests
@@ -20,28 +20,25 @@ public class MapperLookupTests
     ];
 
     [TestMethod]
-    public void Find_ShouldFindOneMapMethod_WhenReadingAnyModel()
+    public void Find_ShouldFindOneMapper_WhenReadingAnyModel()
     {
-        var modelsWithout = Models
-            .Where(model => TryFindDatabaseModel(model) is { } databaseModel
-                && !HasOneMapMethod(
-                    typeof(IEnumerable<>).MakeGenericType(databaseModel),
-                    typeof(IEnumerable<>).MakeGenericType(model)))
+        var modelsWithoutMapper = Models
+            .Where(model => TryFindDatabaseModel(model) is { } databaseModel && !HasOneMapper(databaseModel, model))
             .Select(model => model.Name)
             .ToList();
 
-        Assert.IsEmpty(modelsWithout, string.Join(", ", modelsWithout));
+        Assert.IsEmpty(modelsWithoutMapper, string.Join(", ", modelsWithoutMapper));
     }
 
     [TestMethod]
-    public void Find_ShouldFindOneMapMethod_WhenSavingAnyModel()
+    public void Find_ShouldFindOneMapper_WhenSavingAnyModel()
     {
-        var modelsWithout = Models
-            .Where(model => TryFindDatabaseModel(model) is { } databaseModel && !HasOneMapMethod(model, databaseModel))
+        var modelsWithoutMapper = Models
+            .Where(model => TryFindDatabaseModel(model) is { } databaseModel && !HasOneMapper(model, databaseModel))
             .Select(model => model.Name)
             .ToList();
 
-        Assert.IsEmpty(modelsWithout, string.Join(", ", modelsWithout));
+        Assert.IsEmpty(modelsWithoutMapper, string.Join(", ", modelsWithoutMapper));
     }
 
     // A model without exactly one database model already fails DatabaseModelTypesTests, so it is skipped here.
@@ -59,11 +56,11 @@ public class MapperLookupTests
 
     // Find throws when it finds none or more than one. That is caught here, so the test can list every model that
     // fails instead of stopping at the first one.
-    private static bool HasOneMapMethod(Type input, Type output)
+    private static bool HasOneMapper(Type sourceType, Type targetType)
     {
         try
         {
-            _ = MapperLookup.Find([input], output);
+            _ = MapperLookup.Find(sourceType, targetType);
             return true;
         }
         catch (InvalidOperationException)

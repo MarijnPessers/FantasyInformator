@@ -70,12 +70,11 @@ internal sealed class MapContext
     }
 
     /// <summary>
-    /// To fill the links of a copy, we need to know which properties are links, and which Map method copies each one.
+    /// To fill the links of a copy, we need to know which properties are links, and which mapper copies each one.
     /// A property of the copy is a link when it holds a model or a list of models. The original has a property with the
-    /// same name. The Map method that copies what it holds is found with <see cref="MapperLookup.Find"/>.
+    /// same name. The mapper that copies what it holds is found with <see cref="MapperLookup.Find(Type, Type)"/>.
     /// Throws when the original has no property with that name.
-    /// Example: Player's CurrentNflTeam holds an NflTeam, so PlayerDb's CurrentNflTeam is copied with the Map method
-    /// that copies an NflTeamDb into an NflTeam.
+    /// Example: Player's CurrentNflTeam holds an NflTeam, so PlayerDb's CurrentNflTeam is copied with NflTeamMapper.
     /// </summary>
     private static List<Link> FindLinks(Type sourceType, Type targetType)
     {
@@ -96,8 +95,8 @@ internal sealed class MapContext
                     $"{sourceType.Name} has no property {targetProperty.Name} to map into {targetType.Name}.");
             var sourceEntityType = isList ? sourceProperty.PropertyType.GetGenericArguments()[0] : sourceProperty.PropertyType;
 
-            var mapEntity = MapperLookup.Find([sourceEntityType, typeof(MapContext)], targetEntityType);
-            links.Add(new Link(sourceProperty, targetProperty, mapEntity, isList));
+            var mapper = MapperLookup.Find(sourceEntityType, targetEntityType);
+            links.Add(new Link(sourceProperty, targetProperty, mapper, isList));
         }
 
         return links;
@@ -113,19 +112,18 @@ internal sealed class MapContext
         typeof(BaseEntity).IsAssignableFrom(type) || typeof(BaseEntityDb).IsAssignableFrom(type);
 
     /// <summary>
-    /// One link of a pair: the property of the original, the property of the copy, the Map method that copies what it
+    /// One link of a pair: the property of the original, the property of the copy, the mapper that copies what it
     /// holds, and whether it holds a list.
-    /// Example: PlayerDb's CurrentNflTeam, Player's CurrentNflTeam, the Map method that copies an NflTeamDb into an
-    /// NflTeam, and no list.
+    /// Example: PlayerDb's CurrentNflTeam, Player's CurrentNflTeam, NflTeamMapper, and no list.
     /// </summary>
-    private sealed record Link(PropertyInfo Source, PropertyInfo Target, MethodInfo MapEntity, bool HoldsList)
+    private sealed record Link(PropertyInfo Source, PropertyInfo Target, IMapper Mapper, bool HoldsList)
     {
         /// <summary>
         /// Fills one link of the copy from the same link of the original. When the original's link is null, the copy's
         /// link stays null. For a list, a new empty list is set on the copy, and each model in the original's list is
         /// copied into it.
-        /// Example: a PlayerDb with 3 PlayerPositions gives a Player with 3 PlayerPositions, each copied with the Map
-        /// method that copies a PlayerPositionDb into a PlayerPosition.
+        /// Example: a PlayerDb with 3 PlayerPositions gives a Player with 3 PlayerPositions, each copied with
+        /// PlayerPositionMapper.
         /// </summary>
         public void Fill(object source, object target, MapContext context)
         {
@@ -136,11 +134,9 @@ internal sealed class MapContext
                 return;
             }
 
-            // The field MapEntity is only the information (MethodInfo) about the Map method, so the Map method runs
-            // through Invoke.
             if (!HoldsList)
             {
-                Target.SetValue(target, MapEntity.Invoke(null, [value, context]));
+                Target.SetValue(target, Mapper.Map(value, context));
                 return;
             }
 
@@ -149,7 +145,7 @@ internal sealed class MapContext
 
             foreach (var item in (IList)value)
             {
-                _ = items.Add(MapEntity.Invoke(null, [item, context]));
+                _ = items.Add(Mapper.Map(item, context));
             }
         }
     }

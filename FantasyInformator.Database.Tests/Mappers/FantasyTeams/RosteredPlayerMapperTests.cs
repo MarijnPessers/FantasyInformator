@@ -6,12 +6,20 @@ namespace FantasyInformator.Database.Tests.Mappers.FantasyTeams;
 [TestClass]
 public class RosteredPlayerMapperTests
 {
+    private RosteredPlayerMapper _mapper = null!;
+
+    [TestInitialize]
+    public void Initialize()
+    {
+        _mapper = new RosteredPlayerMapper();
+    }
+
     [TestMethod]
     public void Map_ShouldMapAllFieldsAndChildren_WhenDatabaseModelIsGiven()
     {
         var rosteredPlayer = SourceFactory.Create<RosteredPlayerDb>();
 
-        var result = RosteredPlayerMapper.Map(rosteredPlayer);
+        var result = _mapper.Map(rosteredPlayer);
 
         Assert.IsNotNull(result);
         MappedAssert.Equal(rosteredPlayer, result);
@@ -20,9 +28,9 @@ public class RosteredPlayerMapperTests
     [TestMethod]
     public void Map_ShouldMapAllFieldsAndChildren_WhenApplicationModelIsGiven()
     {
-        var model = SourceFactory.Create<RosteredPlayerDb>().Map();
+        var model = _mapper.Map(SourceFactory.Create<RosteredPlayerDb>());
 
-        var result = model.Map();
+        var result = _mapper.Map(model);
 
         MappedAssert.Equal(result, model);
     }
