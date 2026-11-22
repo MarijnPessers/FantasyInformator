@@ -1,4 +1,4 @@
-using FantasyInformator.Database.Context.Seed;
+using FantasyInformator.Database.Context.Seeds;
 using FantasyInformator.Database.Models.Nfl;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,12 +9,12 @@ public static class NflSchema
 {
     public static void Configure(ModelBuilder modelBuilder)
     {
-        _ = modelBuilder.Entity<Season>(season =>
+        _ = modelBuilder.Entity<SeasonDb>(season =>
         {
             _ = season.HasIndex(x => x.Year).IsUnique();
         });
 
-        _ = modelBuilder.Entity<NflTeam>(nflTeam =>
+        _ = modelBuilder.Entity<NflTeamDb>(nflTeam =>
         {
             _ = nflTeam.Property(x => x.ExternalId).HasMaxLength(ColumnSizes.ExternalId);
             _ = nflTeam.Property(x => x.Name).HasMaxLength(ColumnSizes.Name);
@@ -22,7 +22,7 @@ public static class NflSchema
             _ = nflTeam.HasData(NflSeed.Teams);
         });
 
-        _ = modelBuilder.Entity<Game>(game =>
+        _ = modelBuilder.Entity<GameDb>(game =>
         {
             _ = game.Property(x => x.ExternalId).HasMaxLength(ColumnSizes.ExternalId);
             _ = game.HasIndex(x => x.ExternalId).IsUnique();

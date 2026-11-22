@@ -37,6 +37,7 @@ Not yet changed to return application models: the league users and the rosters.
 
 - A link to another record is a stub that holds only its key. A later step swaps it for the real record.
 - A mapper does not set the id, the state or the update time.
+- A model fetched from a service has the state New, because it is not in the database yet.
 - A mapper that cannot read its input throws.
 - A mapper throws when a value that an application model always needs is empty, such as the id of a player or the code of a slot. A value the application can do without, such as a team name, may stay empty.
 - A starter's slot follows from its place in the roster positions list. Not verified.

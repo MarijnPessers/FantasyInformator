@@ -9,6 +9,7 @@ Gives the kickoff times that Sleeper lacks. Sleeper's schedule has the day of ea
 - It is not an official source. If the call fails, the rest of the application keeps working.
 - Nothing is called unless a button is pressed.
 - Only the schedule service interface (schedule of one season) and the mapper exist so far. The service returns application models; the nflverse models stay inside the project.
+- A model fetched from a service has the state New, because it is not in the database yet.
 
 The home and away team of a game are stubs that hold only the external id. Team codes are changed to Sleeper's. A kickoff time that does not exist in Eastern time throws.
 

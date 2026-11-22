@@ -1,4 +1,4 @@
-using FantasyInformator.Database.Models.League;
+using FantasyInformator.Database.Models.Leagues;
 using Microsoft.EntityFrameworkCore;
 
 namespace FantasyInformator.Database.Context;
@@ -8,12 +8,12 @@ public static class LeagueSchema
 {
     public static void Configure(ModelBuilder modelBuilder)
     {
-        _ = modelBuilder.Entity<League>(league =>
+        _ = modelBuilder.Entity<LeagueDb>(league =>
         {
             _ = league.Property(x => x.Name).HasMaxLength(ColumnSizes.Name);
         });
 
-        _ = modelBuilder.Entity<LeagueInstance>(leagueInstance =>
+        _ = modelBuilder.Entity<LeagueInstanceDb>(leagueInstance =>
         {
             _ = leagueInstance.Property(x => x.ExternalId).HasMaxLength(ColumnSizes.ExternalId);
             _ = leagueInstance.HasIndex(x => x.ExternalId).IsUnique();

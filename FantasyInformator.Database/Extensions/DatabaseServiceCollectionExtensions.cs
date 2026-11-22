@@ -1,7 +1,6 @@
 using FantasyInformator.Database.Context;
 using FantasyInformator.Database.Services;
-using FantasyInformator.Database.Services.FantasyTeam;
-using FantasyInformator.Database.Services.League;
+using FantasyInformator.Database.Services.Players;
 using FantasyInformator.Database.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -36,8 +35,8 @@ public static class DatabaseServiceCollectionExtensions
             builder.UseSqlServer(
                 serviceProvider.GetRequiredService<IOptions<DatabaseSettings>>().Value.ConnectionStringApp));
         _ = services.AddScoped<IDatabaseSaveService, DatabaseSaveService>();
-        _ = services.AddScoped<ILeagueReadService, LeagueReadService>();
-        _ = services.AddScoped<IFantasyTeamReadService, FantasyTeamReadService>();
+        _ = services.AddScoped<IDatabaseReadService, DatabaseReadService>();
+        _ = services.AddScoped<IPlayerService, PlayerService>();
 
         return services;
     }

@@ -1,5 +1,5 @@
 using FantasyInformator.Database.Mappers.Nfl;
-using DatabaseNfl = FantasyInformator.Database.Models.Nfl;
+using FantasyInformator.Database.Models.Nfl;
 
 namespace FantasyInformator.Database.Tests.Mappers.Nfl;
 
@@ -9,7 +9,7 @@ public class GameMapperTests
     [TestMethod]
     public void Map_ShouldMapAllFieldsAndChildren_WhenDatabaseModelIsGiven()
     {
-        var game = SourceFactory.Create<DatabaseNfl.Game>();
+        var game = SourceFactory.Create<GameDb>();
 
         var result = GameMapper.Map(game);
 
@@ -20,7 +20,7 @@ public class GameMapperTests
     [TestMethod]
     public void Map_ShouldMapAllFieldsAndChildren_WhenApplicationModelIsGiven()
     {
-        var model = SourceFactory.Create<DatabaseNfl.Game>().Map();
+        var model = SourceFactory.Create<GameDb>().Map();
 
         var result = model.Map();
 

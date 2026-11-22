@@ -1,5 +1,5 @@
 using AutoFixture;
-using FantasyInformator.Domain.Lineup;
+using FantasyInformator.Domain.Lineups;
 using FantasyInformator.Sleeper.Mappers;
 using SleeperModels = FantasyInformator.Sleeper.Services.Models;
 

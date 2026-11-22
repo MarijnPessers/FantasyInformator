@@ -1,5 +1,5 @@
 using FantasyInformator.Database.Mappers.Scoring;
-using DatabaseScoring = FantasyInformator.Database.Models.Scoring;
+using FantasyInformator.Database.Models.Scoring;
 
 namespace FantasyInformator.Database.Tests.Mappers.Scoring;
 
@@ -9,7 +9,7 @@ public class FantasyScoreMapperTests
     [TestMethod]
     public void Map_ShouldMapAllFieldsAndChildren_WhenDatabaseModelIsGiven()
     {
-        var fantasyScore = SourceFactory.Create<DatabaseScoring.FantasyScore>();
+        var fantasyScore = SourceFactory.Create<FantasyScoreDb>();
 
         var result = FantasyScoreMapper.Map(fantasyScore);
 
@@ -20,7 +20,7 @@ public class FantasyScoreMapperTests
     [TestMethod]
     public void Map_ShouldMapAllFieldsAndChildren_WhenApplicationModelIsGiven()
     {
-        var model = SourceFactory.Create<DatabaseScoring.FantasyScore>().Map();
+        var model = SourceFactory.Create<FantasyScoreDb>().Map();
 
         var result = model.Map();
 

@@ -1,5 +1,5 @@
-using FantasyInformator.Database.Context.Seed;
-using FantasyInformator.Database.Models.Player;
+using FantasyInformator.Database.Context.Seeds;
+using FantasyInformator.Database.Models.Players;
 using Microsoft.EntityFrameworkCore;
 
 namespace FantasyInformator.Database.Context;
@@ -9,7 +9,7 @@ public static class PlayerSchema
 {
     public static void Configure(ModelBuilder modelBuilder)
     {
-        _ = modelBuilder.Entity<Player>(player =>
+        _ = modelBuilder.Entity<PlayerDb>(player =>
         {
             _ = player.Property(x => x.ExternalId).HasMaxLength(ColumnSizes.ExternalId);
             _ = player.Property(x => x.Name).HasMaxLength(ColumnSizes.Name);
@@ -23,7 +23,7 @@ public static class PlayerSchema
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        _ = modelBuilder.Entity<Position>(position =>
+        _ = modelBuilder.Entity<PositionDb>(position =>
         {
             _ = position.Property(x => x.Name).HasMaxLength(ColumnSizes.Name);
             _ = position.Property(x => x.Abbreviation).HasMaxLength(ColumnSizes.Abbreviation);
@@ -31,7 +31,7 @@ public static class PlayerSchema
             _ = position.HasData(PlayerSeed.Positions);
         });
 
-        _ = modelBuilder.Entity<PlayerPosition>(playerPosition =>
+        _ = modelBuilder.Entity<PlayerPositionDb>(playerPosition =>
         {
             _ = playerPosition.HasIndex(x => new { x.PlayerId, x.PositionId }).IsUnique();
 
@@ -46,7 +46,7 @@ public static class PlayerSchema
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        _ = modelBuilder.Entity<GameAppearance>(gameAppearance =>
+        _ = modelBuilder.Entity<GameAppearanceDb>(gameAppearance =>
         {
             _ = gameAppearance.HasIndex(x => new { x.PlayerId, x.GameId }).IsUnique();
 

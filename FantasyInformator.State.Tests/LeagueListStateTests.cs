@@ -1,5 +1,5 @@
 using AutoFixture;
-using FantasyInformator.Database.Models.League;
+using FantasyInformator.Database.Models.Leagues;
 using FantasyInformator.State.Store;
 using Microsoft.Extensions.DependencyInjection;
 using TimeWarp.Mediator;

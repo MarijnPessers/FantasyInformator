@@ -1,13 +1,13 @@
-using FantasyInformator.Database.Mappers.Player;
+using FantasyInformator.Database.Mappers.Players;
 using FantasyInformator.Database.Mappers.Tracking;
+using FantasyInformator.Database.Models.Nfl;
 using AppNfl = FantasyInformator.Domain.Nfl;
-using DatabaseNfl = FantasyInformator.Database.Models.Nfl;
 
 namespace FantasyInformator.Database.Mappers.Nfl;
 
 public static class NflTeamMapper
 {
-    public static AppNfl.NflTeam Map(this DatabaseNfl.NflTeam nflTeam) =>
+    public static AppNfl.NflTeam Map(this NflTeamDb nflTeam) =>
         TrackedModelMapper.MapToAppModel(nflTeam, new AppNfl.NflTeam
         {
             ExternalId = nflTeam.ExternalId,
@@ -17,8 +17,8 @@ public static class NflTeamMapper
             AwayGames = [.. nflTeam.AwayGames.Select(x => x.Map())],
         });
 
-    public static DatabaseNfl.NflTeam Map(this AppNfl.NflTeam nflTeam) =>
-        TrackedModelMapper.MapToDbModel(nflTeam, new DatabaseNfl.NflTeam
+    public static NflTeamDb Map(this AppNfl.NflTeam nflTeam) =>
+        TrackedModelMapper.Map(nflTeam, new NflTeamDb
         {
             ExternalId = nflTeam.ExternalId,
             Name = nflTeam.Name,

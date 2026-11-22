@@ -7,7 +7,7 @@ namespace FantasyInformator.Database.Context;
 public static class AdministrationSchema
 {
     public static void Configure(ModelBuilder modelBuilder) =>
-        modelBuilder.Entity<LastSleeperCall>(lastSleeperCall =>
+        modelBuilder.Entity<LastSleeperCallDb>(lastSleeperCall =>
         {
             _ = lastSleeperCall.HasKey(x => x.CallName);
             _ = lastSleeperCall.Property(x => x.CallName).HasMaxLength(ColumnSizes.CallName);

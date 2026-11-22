@@ -1,5 +1,5 @@
 
-using FantasyInformator.Domain.League;
+using FantasyInformator.Domain.Leagues;
 using FantasyInformator.Domain.Tracking;
 
 namespace FantasyInformator.Domain.Nfl;
@@ -14,7 +14,7 @@ public class Season : TrackedModel
     /// </summary>
     public int? CurrentWeek { get; set; }
 
-    public List<LeagueInstance> LeagueInstances { get; init; } = [];
+    public List<LeagueInstance>? LeagueInstances { get; init; }
 
-    public List<Game> Games { get; init; } = [];
+    public List<Game>? Games { get; init; }
 }

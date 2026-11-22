@@ -1,6 +1,6 @@
 
-using FantasyInformator.Domain.League;
-using FantasyInformator.Domain.Player;
+using FantasyInformator.Domain.Leagues;
+using FantasyInformator.Domain.Players;
 using FantasyInformator.Domain.Tracking;
 
 namespace FantasyInformator.Domain.Scoring;

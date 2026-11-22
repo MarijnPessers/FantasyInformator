@@ -1,4 +1,4 @@
-using FantasyInformator.Domain.Player;
+using FantasyInformator.Domain.Players;
 
 namespace FantasyInformator.Sleeper.Services.Interfaces;
 

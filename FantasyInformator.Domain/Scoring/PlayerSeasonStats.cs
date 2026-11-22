@@ -1,5 +1,5 @@
 
-using FantasyInformator.Domain.League;
+using FantasyInformator.Domain.Leagues;
 using FantasyInformator.Domain.Tracking;
 
 namespace FantasyInformator.Domain.Scoring;
@@ -13,7 +13,7 @@ public class PlayerSeasonStats : TrackedModel
 {
     public Guid PlayerId { get; set; }
 
-    public Player.Player? Player { get; set; }
+    public Players.Player? Player { get; set; }
 
     public Guid LeagueInstanceId { get; set; }
 

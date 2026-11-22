@@ -25,18 +25,18 @@ Each box has three columns: the field name, its type (with the length for text a
 
 Each coloured block is a group of models that belong together.
 
-### League (blue)
+### Leagues (blue)
 
 - **League:** a fantasy league you play in. Its name stays the same from year to year.
 - **League instance:** that league in one season.
 
-### FantasyTeam (green)
+### FantasyTeams (green)
 
 - **Owner:** a person in a league.
 - **Fantasy team:** the team an owner has in one league instance. The owner is a plain id, because it may point to an owner that is not known. A team can also have no owner, then the id is empty.
 - **Rostered player:** a player on that team, and the slot the player is in right now. The player is a plain id, because it may point to a player that is not known.
 
-### Player (yellow)
+### Players (yellow)
 
 - **Player:** a real football player. Without an NFL team, the current team is empty. The injury status is one of None, Q, D, OUT, IR and PUP (the enum `InjuryStatus`, each value with its full name in the code). The read-only `IsIrEligible` is true for IR, PUP and OUT, and those let the player move to an IR slot. Q and D are shown only and do not keep the player out of the lineup.
 - **Position:** what a player plays, such as QB or LB. A dominant position (DL and DE) wins over the other positions of a player: a player with a dominant position counts only as his dominant positions. For example a LB & DE player will only count as a DL.
@@ -49,7 +49,7 @@ Each coloured block is a group of models that belong together.
 - **NFL team:** a real team, such as the Chiefs.
 - **Game:** one real match between two NFL teams in a season.
 
-### Lineup (purple)
+### Lineups (purple)
 
 - **Slot:** a place in a lineup, such as QB or Bench.
 - **League slot:** how many of one slot a league instance has.

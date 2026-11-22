@@ -1,8 +1,8 @@
 using AutoFixture;
 using FantasyInformator.Database.Mappers.Tracking;
+using FantasyInformator.Database.Models.Leagues;
 using AppEnums = FantasyInformator.Domain.Enums;
-using AppLeague = FantasyInformator.Domain.League;
-using DatabaseLeague = FantasyInformator.Database.Models.League;
+using AppLeague = FantasyInformator.Domain.Leagues;
 
 namespace FantasyInformator.Database.Tests.Mappers.Tracking;
 
@@ -14,7 +14,7 @@ public class TrackedModelMapperTests
     [TestMethod]
     public void MapToAppModel_ShouldCopyIdAndReturnTheModel_WhenDatabaseModelIsGiven()
     {
-        var databaseLeague = new DatabaseLeague.League
+        var databaseLeague = new LeagueDb
         {
             Id = _fixture.Create<Guid>(),
             Name = _fixture.Create<string>(),
@@ -30,7 +30,7 @@ public class TrackedModelMapperTests
     [TestMethod]
     public void MapToAppModel_ShouldSetStateToUnchanged_WhenModelIsNew()
     {
-        var databaseLeague = new DatabaseLeague.League { Name = _fixture.Create<string>() };
+        var databaseLeague = new LeagueDb { Name = _fixture.Create<string>() };
         var league = new AppLeague.League { Name = _fixture.Create<string>(), State = AppEnums.TrackingState.New };
 
         var result = TrackedModelMapper.MapToAppModel(databaseLeague, league);

@@ -1,5 +1,5 @@
 
-using FantasyInformator.Domain.Player;
+using FantasyInformator.Domain.Players;
 using FantasyInformator.Domain.Tracking;
 
 namespace FantasyInformator.Domain.Nfl;
@@ -24,5 +24,5 @@ public class Game : TrackedModel
 
     public DateTime KickoffUtc { get; set; }
 
-    public List<GameAppearance> GameAppearances { get; init; } = [];
+    public List<GameAppearance>? GameAppearances { get; init; }
 }

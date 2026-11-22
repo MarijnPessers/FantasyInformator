@@ -1,5 +1,5 @@
 using FantasyInformator.Database.Mappers.Administration;
-using DatabaseAdministration = FantasyInformator.Database.Models.Administration;
+using FantasyInformator.Database.Models.Administration;
 
 namespace FantasyInformator.Database.Tests.Mappers.Administration;
 
@@ -9,7 +9,7 @@ public class LastSleeperCallMapperTests
     [TestMethod]
     public void Map_ShouldMapAllFieldsAndLinks_WhenDatabaseModelIsGiven()
     {
-        var lastSleeperCall = SourceFactory.Create<DatabaseAdministration.LastSleeperCall>();
+        var lastSleeperCall = SourceFactory.Create<LastSleeperCallDb>();
 
         var result = LastSleeperCallMapper.Map(lastSleeperCall);
 

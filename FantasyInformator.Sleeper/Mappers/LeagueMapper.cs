@@ -1,6 +1,6 @@
 using System.Globalization;
-using FantasyInformator.Domain.League;
-using FantasyInformator.Domain.Lineup;
+using FantasyInformator.Domain.Leagues;
+using FantasyInformator.Domain.Lineups;
 using FantasyInformator.Domain.Nfl;
 using SleeperModels = FantasyInformator.Sleeper.Services.Models;
 

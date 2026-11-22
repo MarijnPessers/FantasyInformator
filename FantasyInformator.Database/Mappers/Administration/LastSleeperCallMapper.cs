@@ -1,5 +1,5 @@
+using FantasyInformator.Database.Models.Administration;
 using AppAdministration = FantasyInformator.Domain.Administration;
-using DatabaseAdministration = FantasyInformator.Database.Models.Administration;
 
 namespace FantasyInformator.Database.Mappers.Administration;
 
@@ -7,7 +7,7 @@ public static class LastSleeperCallMapper
 {
     /// <summary>It has no tracking fields and no links, so it needs no context.</summary>
     public static AppAdministration.LastSleeperCall? Map(
-        this DatabaseAdministration.LastSleeperCall? lastSleeperCall) =>
+        this LastSleeperCallDb? lastSleeperCall) =>
         lastSleeperCall is null
             ? null
             : new AppAdministration.LastSleeperCall

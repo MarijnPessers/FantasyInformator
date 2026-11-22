@@ -1,35 +1,34 @@
 using FantasyInformator.Database.Context;
-using FantasyInformator.Database.Mappers.FantasyTeam;
-using FantasyInformator.Database.Mappers.League;
-using FantasyInformator.Database.Mappers.Lineup;
-using FantasyInformator.Database.Mappers.Nfl;
-using FantasyInformator.Database.Mappers.Player;
-using FantasyInformator.Database.Mappers.Scoring;
+using FantasyInformator.Database.Models.Tracking;
 using Microsoft.EntityFrameworkCore;
 using AppEnums = FantasyInformator.Domain.Enums;
-using AppFantasyTeam = FantasyInformator.Domain.FantasyTeam;
-using AppLeague = FantasyInformator.Domain.League;
-using AppLineup = FantasyInformator.Domain.Lineup;
-using AppNfl = FantasyInformator.Domain.Nfl;
-using AppPlayer = FantasyInformator.Domain.Player;
-using AppScoring = FantasyInformator.Domain.Scoring;
 using AppTracking = FantasyInformator.Domain.Tracking;
-using DatabaseTracking = FantasyInformator.Database.Models.Tracking;
 
 namespace FantasyInformator.Database.Services;
 
-public interface IDatabaseSaveService
+internal interface IDatabaseSaveService
 {
     /// <summary>
     /// Writes the changed models in one transaction: New models are inserted, Pending models are updated and
     /// Deleted models are deleted. Unchanged models are skipped. If anything fails, nothing is written.
+    /// The given map turns each model into its database model.
     /// </summary>
-    Task SaveAsync(IEnumerable<AppTracking.TrackedModel> models, CancellationToken cancellationToken);
+    Task SaveAsync<TModel, TDatabaseModel>(
+        IEnumerable<TModel> models,
+        Func<TModel, TDatabaseModel> map,
+        CancellationToken cancellationToken)
+        where TModel : AppTracking.TrackedModel
+        where TDatabaseModel : TrackedModelDb;
 }
 
-public class DatabaseSaveService(IDbContextFactory<FantasyInformatorDbContext> contextFactory) : IDatabaseSaveService
+internal class DatabaseSaveService(IDbContextFactory<FantasyInformatorDbContext> contextFactory) : IDatabaseSaveService
 {
-    public async Task SaveAsync(IEnumerable<AppTracking.TrackedModel> models, CancellationToken cancellationToken)
+    public async Task SaveAsync<TModel, TDatabaseModel>(
+        IEnumerable<TModel> models,
+        Func<TModel, TDatabaseModel> map,
+        CancellationToken cancellationToken)
+        where TModel : AppTracking.TrackedModel
+        where TDatabaseModel : TrackedModelDb
     {
         var savedUtc = DateTime.UtcNow;
         await using var context = await contextFactory.CreateDbContextAsync(cancellationToken);
@@ -40,24 +39,40 @@ public class DatabaseSaveService(IDbContextFactory<FantasyInformatorDbContext> c
 
         foreach (var model in models)
         {
-            Stage(context, model, savedUtc);
+            Stage(context, model.State, () => MapWithId(model, map), savedUtc);
         }
 
         _ = await context.SaveChangesAsync(cancellationToken);
     }
 
-    private static void Stage(FantasyInformatorDbContext context, AppTracking.TrackedModel model, DateTime savedUtc)
+    private static TDatabaseModel MapWithId<TModel, TDatabaseModel>(TModel model, Func<TModel, TDatabaseModel> map)
+        where TModel : AppTracking.TrackedModel
+        where TDatabaseModel : TrackedModelDb
     {
-        switch (model.State)
+        var databaseModel = map(model);
+
+        // The mappers never set the id.
+        databaseModel.Id = model.Id;
+        return databaseModel;
+    }
+
+    private static void Stage<TDatabaseModel>(
+        FantasyInformatorDbContext context,
+        AppEnums.TrackingState state,
+        Func<TDatabaseModel> map,
+        DateTime savedUtc)
+        where TDatabaseModel : TrackedModelDb
+    {
+        switch (state)
         {
             case AppEnums.TrackingState.New:
-                Insert(context, model, savedUtc);
+                Insert(context, map(), savedUtc);
                 break;
             case AppEnums.TrackingState.Pending:
-                Update(context, model, savedUtc);
+                Update(context, map(), savedUtc);
                 break;
             case AppEnums.TrackingState.Deleted:
-                Delete(context, model);
+                Delete(context, map());
                 break;
             case AppEnums.TrackingState.Unchanged:
                 break;
@@ -67,49 +82,30 @@ public class DatabaseSaveService(IDbContextFactory<FantasyInformatorDbContext> c
         }
     }
 
-    private static void Insert(FantasyInformatorDbContext context, AppTracking.TrackedModel model, DateTime savedUtc)
+    private static void Insert(
+        FantasyInformatorDbContext context,
+        TrackedModelDb databaseModel,
+        DateTime savedUtc)
     {
-        var databaseModel = MapToDatabase(model);
         databaseModel.CreatedUtc = savedUtc;
         databaseModel.UpdatedUtc = savedUtc;
         context.Entry(databaseModel).State = EntityState.Added;
     }
 
-    private static void Update(FantasyInformatorDbContext context, AppTracking.TrackedModel model, DateTime savedUtc)
+    private static void Update(
+        FantasyInformatorDbContext context,
+        TrackedModelDb databaseModel,
+        DateTime savedUtc)
     {
-        var databaseModel = MapToDatabase(model);
         databaseModel.UpdatedUtc = savedUtc;
 
         var entry = context.Entry(databaseModel);
         entry.State = EntityState.Modified;
 
         // The model has no created time, so the stored one must stay as it is.
-        entry.Property(nameof(DatabaseTracking.TrackedModel.CreatedUtc)).IsModified = false;
+        entry.Property(nameof(TrackedModelDb.CreatedUtc)).IsModified = false;
     }
 
-    private static void Delete(FantasyInformatorDbContext context, AppTracking.TrackedModel model) =>
-        context.Entry(MapToDatabase(model)).State = EntityState.Deleted;
-
-    private static DatabaseTracking.TrackedModel MapToDatabase(AppTracking.TrackedModel model) =>
-        model switch
-        {
-            AppLeague.League league => league.Map(),
-            AppLeague.LeagueInstance leagueInstance => leagueInstance.Map(),
-            AppFantasyTeam.Owner owner => owner.Map(),
-            AppFantasyTeam.FantasyTeam fantasyTeam => fantasyTeam.Map(),
-            AppFantasyTeam.RosteredPlayer rosteredPlayer => rosteredPlayer.Map(),
-            AppPlayer.Player player => player.Map(),
-            AppPlayer.Position position => position.Map(),
-            AppPlayer.PlayerPosition playerPosition => playerPosition.Map(),
-            AppPlayer.GameAppearance gameAppearance => gameAppearance.Map(),
-            AppNfl.Season season => season.Map(),
-            AppNfl.NflTeam nflTeam => nflTeam.Map(),
-            AppNfl.Game game => game.Map(),
-            AppLineup.Slot slot => slot.Map(),
-            AppLineup.LeagueSlot leagueSlot => leagueSlot.Map(),
-            AppLineup.SlotEligibility slotEligibility => slotEligibility.Map(),
-            AppScoring.FantasyScore fantasyScore => fantasyScore.Map(),
-            AppScoring.PlayerSeasonStats playerSeasonStats => playerSeasonStats.Map(),
-            _ => throw new NotSupportedException(model.GetType().Name),
-        };
+    private static void Delete(FantasyInformatorDbContext context, TrackedModelDb databaseModel) =>
+        context.Entry(databaseModel).State = EntityState.Deleted;
 }

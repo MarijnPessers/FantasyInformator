@@ -8,7 +8,7 @@ public static class ScoringSchema
 {
     public static void Configure(ModelBuilder modelBuilder)
     {
-        _ = modelBuilder.Entity<FantasyScore>(fantasyScore =>
+        _ = modelBuilder.Entity<FantasyScoreDb>(fantasyScore =>
         {
             _ = fantasyScore.Property(x => x.Points).HasPrecision(ColumnSizes.ScorePrecision, ColumnSizes.ScoreScale);
             _ = fantasyScore.HasIndex(x => new { x.GameAppearanceId, x.LeagueInstanceId }).IsUnique();
@@ -24,7 +24,7 @@ public static class ScoringSchema
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        _ = modelBuilder.Entity<PlayerSeasonStats>(playerSeasonStats =>
+        _ = modelBuilder.Entity<PlayerSeasonStatsDb>(playerSeasonStats =>
         {
             _ = playerSeasonStats.Property(x => x.TotalScore).HasPrecision(
                 ColumnSizes.ScorePrecision,

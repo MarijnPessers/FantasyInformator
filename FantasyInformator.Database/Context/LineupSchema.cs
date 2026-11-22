@@ -1,5 +1,5 @@
-using FantasyInformator.Database.Context.Seed;
-using FantasyInformator.Database.Models.Lineup;
+using FantasyInformator.Database.Context.Seeds;
+using FantasyInformator.Database.Models.Lineups;
 using Microsoft.EntityFrameworkCore;
 
 namespace FantasyInformator.Database.Context;
@@ -9,7 +9,7 @@ public static class LineupSchema
 {
     public static void Configure(ModelBuilder modelBuilder)
     {
-        _ = modelBuilder.Entity<Slot>(slot =>
+        _ = modelBuilder.Entity<SlotDb>(slot =>
         {
             _ = slot.Property(x => x.ExternalId).HasMaxLength(ColumnSizes.ExternalId);
             _ = slot.Property(x => x.Name).HasMaxLength(ColumnSizes.Name);
@@ -18,7 +18,7 @@ public static class LineupSchema
             _ = slot.HasData(LineupSeed.Slots);
         });
 
-        _ = modelBuilder.Entity<LeagueSlot>(leagueSlot =>
+        _ = modelBuilder.Entity<LeagueSlotDb>(leagueSlot =>
         {
             _ = leagueSlot.HasIndex(x => new { x.LeagueInstanceId, x.SlotId }).IsUnique();
 
@@ -33,7 +33,7 @@ public static class LineupSchema
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        _ = modelBuilder.Entity<SlotEligibility>(slotEligibility =>
+        _ = modelBuilder.Entity<SlotEligibilityDb>(slotEligibility =>
         {
             _ = slotEligibility.HasIndex(x => new { x.PositionId, x.SlotId }).IsUnique();
 

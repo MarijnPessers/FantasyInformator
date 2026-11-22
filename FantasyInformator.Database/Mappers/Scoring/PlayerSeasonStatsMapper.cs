@@ -1,12 +1,12 @@
 using FantasyInformator.Database.Mappers.Tracking;
+using FantasyInformator.Database.Models.Scoring;
 using AppScoring = FantasyInformator.Domain.Scoring;
-using DatabaseScoring = FantasyInformator.Database.Models.Scoring;
 
 namespace FantasyInformator.Database.Mappers.Scoring;
 
 public static class PlayerSeasonStatsMapper
 {
-    public static AppScoring.PlayerSeasonStats Map(this DatabaseScoring.PlayerSeasonStats playerSeasonStats) =>
+    public static AppScoring.PlayerSeasonStats Map(this PlayerSeasonStatsDb playerSeasonStats) =>
         TrackedModelMapper.MapToAppModel(playerSeasonStats, new AppScoring.PlayerSeasonStats
         {
             PlayerId = playerSeasonStats.PlayerId,
@@ -18,8 +18,8 @@ public static class PlayerSeasonStatsMapper
             MedianScore = playerSeasonStats.MedianScore,
         });
 
-    public static DatabaseScoring.PlayerSeasonStats Map(this AppScoring.PlayerSeasonStats playerSeasonStats) =>
-        TrackedModelMapper.MapToDbModel(playerSeasonStats, new DatabaseScoring.PlayerSeasonStats
+    public static PlayerSeasonStatsDb Map(this AppScoring.PlayerSeasonStats playerSeasonStats) =>
+        TrackedModelMapper.Map(playerSeasonStats, new PlayerSeasonStatsDb
         {
             PlayerId = playerSeasonStats.PlayerId,
             LeagueInstanceId = playerSeasonStats.LeagueInstanceId,

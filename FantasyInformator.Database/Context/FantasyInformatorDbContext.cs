@@ -1,9 +1,9 @@
 using FantasyInformator.Database.Models.Administration;
-using FantasyInformator.Database.Models.FantasyTeam;
-using FantasyInformator.Database.Models.League;
-using FantasyInformator.Database.Models.Lineup;
+using FantasyInformator.Database.Models.FantasyTeams;
+using FantasyInformator.Database.Models.Leagues;
+using FantasyInformator.Database.Models.Lineups;
 using FantasyInformator.Database.Models.Nfl;
-using FantasyInformator.Database.Models.Player;
+using FantasyInformator.Database.Models.Players;
 using FantasyInformator.Database.Models.Scoring;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,59 +15,59 @@ namespace FantasyInformator.Database.Context;
 /// </summary>
 public class FantasyInformatorDbContext(DbContextOptions<FantasyInformatorDbContext> options) : DbContext(options)
 {
-    public DbSet<League> Leagues =>
-        Set<League>();
+    public DbSet<LeagueDb> Leagues =>
+        Set<LeagueDb>();
 
-    public DbSet<LeagueInstance> LeagueInstances =>
-        Set<LeagueInstance>();
+    public DbSet<LeagueInstanceDb> LeagueInstances =>
+        Set<LeagueInstanceDb>();
 
-    public DbSet<Owner> Owners =>
-        Set<Owner>();
+    public DbSet<OwnerDb> Owners =>
+        Set<OwnerDb>();
 
-    public DbSet<FantasyTeam> FantasyTeams =>
-        Set<FantasyTeam>();
+    public DbSet<FantasyTeamDb> FantasyTeams =>
+        Set<FantasyTeamDb>();
 
-    public DbSet<RosteredPlayer> RosteredPlayers =>
-        Set<RosteredPlayer>();
+    public DbSet<RosteredPlayerDb> RosteredPlayers =>
+        Set<RosteredPlayerDb>();
 
-    public DbSet<Player> Players =>
-        Set<Player>();
+    public DbSet<PlayerDb> Players =>
+        Set<PlayerDb>();
 
-    public DbSet<Position> Positions =>
-        Set<Position>();
+    public DbSet<PositionDb> Positions =>
+        Set<PositionDb>();
 
-    public DbSet<PlayerPosition> PlayerPositions =>
-        Set<PlayerPosition>();
+    public DbSet<PlayerPositionDb> PlayerPositions =>
+        Set<PlayerPositionDb>();
 
-    public DbSet<GameAppearance> GameAppearances =>
-        Set<GameAppearance>();
+    public DbSet<GameAppearanceDb> GameAppearances =>
+        Set<GameAppearanceDb>();
 
-    public DbSet<Season> Seasons =>
-        Set<Season>();
+    public DbSet<SeasonDb> Seasons =>
+        Set<SeasonDb>();
 
-    public DbSet<NflTeam> NflTeams =>
-        Set<NflTeam>();
+    public DbSet<NflTeamDb> NflTeams =>
+        Set<NflTeamDb>();
 
-    public DbSet<Game> Games =>
-        Set<Game>();
+    public DbSet<GameDb> Games =>
+        Set<GameDb>();
 
-    public DbSet<Slot> Slots =>
-        Set<Slot>();
+    public DbSet<SlotDb> Slots =>
+        Set<SlotDb>();
 
-    public DbSet<LeagueSlot> LeagueSlots =>
-        Set<LeagueSlot>();
+    public DbSet<LeagueSlotDb> LeagueSlots =>
+        Set<LeagueSlotDb>();
 
-    public DbSet<SlotEligibility> SlotEligibilities =>
-        Set<SlotEligibility>();
+    public DbSet<SlotEligibilityDb> SlotEligibilities =>
+        Set<SlotEligibilityDb>();
 
-    public DbSet<FantasyScore> FantasyScores =>
-        Set<FantasyScore>();
+    public DbSet<FantasyScoreDb> FantasyScores =>
+        Set<FantasyScoreDb>();
 
-    public DbSet<PlayerSeasonStats> PlayerSeasonStats =>
-        Set<PlayerSeasonStats>();
+    public DbSet<PlayerSeasonStatsDb> PlayerSeasonStats =>
+        Set<PlayerSeasonStatsDb>();
 
-    public DbSet<LastSleeperCall> LastSleeperCalls =>
-        Set<LastSleeperCall>();
+    public DbSet<LastSleeperCallDb> LastSleeperCalls =>
+        Set<LastSleeperCallDb>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

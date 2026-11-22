@@ -1,4 +1,4 @@
-using FantasyInformator.Database.Models.FantasyTeam;
+using FantasyInformator.Database.Models.FantasyTeams;
 using Microsoft.EntityFrameworkCore;
 
 namespace FantasyInformator.Database.Context;
@@ -11,7 +11,7 @@ public static class FantasyTeamSchema
 {
     public static void Configure(ModelBuilder modelBuilder)
     {
-        _ = modelBuilder.Entity<Owner>(owner =>
+        _ = modelBuilder.Entity<OwnerDb>(owner =>
         {
             _ = owner.Property(x => x.ExternalId).HasMaxLength(ColumnSizes.ExternalId);
             _ = owner.Property(x => x.Name).HasMaxLength(ColumnSizes.Name);
@@ -19,7 +19,7 @@ public static class FantasyTeamSchema
             _ = owner.Ignore(x => x.FantasyTeams);
         });
 
-        _ = modelBuilder.Entity<FantasyTeam>(fantasyTeam =>
+        _ = modelBuilder.Entity<FantasyTeamDb>(fantasyTeam =>
         {
             _ = fantasyTeam.Property(x => x.ExternalId).HasMaxLength(ColumnSizes.ExternalId);
             _ = fantasyTeam.Property(x => x.Name).HasMaxLength(ColumnSizes.Name);
@@ -33,7 +33,7 @@ public static class FantasyTeamSchema
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        _ = modelBuilder.Entity<RosteredPlayer>(rosteredPlayer =>
+        _ = modelBuilder.Entity<RosteredPlayerDb>(rosteredPlayer =>
         {
             _ = rosteredPlayer.HasIndex(x => new { x.FantasyTeamId, x.PlayerId }).IsUnique();
             _ = rosteredPlayer.Ignore(x => x.Player);

@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Reflection;
 using AutoFixture;
-using FantasyInformator.Database.Models.League;
+using FantasyInformator.Database.Models.Leagues;
 using FantasyInformator.State.Behaviors;
 using FantasyInformator.State.Store;
 using TimeWarp.Mediator;

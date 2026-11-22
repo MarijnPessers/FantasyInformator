@@ -1,12 +1,12 @@
 using FantasyInformator.Database.Mappers.Tracking;
+using FantasyInformator.Database.Models.Scoring;
 using AppScoring = FantasyInformator.Domain.Scoring;
-using DatabaseScoring = FantasyInformator.Database.Models.Scoring;
 
 namespace FantasyInformator.Database.Mappers.Scoring;
 
 public static class FantasyScoreMapper
 {
-    public static AppScoring.FantasyScore Map(this DatabaseScoring.FantasyScore fantasyScore) =>
+    public static AppScoring.FantasyScore Map(this FantasyScoreDb fantasyScore) =>
         TrackedModelMapper.MapToAppModel(fantasyScore, new AppScoring.FantasyScore
         {
             GameAppearanceId = fantasyScore.GameAppearanceId,
@@ -14,8 +14,8 @@ public static class FantasyScoreMapper
             Points = fantasyScore.Points,
         });
 
-    public static DatabaseScoring.FantasyScore Map(this AppScoring.FantasyScore fantasyScore) =>
-        TrackedModelMapper.MapToDbModel(fantasyScore, new DatabaseScoring.FantasyScore
+    public static FantasyScoreDb Map(this AppScoring.FantasyScore fantasyScore) =>
+        TrackedModelMapper.Map(fantasyScore, new FantasyScoreDb
         {
             GameAppearanceId = fantasyScore.GameAppearanceId,
             LeagueInstanceId = fantasyScore.LeagueInstanceId,

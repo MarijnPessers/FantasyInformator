@@ -1,4 +1,4 @@
-using FantasyInformator.Domain.Player;
+using FantasyInformator.Domain.Players;
 using FantasyInformator.Domain.Scoring;
 using SleeperModels = FantasyInformator.Sleeper.Services.Models;
 

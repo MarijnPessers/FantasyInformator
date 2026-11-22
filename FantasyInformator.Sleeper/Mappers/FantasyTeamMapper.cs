@@ -1,7 +1,7 @@
 using System.Globalization;
-using FantasyInformator.Domain.FantasyTeam;
-using FantasyInformator.Domain.Lineup;
-using FantasyInformator.Domain.Player;
+using FantasyInformator.Domain.FantasyTeams;
+using FantasyInformator.Domain.Lineups;
+using FantasyInformator.Domain.Players;
 using SleeperModels = FantasyInformator.Sleeper.Services.Models;
 
 namespace FantasyInformator.Sleeper.Mappers;

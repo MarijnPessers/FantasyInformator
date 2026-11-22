@@ -1,4 +1,4 @@
-using FantasyInformator.Database.Models.League;
+using FantasyInformator.Database.Models.Leagues;
 using TimeWarp.State;
 
 namespace FantasyInformator.State.Store;

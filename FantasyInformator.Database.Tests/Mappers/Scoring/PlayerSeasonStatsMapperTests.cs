@@ -1,5 +1,5 @@
 using FantasyInformator.Database.Mappers.Scoring;
-using DatabaseScoring = FantasyInformator.Database.Models.Scoring;
+using FantasyInformator.Database.Models.Scoring;
 
 namespace FantasyInformator.Database.Tests.Mappers.Scoring;
 
@@ -9,7 +9,7 @@ public class PlayerSeasonStatsMapperTests
     [TestMethod]
     public void Map_ShouldMapAllFieldsAndChildren_WhenDatabaseModelIsGiven()
     {
-        var playerSeasonStats = SourceFactory.Create<DatabaseScoring.PlayerSeasonStats>();
+        var playerSeasonStats = SourceFactory.Create<PlayerSeasonStatsDb>();
 
         var result = PlayerSeasonStatsMapper.Map(playerSeasonStats);
 
@@ -20,7 +20,7 @@ public class PlayerSeasonStatsMapperTests
     [TestMethod]
     public void Map_ShouldMapAllFieldsAndChildren_WhenApplicationModelIsGiven()
     {
-        var model = SourceFactory.Create<DatabaseScoring.PlayerSeasonStats>().Map();
+        var model = SourceFactory.Create<PlayerSeasonStatsDb>().Map();
 
         var result = model.Map();
 

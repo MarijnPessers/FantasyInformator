@@ -1,4 +1,4 @@
-using FantasyInformator.Domain.FantasyTeam;
+using FantasyInformator.Domain.FantasyTeams;
 using FantasyInformator.Sleeper.Services.Models;
 
 namespace FantasyInformator.Sleeper.Services.Interfaces;

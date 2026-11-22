@@ -17,6 +17,7 @@ The Azure SQL server firewall must allow the PC's public IP address. Add it agai
 - The database models are currently a copy of every application model, with the same folders and fields. The one difference: they have no state, and every model holds two dates, `CreatedUtc` and `UpdatedUtc`. The dates are for database administration only and are not mapped to the application models.
 - There is one static mapper per model. It turns a database model into an application model, and back, in the same way.
 - A mapper maps the model itself and its children (its lists) by calling the mappers of the children. It never maps the link up to a parent, so mapping cannot loop.
+- A model read from the database has the state Unchanged, because it matches the database.
 
 ## Tables
 
