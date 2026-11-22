@@ -1,11 +1,9 @@
-
 using FantasyInformator.Database.Models.FantasyTeams;
-using FantasyInformator.Database.Models.Tracking;
 
 namespace FantasyInformator.Database.Models.Lineups;
 
 /// <summary>A place in a lineup that a player can fill, such as QB, Flex or Bench.</summary>
-public class SlotDb : TrackedModelDb
+public class SlotDb : BaseEntityDb
 {
     /// <summary>The Sleeper code of the slot, such as SUPER_FLEX.</summary>
     public required string ExternalId { get; set; }

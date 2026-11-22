@@ -1,12 +1,10 @@
-
 using FantasyInformator.Database.Models.Leagues;
 using FantasyInformator.Database.Models.Players;
-using FantasyInformator.Database.Models.Tracking;
 
 namespace FantasyInformator.Database.Models.Scoring;
 
 /// <summary>The fantasy points a player scored in a game for a league instance.</summary>
-public class FantasyScoreDb : TrackedModelDb
+public class FantasyScoreDb : BaseEntityDb
 {
     public Guid GameAppearanceId { get; set; }
 

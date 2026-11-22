@@ -1,10 +1,8 @@
-
 using FantasyInformator.Database.Models.Players;
-using FantasyInformator.Database.Models.Tracking;
 
 namespace FantasyInformator.Database.Models.Nfl;
 
-public class GameDb : TrackedModelDb
+public class GameDb : BaseEntityDb
 {
     public required string ExternalId { get; set; }
 

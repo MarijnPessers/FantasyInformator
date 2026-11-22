@@ -8,7 +8,11 @@ namespace FantasyInformator.Shared.Tests.Progress;
 [TestClass]
 public class ProgressReportTests
 {
-    private readonly Fixture _fixture = new();
+    private Fixture _fixture = null!;
+
+    [TestInitialize]
+    public void Initialize() =>
+        _fixture = new Fixture();
 
     [TestMethod]
     public void CreatedUtc_ShouldBeTheTimeTheReportWasMade_WhenNotSet()

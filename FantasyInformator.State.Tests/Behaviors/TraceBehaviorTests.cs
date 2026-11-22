@@ -1,27 +1,31 @@
 using System.Diagnostics;
 using System.Reflection;
 using AutoFixture;
-using FantasyInformator.Database.Models.Leagues;
 using FantasyInformator.State.Behaviors;
-using FantasyInformator.State.Store;
 using TimeWarp.Mediator;
 using TimeWarp.State;
-using static FantasyInformator.State.Store.LeagueState;
 
 namespace FantasyInformator.State.Tests.Behaviors;
 
 [TestClass]
 public class TraceBehaviorTests
 {
-    private readonly Fixture _fixture = new();
-    private readonly TraceBehavior<AddLeagueAction, Unit> _behavior = new();
+    private Fixture _fixture = null!;
+    private TraceBehavior<SampleState.SampleAction, Unit> _behavior = null!;
 
     public TestContext TestContext { get; set; } = null!;
+
+    [TestInitialize]
+    public void Initialize()
+    {
+        _fixture = new Fixture();
+        _behavior = new TraceBehavior<SampleState.SampleAction, Unit>();
+    }
 
     [TestMethod]
     public void TraceBehavior_ShouldWrapEveryAction_WhenTheStateProjectIsUsed()
     {
-        var declared = typeof(LeagueState).Assembly.GetCustomAttributes<MediatorBehaviorAttribute>()
+        var declared = typeof(TraceBehavior<,>).Assembly.GetCustomAttributes<MediatorBehaviorAttribute>()
             .Any(attribute => attribute.BehaviorType == typeof(TraceBehavior<,>)
                 && attribute.Scope == typeof(ClientPipeline));
 
@@ -42,7 +46,7 @@ public class TraceBehaviorTests
             },
             TestContext.CancellationToken);
 
-        Assert.AreEqual(nameof(AddLeagueAction), running?.OperationName);
+        Assert.AreEqual(nameof(SampleState.SampleAction), running?.OperationName);
     }
 
     [TestMethod]
@@ -116,5 +120,16 @@ public class TraceBehaviorTests
         Assert.AreEqual(outer?.TraceId, inner?.TraceId);
     }
 
-    private AddLeagueAction CreateAction() => new(new League { Name = _fixture.Create<string>() });
+    private static SampleState.SampleAction CreateAction() => new();
+
+    // The behavior works the same for every action, so the tests use this stand-in instead of a real action.
+    // TimeWarp only accepts an action nested in a state, so the stand-in has a state of its own.
+    // Example: an action that adds a player would be traced the same way.
+    private sealed class SampleState : State<SampleState>
+    {
+        // The stand-in holds no data, so there is nothing to reset.
+        public override void Initialize() { }
+
+        public sealed record SampleAction : IAction;
+    }
 }

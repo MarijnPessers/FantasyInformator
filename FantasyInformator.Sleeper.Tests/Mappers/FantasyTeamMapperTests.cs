@@ -13,7 +13,11 @@ public class FantasyTeamMapperTests
     private const string InjuredReserveCode = "IR";
     private const string TaxiCode = "TAX";
 
-    private readonly Fixture _fixture = new();
+    private Fixture _fixture = null!;
+
+    [TestInitialize]
+    public void Initialize() =>
+        _fixture = new Fixture();
 
     [TestMethod]
     public void ToOwner_ShouldMapExternalIdAndName_WhenUserIsGiven()

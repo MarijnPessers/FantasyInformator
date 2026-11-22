@@ -1,13 +1,11 @@
-
 using FantasyInformator.Domain.Lineups;
-using FantasyInformator.Domain.Tracking;
 
 namespace FantasyInformator.Domain.Players;
 
 /// <summary>
 /// A position a player plays, such as QB or LB. Added when a player arrives with an unknown position.
 /// </summary>
-public class Position : TrackedModel
+public class Position : BaseEntity
 {
     public string Name { get; set; } = string.Empty;
 

@@ -1,10 +1,8 @@
-
 using FantasyInformator.Domain.Players;
-using FantasyInformator.Domain.Tracking;
 
 namespace FantasyInformator.Domain.Nfl;
 
-public class Game : TrackedModel
+public class Game : BaseEntity
 {
     public string ExternalId { get; set; } = string.Empty;
 

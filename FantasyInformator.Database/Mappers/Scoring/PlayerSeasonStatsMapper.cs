@@ -1,32 +1,69 @@
-using FantasyInformator.Database.Mappers.Tracking;
 using FantasyInformator.Database.Models.Scoring;
-using AppScoring = FantasyInformator.Domain.Scoring;
+using FantasyInformator.Domain.Scoring;
 
 namespace FantasyInformator.Database.Mappers.Scoring;
 
-public static class PlayerSeasonStatsMapper
+internal static class PlayerSeasonStatsMapper
 {
-    public static AppScoring.PlayerSeasonStats Map(this PlayerSeasonStatsDb playerSeasonStats) =>
-        TrackedModelMapper.MapToAppModel(playerSeasonStats, new AppScoring.PlayerSeasonStats
-        {
-            PlayerId = playerSeasonStats.PlayerId,
-            LeagueInstanceId = playerSeasonStats.LeagueInstanceId,
-            TotalScore = playerSeasonStats.TotalScore,
-            GamesActive = playerSeasonStats.GamesActive,
-            AverageScore = playerSeasonStats.AverageScore,
-            AverageScoreLast3 = playerSeasonStats.AverageScoreLast3,
-            MedianScore = playerSeasonStats.MedianScore,
-        });
+    #region PlayerSeasonStatsDb to PlayerSeasonStats
 
-    public static PlayerSeasonStatsDb Map(this AppScoring.PlayerSeasonStats playerSeasonStats) =>
-        TrackedModelMapper.Map(playerSeasonStats, new PlayerSeasonStatsDb
-        {
-            PlayerId = playerSeasonStats.PlayerId,
-            LeagueInstanceId = playerSeasonStats.LeagueInstanceId,
-            TotalScore = playerSeasonStats.TotalScore,
-            GamesActive = playerSeasonStats.GamesActive,
-            AverageScore = playerSeasonStats.AverageScore,
-            AverageScoreLast3 = playerSeasonStats.AverageScoreLast3,
-            MedianScore = playerSeasonStats.MedianScore,
-        });
+    /// <summary>Turns a PlayerSeasonStatsDb into a PlayerSeasonStats. A new context fills in the links.</summary>
+    public static PlayerSeasonStats Map(this PlayerSeasonStatsDb playerSeasonStats) =>
+        playerSeasonStats.Map(new MapContext());
+
+    /// <summary>The same, inside a mapping that is already running, so objects met twice are found.</summary>
+    public static PlayerSeasonStats Map(this PlayerSeasonStatsDb playerSeasonStats, MapContext context) =>
+        context.Map(
+            playerSeasonStats,
+            x => new PlayerSeasonStats
+            {
+                PlayerId = x.PlayerId,
+                LeagueInstanceId = x.LeagueInstanceId,
+                TotalScore = x.TotalScore,
+                GamesActive = x.GamesActive,
+                AverageScore = x.AverageScore,
+                AverageScoreLast3 = x.AverageScoreLast3,
+                MedianScore = x.MedianScore,
+            }.MapBase(x));
+
+    /// <summary>Turns a list of PlayerSeasonStatsDb into PlayerSeasonStats, all sharing one context.</summary>
+    public static IEnumerable<PlayerSeasonStats> Map(this IEnumerable<PlayerSeasonStatsDb> items) =>
+        items.Map(new MapContext());
+
+    /// <summary>The same, inside a mapping that is already running.</summary>
+    public static IEnumerable<PlayerSeasonStats> Map(this IEnumerable<PlayerSeasonStatsDb> items, MapContext context) =>
+        [.. items.Select(x => x.Map(context))];
+
+    #endregion
+
+    #region PlayerSeasonStats to PlayerSeasonStatsDb
+
+    /// <summary>Turns a PlayerSeasonStats into a PlayerSeasonStatsDb. A new context fills in the links.</summary>
+    public static PlayerSeasonStatsDb Map(this PlayerSeasonStats playerSeasonStats) =>
+        playerSeasonStats.Map(new MapContext());
+
+    /// <summary>The same, inside a mapping that is already running, so objects met twice are found.</summary>
+    public static PlayerSeasonStatsDb Map(this PlayerSeasonStats playerSeasonStats, MapContext context) =>
+        context.Map(
+            playerSeasonStats,
+            x => new PlayerSeasonStatsDb
+            {
+                PlayerId = x.PlayerId,
+                LeagueInstanceId = x.LeagueInstanceId,
+                TotalScore = x.TotalScore,
+                GamesActive = x.GamesActive,
+                AverageScore = x.AverageScore,
+                AverageScoreLast3 = x.AverageScoreLast3,
+                MedianScore = x.MedianScore,
+            }.MapBase(x));
+
+    /// <summary>Turns a list of PlayerSeasonStats into PlayerSeasonStatsDb, all sharing one context.</summary>
+    public static IEnumerable<PlayerSeasonStatsDb> Map(this IEnumerable<PlayerSeasonStats> items) =>
+        items.Map(new MapContext());
+
+    /// <summary>The same, inside a mapping that is already running.</summary>
+    public static IEnumerable<PlayerSeasonStatsDb> Map(this IEnumerable<PlayerSeasonStats> items, MapContext context) =>
+        [.. items.Select(x => x.Map(context))];
+
+    #endregion
 }

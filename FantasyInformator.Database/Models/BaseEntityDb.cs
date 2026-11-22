@@ -1,6 +1,6 @@
-namespace FantasyInformator.Database.Models.Tracking;
+namespace FantasyInformator.Database.Models;
 
-public abstract class TrackedModelDb
+public abstract class BaseEntityDb
 {
     public Guid Id { get; set; }
 

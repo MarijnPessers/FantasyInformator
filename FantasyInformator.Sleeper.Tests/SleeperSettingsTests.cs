@@ -7,7 +7,11 @@ namespace FantasyInformator.Sleeper.Tests;
 [TestClass]
 public class SleeperSettingsTests
 {
-    private readonly Fixture _fixture = new();
+    private Fixture _fixture = null!;
+
+    [TestInitialize]
+    public void Initialize() =>
+        _fixture = new Fixture();
 
     [TestMethod]
     public void Validate_ShouldBeValid_WhenUsernameIsFilled()

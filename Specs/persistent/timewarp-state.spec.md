@@ -137,6 +137,16 @@ Source: `source/timewarp-mediator-analyzers/membership.cs`, `message-graph-build
   - `TelemetryBehavior` (350), in the opt-in package `TimeWarp.State.Telemetry`
   - `RenderSubscriptionsPostProcessor` (400), only when the host references `TimeWarp.State.Blazor`
 
+## Analyzers
+
+Source: `source/timewarp-state-analyzer/` at the State tag `v12.0.0-beta.8`, read 22 Nov 2026.
+
+- TWS0001 (Error, `timewarp-state-action-analyzer.cs`): every non-abstract class, record or struct that implements `TimeWarp.Mediator.IAction` must be nested, at any depth, in a type that implements `TimeWarp.State.IState`. `State<T>` isn't required, `partial` isn't required. No exemption for test assemblies, private types or attributes; only generated code is skipped. Verified: a record nested in a test class gave TWS0001, 22 Nov 2026.
+- `StateInheritanceAnalyzer`: error when a class derives from `State<T>` with a `T` other than itself; warning when such a class isn't `sealed` or `abstract`.
+- `StateReadOnlyPublicPropertiesAnalyzer`: error on a public property of a state whose setter isn't private.
+- `StateImplementationAnalyzer` (TWS001): a class that derives directly from `State<T>` needs a parameterless constructor or `ICloneable`.
+- TWS0002–TWS0008 (`HandlerMustNotSendActionAnalyzer`, `CatalogActionAnalyzer`): not read.
+
 ## Tracing
 
 - Core TimeWarp.State and TimeWarp.Mediator create no `Activity`, as far as checked (folder lists and READMEs only, not every file).

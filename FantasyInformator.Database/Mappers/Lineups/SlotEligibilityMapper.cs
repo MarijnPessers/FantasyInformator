@@ -1,24 +1,61 @@
-using FantasyInformator.Database.Mappers.Tracking;
 using FantasyInformator.Database.Models.Lineups;
-using AppLineup = FantasyInformator.Domain.Lineups;
+using FantasyInformator.Domain.Lineups;
 
 namespace FantasyInformator.Database.Mappers.Lineups;
 
-public static class SlotEligibilityMapper
+internal static class SlotEligibilityMapper
 {
-    public static AppLineup.SlotEligibility Map(this SlotEligibilityDb slotEligibility) =>
-        TrackedModelMapper.MapToAppModel(slotEligibility, new AppLineup.SlotEligibility
-        {
-            PositionId = slotEligibility.PositionId,
-            SlotId = slotEligibility.SlotId,
-            IsPreferred = slotEligibility.IsPreferred,
-        });
+    #region SlotEligibilityDb to SlotEligibility
 
-    public static SlotEligibilityDb Map(this AppLineup.SlotEligibility slotEligibility) =>
-        TrackedModelMapper.Map(slotEligibility, new SlotEligibilityDb
-        {
-            PositionId = slotEligibility.PositionId,
-            SlotId = slotEligibility.SlotId,
-            IsPreferred = slotEligibility.IsPreferred,
-        });
+    /// <summary>Turns a SlotEligibilityDb into a SlotEligibility. A new context fills in the links.</summary>
+    public static SlotEligibility Map(this SlotEligibilityDb slotEligibility) =>
+        slotEligibility.Map(new MapContext());
+
+    /// <summary>The same, inside a mapping that is already running, so objects met twice are found.</summary>
+    public static SlotEligibility Map(this SlotEligibilityDb slotEligibility, MapContext context) =>
+        context.Map(
+            slotEligibility,
+            x => new SlotEligibility
+            {
+                PositionId = x.PositionId,
+                SlotId = x.SlotId,
+                IsPreferred = x.IsPreferred,
+            }.MapBase(x));
+
+    /// <summary>Turns a list of SlotEligibilityDb into SlotEligibility, all sharing one context.</summary>
+    public static IEnumerable<SlotEligibility> Map(this IEnumerable<SlotEligibilityDb> items) =>
+        items.Map(new MapContext());
+
+    /// <summary>The same, inside a mapping that is already running.</summary>
+    public static IEnumerable<SlotEligibility> Map(this IEnumerable<SlotEligibilityDb> items, MapContext context) =>
+        [.. items.Select(x => x.Map(context))];
+
+    #endregion
+
+    #region SlotEligibility to SlotEligibilityDb
+
+    /// <summary>Turns a SlotEligibility into a SlotEligibilityDb. A new context fills in the links.</summary>
+    public static SlotEligibilityDb Map(this SlotEligibility slotEligibility) =>
+        slotEligibility.Map(new MapContext());
+
+    /// <summary>The same, inside a mapping that is already running, so objects met twice are found.</summary>
+    public static SlotEligibilityDb Map(this SlotEligibility slotEligibility, MapContext context) =>
+        context.Map(
+            slotEligibility,
+            x => new SlotEligibilityDb
+            {
+                PositionId = x.PositionId,
+                SlotId = x.SlotId,
+                IsPreferred = x.IsPreferred,
+            }.MapBase(x));
+
+    /// <summary>Turns a list of SlotEligibility into SlotEligibilityDb, all sharing one context.</summary>
+    public static IEnumerable<SlotEligibilityDb> Map(this IEnumerable<SlotEligibility> items) =>
+        items.Map(new MapContext());
+
+    /// <summary>The same, inside a mapping that is already running.</summary>
+    public static IEnumerable<SlotEligibilityDb> Map(this IEnumerable<SlotEligibility> items, MapContext context) =>
+        [.. items.Select(x => x.Map(context))];
+
+    #endregion
 }

@@ -1,11 +1,9 @@
-
 using FantasyInformator.Database.Models.Players;
-using FantasyInformator.Database.Models.Tracking;
 
 namespace FantasyInformator.Database.Models.Lineups;
 
 /// <summary>A slot a position can start in. A position has one or more.</summary>
-public class SlotEligibilityDb : TrackedModelDb
+public class SlotEligibilityDb : BaseEntityDb
 {
     public Guid PositionId { get; set; }
 

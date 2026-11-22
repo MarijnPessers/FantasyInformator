@@ -1,10 +1,8 @@
-
 using FantasyInformator.Domain.Leagues;
-using FantasyInformator.Domain.Tracking;
 
 namespace FantasyInformator.Domain.Nfl;
 
-public class Season : TrackedModel
+public class Season : BaseEntity
 {
     /// <summary>The year the season starts in.</summary>
     public int Year { get; set; }

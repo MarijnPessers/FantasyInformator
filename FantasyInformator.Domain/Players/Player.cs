@@ -1,13 +1,11 @@
-
 using FantasyInformator.Domain.Enums;
 using FantasyInformator.Domain.FantasyTeams;
 using FantasyInformator.Domain.Nfl;
 using FantasyInformator.Domain.Scoring;
-using FantasyInformator.Domain.Tracking;
 
 namespace FantasyInformator.Domain.Players;
 
-public class Player : TrackedModel
+public class Player : BaseEntity
 {
     public required string ExternalId { get; set; }
 

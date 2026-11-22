@@ -242,6 +242,8 @@ dotnet_diagnostic.CA2007.severity = none
 dotnet_diagnostic.CA2007.severity = none
 # Test methods are named Member_ShouldResult_WhenSituation, with underscores.
 dotnet_diagnostic.CA1707.severity = none
+# Test methods are called by MSTest, not by code, so their names do not end in Async.
+dotnet_naming_rule.async_methods_end_in_async.severity = none
 
 [*.Designer.cs]
 generated_code = true

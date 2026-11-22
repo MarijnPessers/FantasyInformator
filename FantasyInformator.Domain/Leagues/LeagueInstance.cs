@@ -1,13 +1,12 @@
-
+using FantasyInformator.Domain.FantasyTeams;
 using FantasyInformator.Domain.Lineups;
 using FantasyInformator.Domain.Nfl;
 using FantasyInformator.Domain.Scoring;
-using FantasyInformator.Domain.Tracking;
 
 namespace FantasyInformator.Domain.Leagues;
 
 /// <summary>A league in one season. This is the one that has the Sleeper league id.</summary>
-public class LeagueInstance : TrackedModel
+public class LeagueInstance : BaseEntity
 {
     public required string ExternalId { get; set; }
 
@@ -21,7 +20,7 @@ public class LeagueInstance : TrackedModel
 
     public List<LeagueSlot>? LeagueSlots { get; init; }
 
-    public List<FantasyTeams.FantasyTeam>? FantasyTeams { get; init; }
+    public List<FantasyTeam>? FantasyTeams { get; init; }
 
     public List<FantasyScore>? FantasyScores { get; init; }
 

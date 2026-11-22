@@ -1,9 +1,9 @@
 using System.Collections.Concurrent;
 using System.Reflection;
 using FantasyInformator.Database.Context;
-using FantasyInformator.Database.Models.Tracking;
-using FantasyInformator.Domain.Enums;
-using FantasyInformator.Domain.Tracking;
+using FantasyInformator.Database.Mappers;
+using FantasyInformator.Database.Models;
+using FantasyInformator.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace FantasyInformator.Database.Services;
@@ -11,138 +11,144 @@ namespace FantasyInformator.Database.Services;
 internal interface IDatabaseReadService
 {
     /// <summary>
-    /// Reads every row of the database model that belongs to <typeparamref name="TModel"/> (<c>PlayerDb</c> for
-    /// <c>Player</c>) and returns the rows as <typeparamref name="TModel"/>. Nothing is enriched: every link to another
-    /// model is null, which means it is not retrieved.
+    /// Reads everything from the table of a model and returns it as models. Linked data is not read.
+    /// Example: <c>ReadAll&lt;Player&gt;()</c> gives all Players, without the team of each player.
     /// </summary>
     Task<IEnumerable<TModel>> ReadAll<TModel>(CancellationToken cancellationToken)
-        where TModel : TrackedModel;
+        where TModel : BaseEntity;
 }
 
 /// <summary>
-/// Reads any model from the database with one call, for example <c>ReadAll&lt;Player&gt;()</c>. The caller only
-/// names the model. This class works out the rest while the application runs, by the rules below, so no code
-/// is written per model:
+/// Without this class every model would need its own read method, such as ReadAllPlayers, ReadAllLeagues and
+/// ReadAllTeams. This class reads any model with one method, <see cref="ReadAll{TModel}"/>.
+/// Example: <c>ReadAll&lt;Player&gt;()</c> reads every PlayerDb from the player table and returns them as Players.
+/// The steps:
 /// <list type="number">
-/// <item>The database model is the model name with <c>Db</c> behind it (<c>Player</c> gives <c>PlayerDb</c>).</item>
-/// <item>All rows of that database model are read. No links to other models are read; they stay null.</item>
-/// <item>The rows are turned into models by the <c>Map</c> method that exists for that database model.</item>
-/// <item>The id is copied from each row, and the models start as Unchanged, because they match the database.</item>
+/// <item>
+/// The database model of a model is found by adding Db to its name.
+/// Example: Player gives PlayerDb.
+/// </item>
+/// <item>
+/// All data is read from that table. Linked data is not read.
+/// Example: all PlayerDb, without the team of each player.
+/// </item>
+/// <item>
+/// The Map method copies the database models into models.
+/// Example: the Map method in PlayerMapper copies all PlayerDb into Players.
+/// </item>
 /// </list>
-/// Looking things up by name is slow, so every lookup is done once per model and kept for the next calls.
+/// Finding the database model and the Map method by name is slow, so it is done on the first call and remembered after
+/// that in <see cref="ReadAllAsyncMethods"/> and <see cref="MapMethods"/>.
 /// </summary>
-internal class DatabaseReadService(IDbContextFactory<FantasyInformatorDbContext> contextFactory) : IDatabaseReadService
+internal sealed class DatabaseReadService(IDbContextFactory<FantasyInformatorDbContext> contextFactory) : IDatabaseReadService
 {
-    private const string DatabaseModelSuffix = "Db";
-    private const string MapMethodName = "Map";
-
-    /// <summary>The ready-made read call per model (Player, League, ...), built the first time it is needed.</summary>
-    private static readonly ConcurrentDictionary<Type, Delegate> ReadAllCalls = new();
-
-    /// <summary>The ready-made <c>Map</c> call per pair of database model and model, found the first time.</summary>
-    private static readonly ConcurrentDictionary<(Type Database, Type Model), Delegate> RowMappers = new();
+    /// <summary>
+    /// A list of ReadAllAsync methods, one per model.
+    /// <see cref="ReadAll{TModel}"/> is called many times for the same model, and creating its
+    /// <see cref="ReadAllAsync{TModel, TDatabaseModel}"/> every time would be slow. So each one is created once and kept
+    /// here. They are held as a Delegate, which is not type specific.
+    /// Example: the <c>ReadAllAsync&lt;Player, PlayerDb&gt;()</c> method.
+    /// </summary>
+    private static readonly ConcurrentDictionary<Type, Delegate> ReadAllAsyncMethods = new();
 
     /// <summary>
-    /// The method <see cref="ReadAllAsync{TModel, TDatabaseModel}"/> with its two types still blank. A method with
-    /// blank types cannot be called until the blanks are filled in.
+    /// A list of Map methods, one per pair of model and database model.
+    /// Finding a Map method by name is slow, so each one is found once and kept here.
+    /// Example: the Map method that copies PlayerDb into Player.
     /// </summary>
-    private static readonly MethodInfo ReadAllMethod = typeof(DatabaseReadService)
-        .GetMethod(nameof(ReadAllAsync), BindingFlags.Instance | BindingFlags.NonPublic)!;
+    private static readonly ConcurrentDictionary<(Type Database, Type Model), Delegate> MapMethods = new();
 
+    /// <summary>
+    /// Read as ReadAll + MethodInfo: the information (MethodInfo) about the method
+    /// <see cref="ReadAllAsync{TModel, TDatabaseModel}"/>. This field reads nothing itself.
+    /// <see cref="ReadAllAsync{TModel, TDatabaseModel}"/> needs a model and a database model, but the database model is
+    /// only found while the program runs, so the code cannot name it.
+    /// <see cref="CreateReadAllAsyncMethod{TModel}"/> uses it to set <see cref="ReadAllAsync{TModel, TDatabaseModel}"/> to a model and its database model.
+    /// Example: ReadAllAsync set to Player and PlayerDb.
+    /// </summary>
+    private static readonly MethodInfo ReadAllMethodInfo = typeof(DatabaseReadService)
+        .GetMethod(nameof(ReadAllAsync), BindingFlags.Instance | BindingFlags.Public)!;
+
+    /// <inheritdoc/>
     public Task<IEnumerable<TModel>> ReadAll<TModel>(CancellationToken cancellationToken)
-        where TModel : TrackedModel
+        where TModel : BaseEntity
     {
-        // The read call of a model, such as Player, is built the first time and kept for every next call.
-        // The service and the cancellation token are left open: they are filled in on every call.
-        // The dictionary can only store a general kind of call, so it is turned back into its real kind here.
-        var readAll = (Func<DatabaseReadService, CancellationToken, Task<IEnumerable<TModel>>>)ReadAllCalls
-            .GetOrAdd(typeof(TModel), _ => BuildReadAllCall<TModel>());
+        // ReadAll works for any model, but the ReadAllAsync that runs is made for one model and its database model. So
+        // the ReadAllAsync for TModel is taken from the field ReadAllAsyncMethods, or created with the method
+        // CreateReadAllAsyncMethod when the field has none yet. The field gives back a Delegate, which is not type
+        // specific, so it is cast to the Func for TModel. ReadAllAsync is a method of this service, so the Func takes the
+        // service as its first input, and that is why this is passed first.
+        // Example: for Player, the Delegate is cast to the Func that reads all Players, and then it runs with this.
+        var readAll = (Func<DatabaseReadService, CancellationToken, Task<IEnumerable<TModel>>>)ReadAllAsyncMethods
+            .GetOrAdd(typeof(TModel), _ => CreateReadAllAsyncMethod<TModel>());
 
         return readAll(this, cancellationToken);
     }
 
     /// <summary>
-    /// The database type is only known while running (PlayerDb for Player), so the read method cannot be called
-    /// directly. Its two blank types are filled in here, and the result is a call that can be used again.
+    /// Does the actual reading. It needs the model and its database model, so it only runs through the Func that
+    /// <see cref="CreateReadAllAsyncMethod{TModel}"/> makes. It reads all data from the table and copies it into models
+    /// with the Map method. It is public only so <see cref="ReadAllMethodInfo"/> can find it without reading private
+    /// methods; the class is internal, so nothing outside this project can call it.
+    /// Example: set to Player and PlayerDb, it reads all PlayerDb and returns them as Players.
     /// </summary>
-    private static Func<DatabaseReadService, CancellationToken, Task<IEnumerable<TModel>>> BuildReadAllCall<TModel>()
-        where TModel : TrackedModel =>
-        ReadAllMethod
-            .MakeGenericMethod(typeof(TModel), FindDatabaseType(typeof(TModel)))
-            .CreateDelegate<Func<DatabaseReadService, CancellationToken, Task<IEnumerable<TModel>>>>();
-
-    /// <summary>
-    /// The real read, with both types filled in (for example Player and PlayerDb). It is never called by name:
-    /// <see cref="BuildReadAllCall{TModel}"/> fills in the types and <see cref="ReadAll{TModel}"/> calls it.
-    /// </summary>
-    private async Task<IEnumerable<TModel>> ReadAllAsync<TModel, TDatabaseModel>(CancellationToken cancellationToken)
-        where TModel : TrackedModel
-        where TDatabaseModel : TrackedModelDb
+    public async Task<IEnumerable<TModel>> ReadAllAsync<TModel, TDatabaseModel>(CancellationToken cancellationToken)
+        where TModel : BaseEntity
+        where TDatabaseModel : BaseEntityDb
     {
-        // Step 1: read all rows of the database model.
-        var rows = await GetAllAsync<TDatabaseModel>(cancellationToken);
+        // Step 1: read all data from the table.
+        // Example: all PlayerDb.
+        var list = await GetAllAsync<TDatabaseModel>(cancellationToken);
 
-        // Step 2: find the Map method that turns these rows into models.
-        var mapRows = FindRowMapper<TDatabaseModel, TModel>();
+        // Step 2: find the Map method that copies the table data into models.
+        // Example: PlayerDb into Player.
+        var mapper = FindMapMethod<TDatabaseModel, TModel>();
 
-        // The rows come from the database, so every model created while mapping starts as Unchanged.
-        using (TrackedModel.SetNewDefaultState(TrackingState.Unchanged))
-        {
-            // The list is made here, inside the scope. Left lazy, the models would be created after the scope
-            // has ended and would start as New.
-            var models = mapRows(rows).ToList();
-
-            // Step 3: the mappers never set the id, so it is copied here. Mapping keeps the order of the rows,
-            // so the first row belongs to the first model, and so on.
-            foreach (var (row, model) in rows.Zip(models))
-            {
-                model.Id = row.Id;
-            }
-
-            return models;
-        }
+        // Step 3: the Map method copies the database models into models.
+        // Example: all PlayerDb become Players.
+        return mapper(list);
     }
 
     /// <summary>
-    /// Reads every row of one table. <c>Set</c> gives the table of the database model, so no table name is
-    /// written. Only the rows themselves are read: links to other tables stay null.
+    /// <see cref="ReadAll{TModel}"/> only knows the model, but <see cref="ReadAllAsync{TModel, TDatabaseModel}"/> also
+    /// needs its database model, which is only found while the program runs. So this method finds the database model
+    /// with <see cref="DatabaseModelTypes.Find"/>. Then it takes the field <see cref="ReadAllMethodInfo"/>, which is the same
+    /// for every model, and makes from it a <see cref="ReadAllAsync{TModel, TDatabaseModel}"/> set to the model and its
+    /// database model. It returns that as a Func for TModel.
+    /// Example: for Player it finds PlayerDb and returns the Func that reads all Players.
+    /// </summary>
+    private static Func<DatabaseReadService, CancellationToken, Task<IEnumerable<TModel>>> CreateReadAllAsyncMethod<TModel>()
+        where TModel : BaseEntity =>
+        ReadAllMethodInfo
+            .MakeGenericMethod(typeof(TModel), DatabaseModelTypes.Find(typeof(TModel)))
+            .CreateDelegate<Func<DatabaseReadService, CancellationToken, Task<IEnumerable<TModel>>>>();
+
+    /// <summary>
+    /// Reads all data from one table. Linked data is not read; those links stay empty.
+    /// Example: all PlayerDb from the player table, without the team each player links to.
     /// </summary>
     private async Task<List<TDatabaseModel>> GetAllAsync<TDatabaseModel>(CancellationToken cancellationToken)
-        where TDatabaseModel : TrackedModelDb
+        where TDatabaseModel : BaseEntityDb
     {
         await using var context = await contextFactory.CreateDbContextAsync(cancellationToken);
 
-        // AsNoTracking: the rows are only read, so the context does not need to watch them for changes.
+        // EF normally tracks every model it reads, so it can save changes later. This data is only read, never saved
+        // back, so AsNoTracking switches the tracking off. That makes reading faster.
         return await context.Set<TDatabaseModel>()
             .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
 
     /// <summary>
-    /// Every model has the database model with the same name and <c>Db</c> behind it. It is searched for in this
-    /// project. Throws when there is none or more than one; that is a missing exception to the rule.
+    /// Copying table data into models needs the Map method for that pair. It is found once and kept in
+    /// <see cref="MapMethods"/>. <see cref="MapMethods"/> holds it as a Delegate, which is not type specific, so it is
+    /// cast to the Func for this pair. Throws when there is none or more than one.
+    /// Example: the Map method that copies a list of PlayerDb into a list of Players.
     /// </summary>
-    private static Type FindDatabaseType(Type modelType) =>
-        typeof(TrackedModelDb).Assembly
-            .GetTypes()
-            .Single(x => x.Name == modelType.Name + DatabaseModelSuffix && x.IsAssignableTo(typeof(TrackedModelDb)));
-
-    /// <summary>
-    /// Finds the mapper that turns a list of database models into a list of models: the <c>Map</c> extension method
-    /// on <c>IEnumerable&lt;TDatabaseModel&gt;</c> in one of the mapper classes. It looks through all static classes
-    /// of this project for a public <c>Map</c> method that takes that list and returns a list of the model.
-    /// Throws when there is none or more than one. The method is made into a call once and kept.
-    /// </summary>
-    private static Func<IEnumerable<TDatabaseModel>, IEnumerable<TModel>> FindRowMapper<TDatabaseModel, TModel>() =>
-        (Func<IEnumerable<TDatabaseModel>, IEnumerable<TModel>>)RowMappers.GetOrAdd(
+    private static Func<IEnumerable<TDatabaseModel>, IEnumerable<TModel>> FindMapMethod<TDatabaseModel, TModel>() =>
+        (Func<IEnumerable<TDatabaseModel>, IEnumerable<TModel>>)MapMethods.GetOrAdd(
             (typeof(TDatabaseModel), typeof(TModel)),
-            _ => typeof(TrackedModelDb).Assembly
-                .GetTypes()
-                .Where(x => x is { IsAbstract: true, IsSealed: true })
-                .SelectMany(x => x.GetMethods(BindingFlags.Public | BindingFlags.Static))
-                .Single(x => x.Name == MapMethodName
-                    && x.ReturnType == typeof(IEnumerable<TModel>)
-                    && x.GetParameters() is [{ } parameter]
-                    && parameter.ParameterType == typeof(IEnumerable<TDatabaseModel>))
+            _ => MapperLookup
+                .Find([typeof(IEnumerable<TDatabaseModel>)], typeof(IEnumerable<TModel>))
                 .CreateDelegate<Func<IEnumerable<TDatabaseModel>, IEnumerable<TModel>>>());
 }

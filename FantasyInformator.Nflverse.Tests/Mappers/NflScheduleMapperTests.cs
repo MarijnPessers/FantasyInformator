@@ -10,7 +10,11 @@ public class NflScheduleMapperTests
     private const string NflverseRamsCode = "LA";
     private const string SleeperRamsCode = "LAR";
 
-    private readonly Fixture _fixture = new();
+    private Fixture _fixture = null!;
+
+    [TestInitialize]
+    public void Initialize() =>
+        _fixture = new Fixture();
 
     [TestMethod]
     public void ToGame_ShouldConvertEasternDaylightTimeToUtc_WhenGameIsInSummer()

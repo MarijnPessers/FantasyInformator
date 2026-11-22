@@ -1,15 +1,14 @@
-
-using FantasyInformator.Database.Models.Tracking;
+using FantasyInformator.Database.Models.Players;
 
 namespace FantasyInformator.Database.Models.Nfl;
 
-public class NflTeamDb : TrackedModelDb
+public class NflTeamDb : BaseEntityDb
 {
     public required string ExternalId { get; set; }
 
     public required string Name { get; set; }
 
-    public List<Players.PlayerDb>? Players { get; init; }
+    public List<PlayerDb>? Players { get; init; }
 
     public List<GameDb>? HomeGames { get; init; }
 

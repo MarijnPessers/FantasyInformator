@@ -1,10 +1,7 @@
-
-using FantasyInformator.Database.Models.Tracking;
-
 namespace FantasyInformator.Database.Models.Players;
 
 /// <summary>A position a player plays. A player has one or more.</summary>
-public class PlayerPositionDb : TrackedModelDb
+public class PlayerPositionDb : BaseEntityDb
 {
     public Guid PlayerId { get; set; }
 

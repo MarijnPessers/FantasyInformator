@@ -1,9 +1,6 @@
-
-using FantasyInformator.Database.Models.Tracking;
-
 namespace FantasyInformator.Database.Models.Leagues;
 
-public class LeagueDb : TrackedModelDb
+public class LeagueDb : BaseEntityDb
 {
     public required string Name { get; set; }
 

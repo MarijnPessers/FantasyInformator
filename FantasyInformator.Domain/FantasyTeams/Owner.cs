@@ -1,9 +1,6 @@
-
-using FantasyInformator.Domain.Tracking;
-
 namespace FantasyInformator.Domain.FantasyTeams;
 
-public class Owner : TrackedModel
+public class Owner : BaseEntity
 {
     public required string ExternalId { get; set; }
 

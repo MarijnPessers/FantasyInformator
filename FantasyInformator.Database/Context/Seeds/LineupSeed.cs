@@ -118,7 +118,7 @@ public static class LineupSeed
     private static SlotEligibilityDb CreateEligibility(string positionCode, string slotCode, bool isPreferred) =>
         new()
         {
-            Id = SeedIds.For(nameof(SlotEligibilityDb),$"{positionCode}:{slotCode}"),
+            Id = SeedIds.For(nameof(SlotEligibilityDb), $"{positionCode}:{slotCode}"),
             PositionId = PlayerSeed.PositionId(positionCode),
             SlotId = SlotId(slotCode),
             IsPreferred = isPreferred,

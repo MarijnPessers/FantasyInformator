@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Reflection;
-using FantasyInformator.Database.Models.Tracking;
+using FantasyInformator.Database.Models;
 
 namespace FantasyInformator.Database.Tests;
 
@@ -13,9 +13,9 @@ public static class MappedAssert
 {
     private static readonly string[] DatabaseOnlyFields =
     [
-        nameof(TrackedModelDb.Id),
-        nameof(TrackedModelDb.CreatedUtc),
-        nameof(TrackedModelDb.UpdatedUtc),
+        nameof(BaseEntityDb.Id),
+        nameof(BaseEntityDb.CreatedUtc),
+        nameof(BaseEntityDb.UpdatedUtc),
     ];
 
     public static void Equal(object databaseModel, object model)

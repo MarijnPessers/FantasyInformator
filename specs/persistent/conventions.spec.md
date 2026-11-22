@@ -135,6 +135,7 @@ Only the coding decisions that the existing code, `CLAUDE.local.md`, the SonarQu
 - Tests use MSTest and AutoFixture.
 - Test method names follow `.editorconfig`: `Member_ShouldResult_WhenSituation`.
 - A test project has the same folders as its project. A test class is named `<ClassName>Tests`.
+- What several tests in one class share, such as the Fixture, a stand-in, the service under test or a service provider, is created in a method `Initialize` with `[TestInitialize]`, not in each test and not in a field initializer. What must be disposed is disposed in a method `Cleanup` with `[TestCleanup]`. Constants stay `const`.
 - Stand-ins for interfaces come from NSubstitute.
 - The clock is read once, with `DateTime.UtcNow`, and the value is passed on. A test passes its own time, written by hand or made by AutoFixture.
 - The database is EF's InMemory provider.

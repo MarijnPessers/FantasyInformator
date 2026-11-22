@@ -1,5 +1,6 @@
 using FantasyInformator.Database.Context;
 using FantasyInformator.Database.Services;
+using FantasyInformator.Database.Services.FantasyTeams;
 using FantasyInformator.Database.Services.Players;
 using FantasyInformator.Database.Settings;
 using Microsoft.EntityFrameworkCore;
@@ -34,8 +35,11 @@ public static class DatabaseServiceCollectionExtensions
         _ = services.AddDbContextFactory<FantasyInformatorDbContext>((serviceProvider, builder) =>
             builder.UseSqlServer(
                 serviceProvider.GetRequiredService<IOptions<DatabaseSettings>>().Value.ConnectionStringApp));
-        _ = services.AddScoped<IDatabaseSaveService, DatabaseSaveService>();
+        // general serices
+        _ = services.AddScoped<IDatabaseWriteService, DatabaseWriteService>();
         _ = services.AddScoped<IDatabaseReadService, DatabaseReadService>();
+        // data specific services
+        _ = services.AddScoped<IFantasyTeamService, FantasyTeamService>();
         _ = services.AddScoped<IPlayerService, PlayerService>();
 
         return services;

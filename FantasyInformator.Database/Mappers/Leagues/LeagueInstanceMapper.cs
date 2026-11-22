@@ -1,35 +1,61 @@
-using FantasyInformator.Database.Mappers.FantasyTeams;
-using FantasyInformator.Database.Mappers.Lineups;
-using FantasyInformator.Database.Mappers.Scoring;
-using FantasyInformator.Database.Mappers.Tracking;
 using FantasyInformator.Database.Models.Leagues;
-using AppLeague = FantasyInformator.Domain.Leagues;
+using FantasyInformator.Domain.Leagues;
 
 namespace FantasyInformator.Database.Mappers.Leagues;
 
-public static class LeagueInstanceMapper
+internal static class LeagueInstanceMapper
 {
-    public static AppLeague.LeagueInstance Map(this LeagueInstanceDb leagueInstance) =>
-        TrackedModelMapper.MapToAppModel(leagueInstance, new AppLeague.LeagueInstance
-        {
-            ExternalId = leagueInstance.ExternalId,
-            LeagueId = leagueInstance.LeagueId,
-            SeasonId = leagueInstance.SeasonId,
-            LeagueSlots = [.. leagueInstance.LeagueSlots.Select(x => x.Map())],
-            FantasyTeams = [.. leagueInstance.FantasyTeams.Select(x => x.Map())],
-            FantasyScores = [.. leagueInstance.FantasyScores.Select(x => x.Map())],
-            PlayerSeasonStats = [.. leagueInstance.PlayerSeasonStats.Select(x => x.Map())],
-        });
+    #region LeagueInstanceDb to LeagueInstance
 
-    public static LeagueInstanceDb Map(this AppLeague.LeagueInstance leagueInstance) =>
-        TrackedModelMapper.Map(leagueInstance, new LeagueInstanceDb
-        {
-            ExternalId = leagueInstance.ExternalId,
-            LeagueId = leagueInstance.LeagueId,
-            SeasonId = leagueInstance.SeasonId,
-            LeagueSlots = [.. leagueInstance.LeagueSlots.Select(x => x.Map())],
-            FantasyTeams = [.. leagueInstance.FantasyTeams.Select(x => x.Map())],
-            FantasyScores = [.. leagueInstance.FantasyScores.Select(x => x.Map())],
-            PlayerSeasonStats = [.. leagueInstance.PlayerSeasonStats.Select(x => x.Map())],
-        });
+    /// <summary>Turns a LeagueInstanceDb into a LeagueInstance. A new context fills in the links.</summary>
+    public static LeagueInstance Map(this LeagueInstanceDb leagueInstance) =>
+        leagueInstance.Map(new MapContext());
+
+    /// <summary>The same, inside a mapping that is already running, so objects met twice are found.</summary>
+    public static LeagueInstance Map(this LeagueInstanceDb leagueInstance, MapContext context) =>
+        context.Map(
+            leagueInstance,
+            x => new LeagueInstance
+            {
+                ExternalId = x.ExternalId,
+                LeagueId = x.LeagueId,
+                SeasonId = x.SeasonId,
+            }.MapBase(x));
+
+    /// <summary>Turns a list of LeagueInstanceDb into LeagueInstance, all sharing one context.</summary>
+    public static IEnumerable<LeagueInstance> Map(this IEnumerable<LeagueInstanceDb> items) =>
+        items.Map(new MapContext());
+
+    /// <summary>The same, inside a mapping that is already running.</summary>
+    public static IEnumerable<LeagueInstance> Map(this IEnumerable<LeagueInstanceDb> items, MapContext context) =>
+        [.. items.Select(x => x.Map(context))];
+
+    #endregion
+
+    #region LeagueInstance to LeagueInstanceDb
+
+    /// <summary>Turns a LeagueInstance into a LeagueInstanceDb. A new context fills in the links.</summary>
+    public static LeagueInstanceDb Map(this LeagueInstance leagueInstance) =>
+        leagueInstance.Map(new MapContext());
+
+    /// <summary>The same, inside a mapping that is already running, so objects met twice are found.</summary>
+    public static LeagueInstanceDb Map(this LeagueInstance leagueInstance, MapContext context) =>
+        context.Map(
+            leagueInstance,
+            x => new LeagueInstanceDb
+            {
+                ExternalId = x.ExternalId,
+                LeagueId = x.LeagueId,
+                SeasonId = x.SeasonId,
+            }.MapBase(x));
+
+    /// <summary>Turns a list of LeagueInstance into LeagueInstanceDb, all sharing one context.</summary>
+    public static IEnumerable<LeagueInstanceDb> Map(this IEnumerable<LeagueInstance> items) =>
+        items.Map(new MapContext());
+
+    /// <summary>The same, inside a mapping that is already running.</summary>
+    public static IEnumerable<LeagueInstanceDb> Map(this IEnumerable<LeagueInstance> items, MapContext context) =>
+        [.. items.Select(x => x.Map(context))];
+
+    #endregion
 }

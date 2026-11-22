@@ -20,7 +20,9 @@
     <File Path="Specs/fleeting/steps.spec.md" />
   </Folder>
   <Folder Name="/Solution Items/Specs/persistent/">
-    <File Path="Specs/persistent/conventions.spec.md" />    
+    <File Path="Specs/persistent/comments.spec.md" />
+    <File Path="Specs/persistent/conventions.spec.md" />
+    <File Path="Specs/persistent/naming-conventions.spec.md" />
     <File Path="Specs/persistent/nugetcheck.spec.md" />
     <File Path="Specs/persistent/readme-images.spec.md" />
     <File Path="Specs/persistent/roadmap.spec.md" />

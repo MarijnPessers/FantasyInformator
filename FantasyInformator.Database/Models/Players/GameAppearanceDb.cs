@@ -1,12 +1,10 @@
-
 using FantasyInformator.Database.Models.Nfl;
 using FantasyInformator.Database.Models.Scoring;
-using FantasyInformator.Database.Models.Tracking;
 
 namespace FantasyInformator.Database.Models.Players;
 
 /// <summary>A player taking part in a game.</summary>
-public class GameAppearanceDb : TrackedModelDb
+public class GameAppearanceDb : BaseEntityDb
 {
     public Guid PlayerId { get; set; }
 

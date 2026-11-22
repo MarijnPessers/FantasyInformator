@@ -27,6 +27,7 @@ Set in `.editorconfig`.
 | IDE0130 | `FantasyInformator.App/State/Handlers/**.cs` | none |
 | IDE2006 | `*.{cs,razor}` | none |
 | IDE3000 | `*.{cs,razor}` | none |
+| IDE1006 (naming rule `async_methods_end_in_async` only) | `FantasyInformator*Tests/**.cs` | none |
 
 <!-- end of header -->
 

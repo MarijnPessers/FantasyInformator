@@ -12,7 +12,11 @@ public class PlayerMapperTests
     private const string WideReceiverCode = "WR";
     private const string UnknownStatus = "SomeOtherStatus";
 
-    private readonly Fixture _fixture = new();
+    private Fixture _fixture = null!;
+
+    [TestInitialize]
+    public void Initialize() =>
+        _fixture = new Fixture();
 
     [TestMethod]
     public void ToPlayer_ShouldMapExternalIdNameAndTeam_WhenPlayerIsGiven()

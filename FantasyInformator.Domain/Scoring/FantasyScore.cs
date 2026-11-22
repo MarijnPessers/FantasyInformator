@@ -1,12 +1,10 @@
-
 using FantasyInformator.Domain.Leagues;
 using FantasyInformator.Domain.Players;
-using FantasyInformator.Domain.Tracking;
 
 namespace FantasyInformator.Domain.Scoring;
 
 /// <summary>The fantasy points a player scored in a game for a league instance.</summary>
-public class FantasyScore : TrackedModel
+public class FantasyScore : BaseEntity
 {
     public Guid GameAppearanceId { get; set; }
 

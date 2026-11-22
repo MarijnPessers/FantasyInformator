@@ -11,6 +11,7 @@ public static class LeagueSchema
         _ = modelBuilder.Entity<LeagueDb>(league =>
         {
             _ = league.Property(x => x.Name).HasMaxLength(ColumnSizes.Name);
+            _ = league.HasIndex(x => x.Name).IsUnique();
         });
 
         _ = modelBuilder.Entity<LeagueInstanceDb>(leagueInstance =>

@@ -1,6 +1,5 @@
-
 using FantasyInformator.Database.Models.Leagues;
-using FantasyInformator.Database.Models.Tracking;
+using FantasyInformator.Database.Models.Players;
 
 namespace FantasyInformator.Database.Models.Scoring;
 
@@ -9,11 +8,11 @@ namespace FantasyInformator.Database.Models.Scoring;
 /// Calculated by the application from <see cref="FantasyScoreDb"/>, never retrieved from Sleeper.
 /// The season comes through the league instance.
 /// </summary>
-public class PlayerSeasonStatsDb : TrackedModelDb
+public class PlayerSeasonStatsDb : BaseEntityDb
 {
     public Guid PlayerId { get; set; }
 
-    public Players.PlayerDb? Player { get; set; }
+    public PlayerDb? Player { get; set; }
 
     public Guid LeagueInstanceId { get; set; }
 
