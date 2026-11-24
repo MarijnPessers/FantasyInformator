@@ -38,12 +38,10 @@ public static class MapMethods
             var modelName = model.FullName!;
             var otherModel = CreateOtherModelName(model, modelsNamespace, arguments);
 
-            foreach (var mapMethod in CreateBothWays(modelName, otherModel))
+            foreach (var mapMethod in CreateBothWays(modelName, otherModel)
+                .Where(x => !HasMapMethod(mapMethods, x.Source)))
             {
-                if (!HasMapMethod(mapMethods, mapMethod.Source))
-                {
-                    mapMethods.Add(mapMethod);
-                }
+                mapMethods.Add(mapMethod);
             }
         }
 

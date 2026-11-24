@@ -59,13 +59,9 @@ public sealed record MapGeneratorArguments
             {
                 AddExplicitPair(explicitPairs, value);
             }
-            else if (!SingleValueNames.Contains(name))
+            else
             {
-                throw new MapGeneratorException($"{name} is not a known argument.");
-            }
-            else if (!values.TryAdd(name, value))
-            {
-                throw new MapGeneratorException($"{name} is given more than once.");
+                AddSingleValue(values, name, value);
             }
         }
 
@@ -93,6 +89,19 @@ public sealed record MapGeneratorArguments
         if (!explicitPairs.TryAdd(model, otherModel))
         {
             throw new MapGeneratorException($"{PairName} is given more than once for {model}.");
+        }
+    }
+
+    private static void AddSingleValue(Dictionary<string, string> values, string name, string value)
+    {
+        if (!SingleValueNames.Contains(name))
+        {
+            throw new MapGeneratorException($"{name} is not a known argument.");
+        }
+
+        if (!values.TryAdd(name, value))
+        {
+            throw new MapGeneratorException($"{name} is given more than once.");
         }
     }
 

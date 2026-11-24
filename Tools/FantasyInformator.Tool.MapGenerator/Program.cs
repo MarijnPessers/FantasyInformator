@@ -12,7 +12,7 @@ try
 }
 catch (MapGeneratorException exception)
 {
-    Console.Error.WriteLine(exception.Message);
+    await Console.Error.WriteLineAsync(exception.Message);
 
     return 1;
 }

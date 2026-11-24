@@ -6,6 +6,7 @@ public class GeneratedFilesTests
     private const string ExtensionsNamespace = "Shop.Database";
 
     private MapMethod _mapMethod = null!;
+    private static readonly string[] Expected = ["PlayerMapExtensions.g.cs", "MapExtensions.g.cs"];
 
     [TestInitialize]
     public void Initialize() =>
@@ -16,9 +17,8 @@ public class GeneratedFilesTests
     {
         var result = GeneratedFiles.Create([_mapMethod], ExtensionsNamespace);
 
-        CollectionAssert.AreEquivalent(
-            new[] { "PlayerMapExtensions.g.cs", "MapExtensions.g.cs" },
-            result.Keys.ToArray());
+        Assert.AreSequenceEqual(
+            Expected, [.. result.Keys], SequenceOrder.InAnyOrder);
     }
 
     [TestMethod]

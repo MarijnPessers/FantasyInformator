@@ -22,9 +22,8 @@ public class MapMethodsTests
     {
         var result = MapMethods.Find(_modelsAssembly, CreateArguments([]));
 
-        CollectionAssert.AreEquivalent(
-            new[] { new MapMethod(PlayerName, PlayerDb), new MapMethod(PlayerDb, PlayerName) },
-            result.ToArray());
+        Assert.AreSequenceEqual(
+            [new MapMethod(PlayerName, PlayerDb), new MapMethod(PlayerDb, PlayerName)], [.. result], SequenceOrder.InAnyOrder);
     }
 
     [TestMethod]
@@ -32,14 +31,12 @@ public class MapMethodsTests
     {
         var result = MapMethods.Find(_modelsAssembly, CreateArguments(new() { [PlayerName] = SuperPlayer }));
 
-        CollectionAssert.AreEquivalent(
-            new[]
-            {
+        Assert.AreSequenceEqual(
+            [
                 new MapMethod(PlayerName, SuperPlayer),
                 new MapMethod(SuperPlayer, PlayerName),
                 new MapMethod(PlayerDb, PlayerName),
-            },
-            result.ToArray());
+            ], [.. result], SequenceOrder.InAnyOrder);
     }
 
     [TestMethod]
