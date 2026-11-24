@@ -3,21 +3,21 @@ using FantasyInformator.Domain.Lineups;
 
 namespace FantasyInformator.Database.Mappers.Lineups;
 
-internal sealed class SlotMapper : Mapper<Slot, SlotDb>
+internal sealed class SlotMapper : EntityMapper<Slot, SlotDb>
 {
-    protected override Slot CreateModel(SlotDb databaseModel) =>
+    protected override Slot CreateCopy(SlotDb source) =>
         new()
         {
-            ExternalId = databaseModel.ExternalId,
-            Name = databaseModel.Name,
-            Abbreviation = databaseModel.Abbreviation,
+            ExternalId = source.ExternalId,
+            Name = source.Name,
+            Abbreviation = source.Abbreviation,
         };
 
-    protected override SlotDb CreateDatabaseModel(Slot model) =>
+    protected override SlotDb CreateCopy(Slot source) =>
         new()
         {
-            ExternalId = model.ExternalId,
-            Name = model.Name,
-            Abbreviation = model.Abbreviation,
+            ExternalId = source.ExternalId,
+            Name = source.Name,
+            Abbreviation = source.Abbreviation,
         };
 }

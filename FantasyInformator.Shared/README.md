@@ -7,6 +7,8 @@ The application's own library of shared functionality. Each functionality that i
 ## Functionality
 
 - Progress reporting: how a part of the application reports errors and progress, instead of stopping with an error. The report is built. The class that receives reports, the progress state and the screen part are not.
+- Mappers: a base class with the Map methods both ways, for one model and for a list, a context that fills the links, a lookup that finds the mapper between two models, and `MappingException` for every error the mappers find themselves. The console app `FantasyInformator.Tool.MapGenerator` writes `.Map()` on every model into a project before it compiles. See the [Mappers README](Mappers/README.md).
+- Database: base classes that read and save any model with EF Core. A project derives from them and gives the context, the database model of each model and the action for each model.
 
 ## Explanations
 

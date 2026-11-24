@@ -17,7 +17,7 @@ Everything in this file is a rule. Learned from the Database read and write serv
   - Bad: `CreateValueInListFilter`, which reads as a filter for a "CreateValue".
   - When a name can still be read in more than one way, the first line of its comment says how to read it (see `comments.spec.md`).
 - A class that holds a list is named after what is in the list.
-  - Good: `DatabaseModelTypes`, `MapperTypes`.
+  - Good: `DatabaseModelTypes`.
   - Bad: `DatabaseProject`, `ProjectTypes`.
 - A variable names the thing it holds: `mapper`, `list`. A list that a test fills with failures says what is missing: `modelsWithoutDatabaseModel`, not `modelsWithout`.
 

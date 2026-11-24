@@ -3,29 +3,29 @@ using FantasyInformator.Domain.Scoring;
 
 namespace FantasyInformator.Database.Mappers.Scoring;
 
-internal sealed class PlayerSeasonStatsMapper : Mapper<PlayerSeasonStats, PlayerSeasonStatsDb>
+internal sealed class PlayerSeasonStatsMapper : EntityMapper<PlayerSeasonStats, PlayerSeasonStatsDb>
 {
-    protected override PlayerSeasonStats CreateModel(PlayerSeasonStatsDb databaseModel) =>
+    protected override PlayerSeasonStats CreateCopy(PlayerSeasonStatsDb source) =>
         new()
         {
-            PlayerId = databaseModel.PlayerId,
-            LeagueInstanceId = databaseModel.LeagueInstanceId,
-            TotalScore = databaseModel.TotalScore,
-            GamesActive = databaseModel.GamesActive,
-            AverageScore = databaseModel.AverageScore,
-            AverageScoreLast3 = databaseModel.AverageScoreLast3,
-            MedianScore = databaseModel.MedianScore,
+            PlayerId = source.PlayerId,
+            LeagueInstanceId = source.LeagueInstanceId,
+            TotalScore = source.TotalScore,
+            GamesActive = source.GamesActive,
+            AverageScore = source.AverageScore,
+            AverageScoreLast3 = source.AverageScoreLast3,
+            MedianScore = source.MedianScore,
         };
 
-    protected override PlayerSeasonStatsDb CreateDatabaseModel(PlayerSeasonStats model) =>
+    protected override PlayerSeasonStatsDb CreateCopy(PlayerSeasonStats source) =>
         new()
         {
-            PlayerId = model.PlayerId,
-            LeagueInstanceId = model.LeagueInstanceId,
-            TotalScore = model.TotalScore,
-            GamesActive = model.GamesActive,
-            AverageScore = model.AverageScore,
-            AverageScoreLast3 = model.AverageScoreLast3,
-            MedianScore = model.MedianScore,
+            PlayerId = source.PlayerId,
+            LeagueInstanceId = source.LeagueInstanceId,
+            TotalScore = source.TotalScore,
+            GamesActive = source.GamesActive,
+            AverageScore = source.AverageScore,
+            AverageScoreLast3 = source.AverageScoreLast3,
+            MedianScore = source.MedianScore,
         };
 }

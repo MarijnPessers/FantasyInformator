@@ -3,19 +3,19 @@ using FantasyInformator.Domain.Players;
 
 namespace FantasyInformator.Database.Mappers.Players;
 
-internal sealed class PlayerPositionMapper : Mapper<PlayerPosition, PlayerPositionDb>
+internal sealed class PlayerPositionMapper : EntityMapper<PlayerPosition, PlayerPositionDb>
 {
-    protected override PlayerPosition CreateModel(PlayerPositionDb databaseModel) =>
+    protected override PlayerPosition CreateCopy(PlayerPositionDb source) =>
         new()
         {
-            PlayerId = databaseModel.PlayerId,
-            PositionId = databaseModel.PositionId,
+            PlayerId = source.PlayerId,
+            PositionId = source.PositionId,
         };
 
-    protected override PlayerPositionDb CreateDatabaseModel(PlayerPosition model) =>
+    protected override PlayerPositionDb CreateCopy(PlayerPosition source) =>
         new()
         {
-            PlayerId = model.PlayerId,
-            PositionId = model.PositionId,
+            PlayerId = source.PlayerId,
+            PositionId = source.PositionId,
         };
 }

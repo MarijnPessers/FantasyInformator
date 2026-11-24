@@ -29,23 +29,27 @@
     <File Path="Specs/persistent/timewarp-state.spec.md" />
   </Folder>
   <Folder Name="/Tests/">
-    <Project Path="FantasyInformator.App.Tests/FantasyInformator.App.Tests.csproj" />
-    <Project Path="FantasyInformator.Database.Tests/FantasyInformator.Database.Tests.csproj" />
-    <Project Path="FantasyInformator.Logic.Tests/FantasyInformator.Logic.Tests.csproj" />
-    <Project Path="FantasyInformator.Migrator.Tests/FantasyInformator.Migrator.Tests.csproj" />
-    <Project Path="FantasyInformator.Nflverse.Tests/FantasyInformator.Nflverse.Tests.csproj" />
-    <Project Path="FantasyInformator.Shared.Tests/FantasyInformator.Shared.Tests.csproj" />
-    <Project Path="FantasyInformator.Sleeper.Tests/FantasyInformator.Sleeper.Tests.csproj" />
-    <Project Path="FantasyInformator.State.Tests/FantasyInformator.State.Tests.csproj" />
-    <Project Path="FantasyInformator.Tests/FantasyInformator.Tests.csproj" />
+    <Project Path="Tests/FantasyInformator.App.Tests/FantasyInformator.App.Tests.csproj" />
+    <Project Path="Tests/FantasyInformator.Database.Tests/FantasyInformator.Database.Tests.csproj" />
+    <Project Path="Tests/FantasyInformator.Logic.Tests/FantasyInformator.Logic.Tests.csproj" />
+    <Project Path="Tests/FantasyInformator.Migrator.Tests/FantasyInformator.Migrator.Tests.csproj" />
+    <Project Path="Tests/FantasyInformator.Service.Nflverse.Tests/FantasyInformator.Service.Nflverse.Tests.csproj" />
+    <Project Path="Tests/FantasyInformator.Service.Sleeper.Tests/FantasyInformator.Service.Sleeper.Tests.csproj" />
+    <Project Path="Tests/FantasyInformator.Tool.MapGenerator.Tests/FantasyInformator.Tool.MapGenerator.Tests.csproj" />
+    <Project Path="Tests/FantasyInformator.Shared.Tests/FantasyInformator.Shared.Tests.csproj" />
+    <Project Path="Tests/FantasyInformator.State.Tests/FantasyInformator.State.Tests.csproj" />
+    <Project Path="Tests/FantasyInformator.Tests/FantasyInformator.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Tools/">
+    <Project Path="Tools/FantasyInformator.Tool.MapGenerator/FantasyInformator.Tool.MapGenerator.csproj" />
   </Folder>
   <Project Path="FantasyInformator.App/FantasyInformator.App.csproj" />
   <Project Path="FantasyInformator.Database/FantasyInformator.Database.csproj" />
   <Project Path="FantasyInformator.Domain/FantasyInformator.Domain.csproj" />
   <Project Path="FantasyInformator.Logic/FantasyInformator.Logic.csproj" />
   <Project Path="FantasyInformator.Migrator/FantasyInformator.Migrator.csproj" />
-  <Project Path="FantasyInformator.Nflverse/FantasyInformator.Nflverse.csproj" />
+  <Project Path="FantasyInformator.Service.Nflverse/FantasyInformator.Service.Nflverse.csproj" />
+  <Project Path="FantasyInformator.Service.Sleeper/FantasyInformator.Service.Sleeper.csproj" />
   <Project Path="FantasyInformator.Shared/FantasyInformator.Shared.csproj" />
-  <Project Path="FantasyInformator.Sleeper/FantasyInformator.Sleeper.csproj" />
   <Project Path="FantasyInformator.State/FantasyInformator.State.csproj" />
 </Solution>

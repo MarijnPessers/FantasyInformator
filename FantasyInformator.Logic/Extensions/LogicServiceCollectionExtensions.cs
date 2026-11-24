@@ -1,6 +1,6 @@
 using FantasyInformator.Database.Extensions;
 using FantasyInformator.Logic.Services.Players;
-using FantasyInformator.Sleeper.Extensions;
+using FantasyInformator.Service.Sleeper.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

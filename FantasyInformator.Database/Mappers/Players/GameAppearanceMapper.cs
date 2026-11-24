@@ -3,21 +3,21 @@ using FantasyInformator.Domain.Players;
 
 namespace FantasyInformator.Database.Mappers.Players;
 
-internal sealed class GameAppearanceMapper : Mapper<GameAppearance, GameAppearanceDb>
+internal sealed class GameAppearanceMapper : EntityMapper<GameAppearance, GameAppearanceDb>
 {
-    protected override GameAppearance CreateModel(GameAppearanceDb databaseModel) =>
+    protected override GameAppearance CreateCopy(GameAppearanceDb source) =>
         new()
         {
-            PlayerId = databaseModel.PlayerId,
-            GameId = databaseModel.GameId,
-            IsHome = databaseModel.IsHome,
+            PlayerId = source.PlayerId,
+            GameId = source.GameId,
+            IsHome = source.IsHome,
         };
 
-    protected override GameAppearanceDb CreateDatabaseModel(GameAppearance model) =>
+    protected override GameAppearanceDb CreateCopy(GameAppearance source) =>
         new()
         {
-            PlayerId = model.PlayerId,
-            GameId = model.GameId,
-            IsHome = model.IsHome,
+            PlayerId = source.PlayerId,
+            GameId = source.GameId,
+            IsHome = source.IsHome,
         };
 }

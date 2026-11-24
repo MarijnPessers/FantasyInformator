@@ -10,7 +10,7 @@ Read a spec file only when its "Read when" fits the current task, or when Marijn
 |------|---------|-----------|
 | `persistent/conventions.spec.md` | Conventions: project structure, state, errors and web calls, classes, Blazor, texts, mapping and tests. | Writing or reviewing code. |
 | `persistent/naming-conventions.spec.md` | Naming: how classes, members and variables are named so the name says what it holds or does, and which names belong together. | Writing or reviewing code. |
-| `persistent/comments.spec.md` | Comments: their order (problem first), wording, examples, links and what a comment may describe. | Writing or reviewing code, including comments. Read it again right before writing or reviewing the comments of a whole file. |
+| `persistent/comments.spec.md` | Comments: their order (problem first), wording, examples, links and what a comment may describe. | Marijn asks to write or change comments. |
 | `persistent/nugetcheck.spec.md` | NuGet check: the date the prerelease packages were last checked for a newer stable version. | At the start of each session. |
 | `persistent/readme-images.spec.md` | Rules for README visuals: Markdown before draw.io, where image files go, the timestamp on image links, and how the models diagram (draw.io) is drawn and kept in sync. | Adding or changing a visual in a README. |
 | `persistent/roadmap.spec.md` | Roadmap: the features still to come. | Planning or designing a new feature. |

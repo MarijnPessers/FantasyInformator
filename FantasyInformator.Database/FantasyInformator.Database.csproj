@@ -24,10 +24,36 @@
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="11.0.0" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <DomainProject>..\FantasyInformator.Domain\FantasyInformator.Domain.csproj</DomainProject>
+    <MapGeneratorProject>..\Tools\FantasyInformator.Tool.MapGenerator\FantasyInformator.Tool.MapGenerator.csproj</MapGeneratorProject>
+    <MapGeneratorOutputFolder>$(MSBuildProjectDirectory)\Generated</MapGeneratorOutputFolder>
+  </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\FantasyInformator.Domain\FantasyInformator.Domain.csproj" />
+    <ProjectReference Include="$(DomainProject)" />
     <ProjectReference Include="..\FantasyInformator.Shared\FantasyInformator.Shared.csproj" />
+    <ProjectReference Include="$(MapGeneratorProject)" ReferenceOutputAssembly="false" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Generated\**" />
+  </ItemGroup>
+
+  <Target Name="WriteMapMethods" BeforeTargets="CoreCompile" DependsOnTargets="ResolveProjectReferences">
+    <MSBuild Projects="$(MapGeneratorProject)" Targets="GetTargetPath">
+      <Output TaskParameter="TargetOutputs" PropertyName="MapGeneratorAssembly" />
+    </MSBuild>
+    <MSBuild Projects="$(DomainProject)" Targets="GetTargetPath">
+      <Output TaskParameter="TargetOutputs" PropertyName="DomainAssembly" />
+    </MSBuild>
+    <Exec Condition="Exists('$(MapGeneratorAssembly)') And Exists('$(DomainAssembly)')"
+          LogStandardErrorAsError="true"
+          Command="dotnet &quot;$(MapGeneratorAssembly)&quot; --models &quot;$(DomainAssembly)&quot; --model-base FantasyInformator.Domain.BaseEntity --suffix Db --other-models-namespace FantasyInformator.Database.Models --extensions-namespace $(RootNamespace) --output &quot;$(MapGeneratorOutputFolder)&quot;" />
+    <ItemGroup>
+      <Compile Include="Generated\**\*.cs" />
+    </ItemGroup>
+  </Target>
 
   <ItemGroup>
     <Folder Include="Migrations\" />

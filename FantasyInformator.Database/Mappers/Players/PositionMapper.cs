@@ -3,21 +3,21 @@ using FantasyInformator.Domain.Players;
 
 namespace FantasyInformator.Database.Mappers.Players;
 
-internal sealed class PositionMapper : Mapper<Position, PositionDb>
+internal sealed class PositionMapper : EntityMapper<Position, PositionDb>
 {
-    protected override Position CreateModel(PositionDb databaseModel) =>
+    protected override Position CreateCopy(PositionDb source) =>
         new()
         {
-            Name = databaseModel.Name,
-            Abbreviation = databaseModel.Abbreviation,
-            IsDominant = databaseModel.IsDominant,
+            Name = source.Name,
+            Abbreviation = source.Abbreviation,
+            IsDominant = source.IsDominant,
         };
 
-    protected override PositionDb CreateDatabaseModel(Position model) =>
+    protected override PositionDb CreateCopy(Position source) =>
         new()
         {
-            Name = model.Name,
-            Abbreviation = model.Abbreviation,
-            IsDominant = model.IsDominant,
+            Name = source.Name,
+            Abbreviation = source.Abbreviation,
+            IsDominant = source.IsDominant,
         };
 }

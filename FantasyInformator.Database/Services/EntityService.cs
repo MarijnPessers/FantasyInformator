@@ -1,4 +1,5 @@
 using FantasyInformator.Domain;
+using FantasyInformator.Shared.Database;
 
 namespace FantasyInformator.Database.Services;
 

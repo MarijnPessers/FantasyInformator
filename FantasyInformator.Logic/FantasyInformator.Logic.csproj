@@ -17,9 +17,9 @@
   <ItemGroup>
     <ProjectReference Include="..\FantasyInformator.Database\FantasyInformator.Database.csproj" />
     <ProjectReference Include="..\FantasyInformator.Domain\FantasyInformator.Domain.csproj" />
-    <ProjectReference Include="..\FantasyInformator.Nflverse\FantasyInformator.Nflverse.csproj" />
+    <ProjectReference Include="..\FantasyInformator.Service.Nflverse\FantasyInformator.Service.Nflverse.csproj" />
     <ProjectReference Include="..\FantasyInformator.Shared\FantasyInformator.Shared.csproj" />
-    <ProjectReference Include="..\FantasyInformator.Sleeper\FantasyInformator.Sleeper.csproj" />
+    <ProjectReference Include="..\FantasyInformator.Service.Sleeper\FantasyInformator.Service.Sleeper.csproj" />
   </ItemGroup>
 
 </Project>

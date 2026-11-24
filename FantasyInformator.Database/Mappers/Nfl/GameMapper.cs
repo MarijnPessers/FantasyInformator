@@ -3,27 +3,27 @@ using FantasyInformator.Domain.Nfl;
 
 namespace FantasyInformator.Database.Mappers.Nfl;
 
-internal sealed class GameMapper : Mapper<Game, GameDb>
+internal sealed class GameMapper : EntityMapper<Game, GameDb>
 {
-    protected override Game CreateModel(GameDb databaseModel) =>
+    protected override Game CreateCopy(GameDb source) =>
         new()
         {
-            ExternalId = databaseModel.ExternalId,
-            SeasonId = databaseModel.SeasonId,
-            Week = databaseModel.Week,
-            HomeNflTeamId = databaseModel.HomeNflTeamId,
-            AwayNflTeamId = databaseModel.AwayNflTeamId,
-            KickoffUtc = databaseModel.KickoffUtc,
+            ExternalId = source.ExternalId,
+            SeasonId = source.SeasonId,
+            Week = source.Week,
+            HomeNflTeamId = source.HomeNflTeamId,
+            AwayNflTeamId = source.AwayNflTeamId,
+            KickoffUtc = source.KickoffUtc,
         };
 
-    protected override GameDb CreateDatabaseModel(Game model) =>
+    protected override GameDb CreateCopy(Game source) =>
         new()
         {
-            ExternalId = model.ExternalId,
-            SeasonId = model.SeasonId,
-            Week = model.Week,
-            HomeNflTeamId = model.HomeNflTeamId,
-            AwayNflTeamId = model.AwayNflTeamId,
-            KickoffUtc = model.KickoffUtc,
+            ExternalId = source.ExternalId,
+            SeasonId = source.SeasonId,
+            Week = source.Week,
+            HomeNflTeamId = source.HomeNflTeamId,
+            AwayNflTeamId = source.AwayNflTeamId,
+            KickoffUtc = source.KickoffUtc,
         };
 }

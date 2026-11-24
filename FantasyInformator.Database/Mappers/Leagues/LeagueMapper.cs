@@ -3,17 +3,17 @@ using FantasyInformator.Domain.Leagues;
 
 namespace FantasyInformator.Database.Mappers.Leagues;
 
-internal sealed class LeagueMapper : Mapper<League, LeagueDb>
+internal sealed class LeagueMapper : EntityMapper<League, LeagueDb>
 {
-    protected override League CreateModel(LeagueDb databaseModel) =>
+    protected override League CreateCopy(LeagueDb source) =>
         new()
         {
-            Name = databaseModel.Name,
+            Name = source.Name,
         };
 
-    protected override LeagueDb CreateDatabaseModel(League model) =>
+    protected override LeagueDb CreateCopy(League source) =>
         new()
         {
-            Name = model.Name,
+            Name = source.Name,
         };
 }

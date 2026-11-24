@@ -3,19 +3,19 @@ using FantasyInformator.Domain.Nfl;
 
 namespace FantasyInformator.Database.Mappers.Nfl;
 
-internal sealed class NflTeamMapper : Mapper<NflTeam, NflTeamDb>
+internal sealed class NflTeamMapper : EntityMapper<NflTeam, NflTeamDb>
 {
-    protected override NflTeam CreateModel(NflTeamDb databaseModel) =>
+    protected override NflTeam CreateCopy(NflTeamDb source) =>
         new()
         {
-            ExternalId = databaseModel.ExternalId,
-            Name = databaseModel.Name,
+            ExternalId = source.ExternalId,
+            Name = source.Name,
         };
 
-    protected override NflTeamDb CreateDatabaseModel(NflTeam model) =>
+    protected override NflTeamDb CreateCopy(NflTeam source) =>
         new()
         {
-            ExternalId = model.ExternalId,
-            Name = model.Name,
+            ExternalId = source.ExternalId,
+            Name = source.Name,
         };
 }

@@ -3,6 +3,7 @@ using FantasyInformator.Database.Services;
 using FantasyInformator.Database.Services.FantasyTeams;
 using FantasyInformator.Database.Services.Players;
 using FantasyInformator.Database.Settings;
+using FantasyInformator.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

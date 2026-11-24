@@ -3,19 +3,19 @@ using FantasyInformator.Domain.FantasyTeams;
 
 namespace FantasyInformator.Database.Mappers.FantasyTeams;
 
-internal sealed class OwnerMapper : Mapper<Owner, OwnerDb>
+internal sealed class OwnerMapper : EntityMapper<Owner, OwnerDb>
 {
-    protected override Owner CreateModel(OwnerDb databaseModel) =>
+    protected override Owner CreateCopy(OwnerDb source) =>
         new()
         {
-            ExternalId = databaseModel.ExternalId,
-            Name = databaseModel.Name,
+            ExternalId = source.ExternalId,
+            Name = source.Name,
         };
 
-    protected override OwnerDb CreateDatabaseModel(Owner model) =>
+    protected override OwnerDb CreateCopy(Owner source) =>
         new()
         {
-            ExternalId = model.ExternalId,
-            Name = model.Name,
+            ExternalId = source.ExternalId,
+            Name = source.Name,
         };
 }

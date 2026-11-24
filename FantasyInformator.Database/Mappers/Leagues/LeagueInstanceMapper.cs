@@ -3,21 +3,21 @@ using FantasyInformator.Domain.Leagues;
 
 namespace FantasyInformator.Database.Mappers.Leagues;
 
-internal sealed class LeagueInstanceMapper : Mapper<LeagueInstance, LeagueInstanceDb>
+internal sealed class LeagueInstanceMapper : EntityMapper<LeagueInstance, LeagueInstanceDb>
 {
-    protected override LeagueInstance CreateModel(LeagueInstanceDb databaseModel) =>
+    protected override LeagueInstance CreateCopy(LeagueInstanceDb source) =>
         new()
         {
-            ExternalId = databaseModel.ExternalId,
-            LeagueId = databaseModel.LeagueId,
-            SeasonId = databaseModel.SeasonId,
+            ExternalId = source.ExternalId,
+            LeagueId = source.LeagueId,
+            SeasonId = source.SeasonId,
         };
 
-    protected override LeagueInstanceDb CreateDatabaseModel(LeagueInstance model) =>
+    protected override LeagueInstanceDb CreateCopy(LeagueInstance source) =>
         new()
         {
-            ExternalId = model.ExternalId,
-            LeagueId = model.LeagueId,
-            SeasonId = model.SeasonId,
+            ExternalId = source.ExternalId,
+            LeagueId = source.LeagueId,
+            SeasonId = source.SeasonId,
         };
 }

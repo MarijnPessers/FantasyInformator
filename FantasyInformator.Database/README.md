@@ -15,7 +15,8 @@ The Azure SQL server firewall must allow the PC's public IP address. Add it agai
 ## Models and mappers
 
 - The database models are currently a copy of every application model, with the same folders and fields. The one difference: they have no state, and every model holds two dates, `CreatedUtc` and `UpdatedUtc`. The dates are for database administration only and are not mapped to the application models.
-- There is one mapper per model, derived from `Mapper<TModel, TDatabaseModel>`. It only copies the fields. The base class holds the Map methods both ways, for one model and for a list, and `MapContext` fills the links.
+- There is one mapper per model, derived from `EntityMapper<TModel, TDatabaseModel>`. It only copies the fields. `Mapper<TModel, TOtherModel>` in Shared holds the Map methods both ways, for one model and for a list, and `EntityMapContext` fills the links and copies the Id and state.
+- The mappers are written by hand. The `.Map()` methods on every model and database model, such as `player.Map()` and `playerDb.Map()`, are written by [FantasyInformator.Tool.MapGenerator](../Tools/FantasyInformator.Tool.MapGenerator/README.md) into the `Generated` folder, just before Database compiles. Never change those files by hand.
 - A model read from the database has the state Unchanged, because it matches the database.
 
 ## Tables

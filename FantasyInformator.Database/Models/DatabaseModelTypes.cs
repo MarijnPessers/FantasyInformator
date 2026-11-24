@@ -1,27 +1,22 @@
+using FantasyInformator.Shared.Database;
+
 namespace FantasyInformator.Database.Models;
 
 /// <summary>
-/// Finding a database model by its name means searching through the types of the Database project, and reading those
-/// types is slow. So the database models are picked out once and kept here.
-/// Example: PlayerDb, LeagueDb and every other model that builds on <see cref="BaseEntityDb"/>.
+/// The database models of this project: every model that builds on <see cref="BaseEntityDb"/>, named after its model
+/// with Db added. Searching for them is slow, so <see cref="Lookup"/> picks them out once.
+/// Example: PlayerDb, LeagueDb and every other database model.
 /// </summary>
 internal static class DatabaseModelTypes
 {
     private const string DatabaseModelSuffix = "Db";
 
-    /// <summary>Every database model type in the Database project.</summary>
-    public static Type[] All { get; } =
-    [
-        .. typeof(BaseEntityDb).Assembly.GetTypes()
-            .Where(x => x is { IsClass: true, IsAbstract: false } && x.IsAssignableTo(typeof(BaseEntityDb))),
-    ];
+    private static DatabaseModelLookup Lookup { get; } = new(typeof(BaseEntityDb), DatabaseModelSuffix);
 
     /// <summary>
-    /// Reading and saving only get the model, but the database works with its database model. Every database model is
-    /// named after its model with Db added, so it is found by that name in <see cref="All"/>. Fails when there is none
-    /// or more than one.
+    /// The database model of a model. Throws when there is none or more than one.
     /// Example: Player gives PlayerDb.
     /// </summary>
     public static Type Find(Type modelType) =>
-        All.Single(x => x.Name == modelType.Name + DatabaseModelSuffix);
+        Lookup.Find(modelType);
 }

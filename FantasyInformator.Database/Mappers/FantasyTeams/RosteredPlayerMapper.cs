@@ -3,21 +3,21 @@ using FantasyInformator.Domain.FantasyTeams;
 
 namespace FantasyInformator.Database.Mappers.FantasyTeams;
 
-internal sealed class RosteredPlayerMapper : Mapper<RosteredPlayer, RosteredPlayerDb>
+internal sealed class RosteredPlayerMapper : EntityMapper<RosteredPlayer, RosteredPlayerDb>
 {
-    protected override RosteredPlayer CreateModel(RosteredPlayerDb databaseModel) =>
+    protected override RosteredPlayer CreateCopy(RosteredPlayerDb source) =>
         new()
         {
-            FantasyTeamId = databaseModel.FantasyTeamId,
-            PlayerId = databaseModel.PlayerId,
-            SlotId = databaseModel.SlotId,
+            FantasyTeamId = source.FantasyTeamId,
+            PlayerId = source.PlayerId,
+            SlotId = source.SlotId,
         };
 
-    protected override RosteredPlayerDb CreateDatabaseModel(RosteredPlayer model) =>
+    protected override RosteredPlayerDb CreateCopy(RosteredPlayer source) =>
         new()
         {
-            FantasyTeamId = model.FantasyTeamId,
-            PlayerId = model.PlayerId,
-            SlotId = model.SlotId,
+            FantasyTeamId = source.FantasyTeamId,
+            PlayerId = source.PlayerId,
+            SlotId = source.SlotId,
         };
 }

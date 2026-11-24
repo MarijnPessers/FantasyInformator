@@ -22,12 +22,13 @@ Every functionality is a separate project. A project's README holds its details.
 | [FantasyInformator.State](FantasyInformator.State/README.md) | Holds the data the app shows, changes it and marks what changed. |
 | [FantasyInformator.Logic](FantasyInformator.Logic/README.md) | Fetches data from Sleeper and nflverse, reads and writes the database, and decides when to save. |
 | [FantasyInformator.Domain](FantasyInformator.Domain/README.md) | The application models, known to every project |
-| [FantasyInformator.Shared](FantasyInformator.Shared/README.md) | The application's own library of shared functionality, such as the progress reports every project uses to report errors and progress |
-| [FantasyInformator.Sleeper](FantasyInformator.Sleeper/README.md) | Retrieval from Sleeper |
-| [FantasyInformator.Nflverse](FantasyInformator.Nflverse/README.md) | Kickoff times from nflverse |
+| [FantasyInformator.Shared](FantasyInformator.Shared/README.md) | The application's own library of shared functionality, such as the progress reports every project uses to report errors and progress, and the mappers |
+| [FantasyInformator.Tool.MapGenerator](Tools/FantasyInformator.Tool.MapGenerator/README.md) | Console app that writes the `.Map()` extension methods for every model into a project, just before it compiles |
+| [FantasyInformator.Service.Sleeper](FantasyInformator.Service.Sleeper/README.md) | Retrieval from Sleeper |
+| [FantasyInformator.Service.Nflverse](FantasyInformator.Service.Nflverse/README.md) | Kickoff times from nflverse |
 | [FantasyInformator.Database](FantasyInformator.Database/README.md) | Code-first database |
 | [FantasyInformator.Migrator](FantasyInformator.Migrator/README.md) | Creates and applies the database migrations |
-| [FantasyInformator.Tests](FantasyInformator.Tests/README.md) | Tests of chosen flows through State and Logic, with stand-ins for Sleeper and the database |
+| [FantasyInformator.Tests](Tests/FantasyInformator.Tests/README.md) | Tests of chosen flows through State and Logic, with stand-ins for Sleeper and the database |
 
 A project with its own models (Sleeper, Nflverse, Database) holds the mappers between those models and Domain, so no other project needs to know its models.
 

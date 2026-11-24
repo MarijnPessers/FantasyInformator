@@ -3,21 +3,21 @@ using FantasyInformator.Domain.Scoring;
 
 namespace FantasyInformator.Database.Mappers.Scoring;
 
-internal sealed class FantasyScoreMapper : Mapper<FantasyScore, FantasyScoreDb>
+internal sealed class FantasyScoreMapper : EntityMapper<FantasyScore, FantasyScoreDb>
 {
-    protected override FantasyScore CreateModel(FantasyScoreDb databaseModel) =>
+    protected override FantasyScore CreateCopy(FantasyScoreDb source) =>
         new()
         {
-            GameAppearanceId = databaseModel.GameAppearanceId,
-            LeagueInstanceId = databaseModel.LeagueInstanceId,
-            Points = databaseModel.Points,
+            GameAppearanceId = source.GameAppearanceId,
+            LeagueInstanceId = source.LeagueInstanceId,
+            Points = source.Points,
         };
 
-    protected override FantasyScoreDb CreateDatabaseModel(FantasyScore model) =>
+    protected override FantasyScoreDb CreateCopy(FantasyScore source) =>
         new()
         {
-            GameAppearanceId = model.GameAppearanceId,
-            LeagueInstanceId = model.LeagueInstanceId,
-            Points = model.Points,
+            GameAppearanceId = source.GameAppearanceId,
+            LeagueInstanceId = source.LeagueInstanceId,
+            Points = source.Points,
         };
 }

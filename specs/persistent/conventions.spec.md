@@ -7,9 +7,10 @@ Only the coding decisions that the existing code, `CLAUDE.local.md`, the SonarQu
 - Project references:
   - Domain: nothing
   - Shared: nothing
+  - Tool.MapGenerator: nothing
   - Sleeper: Domain, Shared
   - Nflverse: Domain, Shared
-  - Database: Domain, Shared
+  - Database: Domain, Shared, Tool.MapGenerator (as a tool that runs before compiling)
   - Logic: Domain, Shared, Sleeper, Nflverse, Database
   - State: Domain, Shared, Logic
   - App: Domain, Shared, State
@@ -19,7 +20,7 @@ Only the coding decisions that the existing code, `CLAUDE.local.md`, the SonarQu
 - Logic holds the commands as reusable methods. It fetches data from Sleeper and Nflverse, and it is the only project that reads and writes the database and decides when to save. It never changes data or its tracking state; State does that.
 - Database keeps the saves of limited calls (such as the once-a-day players call) safe in a file, retries them and reports on them through `IProgress`.
 - Each project has one extension method that registers its services. It also calls the extension method of each project it uses and passes the configuration on, so `Program.cs` only calls the App's.
-- Mappers are pure. Sleeper and Nflverse mappers are static. Database mappers derive from `Mapper<TModel, TDatabaseModel>`, which holds all Map methods; each one only copies the fields.
+- Mappers are pure. Sleeper and Nflverse mappers are static. Database mappers derive from `EntityMapper<TModel, TDatabaseModel>`, which derives from `Mapper<TModel, TOtherModel>` in Shared; that holds all Map methods, so each mapper only copies the fields.
 - Each project that needs configuration has its own settings class and its own section in `appsettings.json`, named after the project. Settings that belong to no single project stay outside those sections. Values specific to a person or PC go in user secrets. Settings are checked when the app starts.
 - Project settings stay in each `.csproj` (no `Directory.Build.props`). Warnings-as-errors comes on after the first clean build with 0 warnings.
 

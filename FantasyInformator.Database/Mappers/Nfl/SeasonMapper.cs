@@ -3,17 +3,17 @@ using FantasyInformator.Domain.Nfl;
 
 namespace FantasyInformator.Database.Mappers.Nfl;
 
-internal sealed class SeasonMapper : Mapper<Season, SeasonDb>
+internal sealed class SeasonMapper : EntityMapper<Season, SeasonDb>
 {
-    protected override Season CreateModel(SeasonDb databaseModel) =>
+    protected override Season CreateCopy(SeasonDb source) =>
         new()
         {
-            Year = databaseModel.Year,
+            Year = source.Year,
         };
 
-    protected override SeasonDb CreateDatabaseModel(Season model) =>
+    protected override SeasonDb CreateCopy(Season source) =>
         new()
         {
-            Year = model.Year,
+            Year = source.Year,
         };
 }

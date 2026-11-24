@@ -3,21 +3,21 @@ using FantasyInformator.Domain.Lineups;
 
 namespace FantasyInformator.Database.Mappers.Lineups;
 
-internal sealed class SlotEligibilityMapper : Mapper<SlotEligibility, SlotEligibilityDb>
+internal sealed class SlotEligibilityMapper : EntityMapper<SlotEligibility, SlotEligibilityDb>
 {
-    protected override SlotEligibility CreateModel(SlotEligibilityDb databaseModel) =>
+    protected override SlotEligibility CreateCopy(SlotEligibilityDb source) =>
         new()
         {
-            PositionId = databaseModel.PositionId,
-            SlotId = databaseModel.SlotId,
-            IsPreferred = databaseModel.IsPreferred,
+            PositionId = source.PositionId,
+            SlotId = source.SlotId,
+            IsPreferred = source.IsPreferred,
         };
 
-    protected override SlotEligibilityDb CreateDatabaseModel(SlotEligibility model) =>
+    protected override SlotEligibilityDb CreateCopy(SlotEligibility source) =>
         new()
         {
-            PositionId = model.PositionId,
-            SlotId = model.SlotId,
-            IsPreferred = model.IsPreferred,
+            PositionId = source.PositionId,
+            SlotId = source.SlotId,
+            IsPreferred = source.IsPreferred,
         };
 }

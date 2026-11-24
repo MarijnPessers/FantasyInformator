@@ -3,23 +3,23 @@ using FantasyInformator.Domain.Players;
 
 namespace FantasyInformator.Database.Mappers.Players;
 
-internal sealed class PlayerMapper : Mapper<Player, PlayerDb>
+internal sealed class PlayerMapper : EntityMapper<Player, PlayerDb>
 {
-    protected override Player CreateModel(PlayerDb databaseModel) =>
+    protected override Player CreateCopy(PlayerDb source) =>
         new()
         {
-            ExternalId = databaseModel.ExternalId,
-            Name = databaseModel.Name,
-            CurrentNflTeamId = databaseModel.CurrentNflTeamId,
-            InjuryStatus = databaseModel.InjuryStatus,
+            ExternalId = source.ExternalId,
+            Name = source.Name,
+            CurrentNflTeamId = source.CurrentNflTeamId,
+            InjuryStatus = source.InjuryStatus,
         };
 
-    protected override PlayerDb CreateDatabaseModel(Player model) =>
+    protected override PlayerDb CreateCopy(Player source) =>
         new()
         {
-            ExternalId = model.ExternalId,
-            Name = model.Name,
-            CurrentNflTeamId = model.CurrentNflTeamId,
-            InjuryStatus = model.InjuryStatus,
+            ExternalId = source.ExternalId,
+            Name = source.Name,
+            CurrentNflTeamId = source.CurrentNflTeamId,
+            InjuryStatus = source.InjuryStatus,
         };
 }
