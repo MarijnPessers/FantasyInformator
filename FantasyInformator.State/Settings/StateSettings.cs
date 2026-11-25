@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace FantasyInformator.App.Settings;
+namespace FantasyInformator.State.Settings;
 
-public class AppSettings
+public class StateSettings
 {
-    public const string SectionName = "App";
+    public const string SectionName = "State";
 
     [Required]
     public string OwnerName { get; set; } = string.Empty;

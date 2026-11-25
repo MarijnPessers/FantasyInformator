@@ -39,6 +39,9 @@ Source for all of this: the beta.8 sample `program.cs`, `mediator-scope.cs` and 
   - The host holds `[assembly: MediatorScope(typeof(ClientPipeline))]`. Without it, a client `Send` gives the analyzer error TWM004.
 - Only one generated mediator may exist in a compile graph. TimeWarp's test app uses `AddServerPipelineMediator()` for its second one, to avoid CS0121.
 - The generated DI methods are in the namespace `Microsoft.Extensions.DependencyInjection`. Source: a comment in `test-app-server.csproj`.
+- `GeneratedMediatorServiceCollectionExtensions`, which holds `AddGeneratedMediator<TScope>()`, is `internal`, like every generated type, so only code in the project that references the generator can call it. A project that references only that project can't. Source: `source/timewarp-mediator-generators/mediator-emitter.cs` and `documentation/m1-generated-mediator.md` at the Mediator tag `v14.0.0`, read 25 Nov 2026.
+- The documented layout is: the host references `TimeWarp.Mediator.Generators` and calls `AddGeneratedMediator<TScope>()`; a library that holds handlers references only Contracts and Analyzers and adds `[assembly: MediatorAssembly]`. Source: `documentation/generated-vs-legacy.md` at `v14.0.0`.
+- Not stated in the docs read: whether the generator works in a library project that isn't the host, whether it only works for an `Exe`, and what happens when two projects of one graph reference the generator (the docs only say the internal types avoid CS0436). `message-graph-builder.cs` and `membership.cs` at `v14.0.0` gave a 404.
 - TimeWarp.State's own `assembly-marker.cs` holds `[assembly: MediatorAssembly]`, `[assembly: MediatorScope(typeof(ClientPipeline))]` and four `[assembly: MediatorBehavior(...)]` lines.
 - `AddTimeWarpState(x => x.Assemblies = [...])` exists in beta.8. Verified: `LeagueListStateTests` compiles with it. In 11.0.3 it was needed, because by default only the calling assembly was scanned.
 - The store depends on `ISender<ClientPipeline>`. TimeWarp's `store-get-or-add-tests.cs` registers a stand-in `ISender<ClientPipeline>`.
@@ -161,7 +164,9 @@ Source: `source/timewarp-state-analyzer/` at the State tag `v12.0.0-beta.8`, rea
 ## Blazor
 
 - The Blazor parts are in a separate package, `TimeWarp.State.Blazor`. A Blazor host calls `AddTimeWarpStateBlazor()` besides `AddTimeWarpState()`. Source: an earlier session, not rechecked at beta.8.
-- Not known: the lifetime of the store (probably per Blazor Server connection), the name of the component base class (maybe `TimeWarpStateComponent`), and whether the Blazor connection already has a running `Activity`.
+- The store is registered as scoped: `serviceCollection.TryAddScoped<IStore, Store>();`. In Blazor Server a scope lives as long as one circuit (an ASP.NET Core fact, not checked in TimeWarp), so each user session has its own store and its own states. Data loaded in a scope made at app start never reaches the store of a circuit. Source: `source/timewarp-state/extensions/service-collection-extensions.add-timewarp-state.cs` at the State tag `v12.0.0-beta.8`, read 25 Nov 2026.
+- A state class is registered as transient (`TryAddTransient(type)`, in `EnsureStates`). `Store.GetState(Type)` keeps one instance per state type in its own `ConcurrentDictionary` and creates it with `ServiceProvider.GetRequiredService(stateType)`, so a state class can have constructor injection. It then sets `Sender` and calls `Initialize()`. Source: `source/timewarp-state/store/store.cs` at the same tag, read 25 Nov 2026.
+- Not known: the name of the component base class (maybe `TimeWarpStateComponent`), and whether the Blazor connection already has a running `Activity`.
 
 ## Other packages and features
 

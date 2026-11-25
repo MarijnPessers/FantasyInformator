@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using AutoFixture;
-using FantasyInformator.App.Settings;
+using FantasyInformator.State.Settings;
 
-namespace FantasyInformator.App.Tests.Settings;
+namespace FantasyInformator.State.Tests.Settings;
 
 [TestClass]
-public class AppSettingsTests
+public class StateSettingsTests
 {
     private Fixture _fixture = null!;
 
@@ -16,7 +16,7 @@ public class AppSettingsTests
     [TestMethod]
     public void Validate_ShouldBeValid_WhenOwnerNameIsFilled()
     {
-        var options = new AppSettings { OwnerName = _fixture.Create<string>() };
+        var options = new StateSettings { OwnerName = _fixture.Create<string>() };
 
         var results = Validate(options);
 
@@ -28,15 +28,15 @@ public class AppSettingsTests
     [DataRow(" ")]
     public void Validate_ShouldReportOwnerName_WhenOwnerNameIsBlank(string ownerName)
     {
-        var options = new AppSettings { OwnerName = ownerName };
+        var options = new StateSettings { OwnerName = ownerName };
 
         var results = Validate(options);
 
         Assert.HasCount(1, results);
-        Assert.Contains(nameof(AppSettings.OwnerName), results[0].MemberNames.ToList());
+        Assert.Contains(nameof(StateSettings.OwnerName), results[0].MemberNames.ToList());
     }
 
-    private static List<ValidationResult> Validate(AppSettings options)
+    private static List<ValidationResult> Validate(StateSettings options)
     {
         var results = new List<ValidationResult>();
         _ = Validator.TryValidateObject(options, new ValidationContext(options), results, true);

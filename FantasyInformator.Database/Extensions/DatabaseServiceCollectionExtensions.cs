@@ -41,6 +41,7 @@ public static class DatabaseServiceCollectionExtensions
         _ = services.AddScoped<IDatabaseReadService, DatabaseReadService>();
         // data specific services
         _ = services.AddScoped<IFantasyTeamService, FantasyTeamService>();
+        _ = services.AddScoped<IOwnerService, OwnerService>();
         _ = services.AddScoped<IPlayerService, PlayerService>();
 
         return services;

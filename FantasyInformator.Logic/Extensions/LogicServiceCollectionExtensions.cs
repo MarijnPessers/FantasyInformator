@@ -1,4 +1,5 @@
 using FantasyInformator.Database.Extensions;
+using FantasyInformator.Logic.Services.FantasyTeams;
 using FantasyInformator.Logic.Services.Players;
 using FantasyInformator.Service.Sleeper.Extensions;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +18,7 @@ public static class LogicServiceCollectionExtensions
         _ = services.AddDatabaseOptions(configuration);
         _ = services.AddSleeperOptions(configuration);
         _ = services.AddDatabaseServices();
+        _ = services.AddScoped<IOwnerLogic, OwnerLogic>();
         _ = services.AddScoped<IPlayerLogic, PlayerLogic>();
 
         return services;
