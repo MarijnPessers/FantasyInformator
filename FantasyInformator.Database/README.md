@@ -12,6 +12,12 @@ The code-first database. It has its own database models and hand-written mappers
 
 The Azure SQL server firewall must allow the PC's public IP address. Add it again when it changes.
 
+## Wake-up call
+
+The Azure SQL database pauses itself when nobody uses it, so the first call after a pause can take a long time.
+
+At startup the app wakes the database once. An error, or no answer within `WakeUpTimeout` (2 minutes, in the `Database` section), means the database is unavailable.
+
 ## Models and mappers
 
 - The database models are currently a copy of every application model, with the same folders and fields. The one difference: they have no state, and every model holds two dates, `CreatedUtc` and `UpdatedUtc`. The dates are for database administration only and are not mapped to the application models.

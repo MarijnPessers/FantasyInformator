@@ -8,6 +8,8 @@ The front end. It shows state and starts actions. It holds no retrieval, databas
 - The overview has one tab per season, current year first. Leagues are styled divs.
 - Opening the overview loads the stored seasons, leagues and rosters from the database. Sleeper calls and saves need a button.
 - The browser warns when you leave with unsaved changes.
+- `MainLayout` wakes the database first and shows a waiting text. If it fails, it shows that the database isn't available.
+- The app finds you in the list of owners by the name in `FocusOwnerName` (in `appsettings.json`, under `State`), for example `GoudaCheesewizz`. That owner is the focus owner.
 
 References `FantasyInformator.Domain` and `FantasyInformator.State` (the latter to register the services).
 
