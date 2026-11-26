@@ -62,5 +62,20 @@ public sealed class DatabaseWakeUpServiceTests(TestContext testContext)
             create(cancellationToken);
     }
 
-    private sealed class TestDbException : DbException;
+    private sealed class TestDbException : DbException
+    {
+        public TestDbException()
+        {
+        }
+
+        public TestDbException(string message)
+            : base(message)
+        {
+        }
+
+        public TestDbException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+    }
 }

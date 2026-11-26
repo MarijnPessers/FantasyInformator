@@ -95,7 +95,7 @@ Only the coding decisions that the existing code, `CLAUDE.local.md`, the SonarQu
 - Every component has a code-behind (`.razor.cs`).
 - The template holds only `if` statements and loops. All other logic is in the code-behind.
 - Services come in through the primary constructor, never through `[Inject]` properties.
-- All CSS comes from Tailwind.
+- The site uses Tailwind.
 - A code-behind is ordered like this:
   - Class declaration: the attributes (`[Route]`, `[Authorize]`, `[StreamRendering]`), then the primary constructor with the services, the base class and the interfaces.
   - Members, top to bottom:

@@ -17,7 +17,11 @@ public static class StateServiceCollectionExtensions
     public static IServiceCollection AddStateServices(this IServiceCollection services, IConfiguration configuration)
     {
         _ = services.AddGeneratedMediator<ClientPipeline>();
-        _ = services.AddTimeWarpState(x => x.Assemblies = [Assembly.GetExecutingAssembly()]);
+        _ = services.AddTimeWarpState(x =>
+        {
+            x.Assemblies = [Assembly.GetExecutingAssembly()];
+            _ = x.UseReduxDevTools();
+        });
 
         _ = services.AddOptions<StateSettings>()
             .Bind(configuration.GetSection(StateSettings.SectionName))

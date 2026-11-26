@@ -6,7 +6,7 @@
 ## Build output
 bin/
 obj/
-.tailwind/
+.tailwind/v*/
 
 ## Claude
 claudeTmp/

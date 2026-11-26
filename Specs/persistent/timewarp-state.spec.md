@@ -138,7 +138,7 @@ Source: `source/timewarp-mediator-analyzers/membership.cs`, `message-graph-build
 - Built-in, with their order:
   - `StateTransactionBehavior` (300), in TimeWarp.State
   - `TelemetryBehavior` (350), in the opt-in package `TimeWarp.State.Telemetry`
-  - `RenderSubscriptionsPostProcessor` (400), only when the host references `TimeWarp.State.Blazor`
+  - `RenderSubscriptionsPostProcessor` (400), in TimeWarp.State (see Blazor below)
 
 ## Analyzers
 
@@ -166,10 +166,24 @@ Source: `source/timewarp-state-analyzer/` at the State tag `v12.0.0-beta.8`, rea
 - The Blazor parts are in a separate package, `TimeWarp.State.Blazor`. A Blazor host calls `AddTimeWarpStateBlazor()` besides `AddTimeWarpState()`. Source: an earlier session, not rechecked at beta.8.
 - The store is registered as scoped: `serviceCollection.TryAddScoped<IStore, Store>();`. In Blazor Server a scope lives as long as one circuit (an ASP.NET Core fact, not checked in TimeWarp), so each user session has its own store and its own states. Data loaded in a scope made at app start never reaches the store of a circuit. Source: `source/timewarp-state/extensions/service-collection-extensions.add-timewarp-state.cs` at the State tag `v12.0.0-beta.8`, read 25 Nov 2026.
 - A state class is registered as transient (`TryAddTransient(type)`, in `EnsureStates`). `Store.GetState(Type)` keeps one instance per state type in its own `ConcurrentDictionary` and creates it with `ServiceProvider.GetRequiredService(stateType)`, so a state class can have constructor injection. It then sets `Sender` and calls `Initialize()`. Source: `source/timewarp-state/store/store.cs` at the same tag, read 25 Nov 2026.
-- Not known: the name of the component base class (maybe `TimeWarpStateComponent`), and whether the Blazor connection already has a running `Activity`.
+- The component base class is `TimeWarpStateComponent` (namespace `TimeWarp.State`), in `TimeWarp.State` itself, not in `TimeWarp.State.Blazor`. It gets `IStore`, `Subscriptions` and `ISender<ClientPipeline>` through `[Inject]` properties. `GetState<TState>()` subscribes the component to that state and returns it; `GetState<TState>(false)` doesn't subscribe. Verified: `TimeWarpStateComponent` is in `TimeWarp.State.dll` 12.0.0-beta.8. Source: `source/timewarp-state/components/timewarp-state-component.cs` at the State tag `v12.0.0-beta.8`, read 26 Nov 2026.
+- `RenderSubscriptionsPostProcessor` (order 400) is in `TimeWarp.State` itself and switched on by its `assembly-marker.cs`. After each action it re-renders the components subscribed to the action's state. An action with `[SuppressRender]` skips that. Source: `source/timewarp-state/features/render-subscriptions/render-subscriptions-post-processor.cs` and `assembly-marker.cs` at the State tag `v12.0.0-beta.8`, read 26 Nov 2026.
+- Not known: whether the Blazor connection already has a running `Activity`.
 
 ## Other packages and features
 
 - `TimeWarp.State.Plus`: extras such as action tracking. Not opened.
 - Action catalog (beta.8 README): opt-in. The source generator writes a registry per assembly, registered with `builder.Services.AddActionCatalog(typeof(AssemblyMarker).Assembly);`.
 - The only change in beta.8 (PR #615): "allow-list JavaScript-dispatchable actions".
+
+## Redux DevTools
+
+Source: `source/timewarp-state/features/redux-dev-tools/` (`requests/commit/commit-handler.cs`, `redux-dev-tools-interop.cs`, `redux-dev-tools-behavior.cs`), `extensions/service-collection-extensions.use-redux-dev-tools.cs`, `extensions/timewarp-state-options.cs`, `extensions/service-collection-extensions.add-timewarp-state.cs` and `store/store.redux-dev-tools.cs` at the State tag `v12.0.0-beta.8`, read 26 Nov 2026.
+
+- `CommitHandler` (namespace `TimeWarp.Features.ReduxDevTools`) is a handler in TimeWarp.State. Its constructor needs `ILogger<CommitHandler>`, `IReduxDevToolsStore` and `ReduxDevToolsInterop`, none optional. `ReduxDevToolsInterop` needs `IReduxDevToolsStore`, `ReduxDevToolsOptions` and `IJSRuntime`.
+- `ReduxDevToolsBehavior` takes those services as optional and goes straight to `next` when they're missing.
+- `AddTimeWarpState` doesn't register them, and `TimeWarpStateOptions` has no switch for them.
+- `UseReduxDevTools` registers them. Signature: `public static TimeWarpStateOptions UseReduxDevTools(this TimeWarpStateOptions timeWarpStateOptions, Action<ReduxDevToolsOptions>? reduxDevToolsOptionsAction = null)`, in `ServiceCollectionExtensions`, namespace `TimeWarp.State`. It registers `ReduxDevToolsInterop` (scoped), `IReduxDevToolsStore` as the registered `IStore` (scoped) and `ReduxDevToolsOptions` (singleton), and allow-lists the DevTools Start and Commit messages for JavaScript.
+- `Store` implements `IReduxDevToolsStore` (`internal partial class Store : IReduxDevToolsStore`).
+- Verified on 26 Nov 2026: the App, started in Development, stops at `builder.Build()` with "Unable to resolve service for type 'TimeWarp.State.IReduxDevToolsStore' while attempting to activate 'TimeWarp.Features.ReduxDevTools.CommitHandler'". So `AddGeneratedMediator<ClientPipeline>()` registers TimeWarp.State's own `CommitHandler` (scoped), and the start-up check of all services fails on it.
+- Not known: whether `UseReduxDevTools` needs a JavaScript file in the page, and whether the generator can leave `CommitHandler` out.

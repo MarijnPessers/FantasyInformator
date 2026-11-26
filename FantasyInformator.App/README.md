@@ -19,7 +19,7 @@ Settings that belong to a person or PC come from .NET user secrets: the Sleeper 
 
 ## Styling
 
-- All CSS comes from Tailwind. Write it in `Styles/tailwind.css`. Each build turns that file into `wwwroot/tailwind.css`, which is never edited by hand.
-- The first build downloads the Tailwind program (about 110 MB) into `.tailwind/`.
-- With hot reload, a new Tailwind class only shows after the next build. To see it right away, run this in the App folder: `.tailwind\v4.3.5\tailwindcss-windows-x64.exe -i Styles\tailwind.css -o wwwroot\tailwind.css --watch`.
+- The site uses Tailwind. Write it in `.tailwind/tailwind.css`. Each build turns that file into `wwwroot/css/tailwind.css`, which is never edited by hand.
+- The first build downloads the Tailwind program (about 110 MB) into `.tailwind/v4.3.5/`.
+- With hot reload, a new Tailwind class only shows after the next build. To see it right away, run this in the App folder: `.tailwind\v4.3.5\tailwindcss-windows-x64.exe -i .tailwind\tailwind.css -o wwwroot\css\tailwind.css --watch`.
 - To update Tailwind, change `TailwindVersion` in the project file.

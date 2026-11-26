@@ -1,0 +1,10 @@
+@using FantasyInformator.App.Resources
+@using TimeWarp.State
+@inherits TimeWarpStateComponent
+
+@if (IsSpinnerShown)
+{
+    <div class="spinner-overlay">
+        <img src="@Assets["img/spinner.png"]" alt="@Texts.SpinnerImageDescription" class="spinner-image" />
+    </div>
+}

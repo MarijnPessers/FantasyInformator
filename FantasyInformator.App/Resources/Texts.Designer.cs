@@ -70,6 +70,15 @@ namespace FantasyInformator.App.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loading.
+        /// </summary>
+        public static string SpinnerImageDescription {
+            get {
+                return ResourceManager.GetString("SpinnerImageDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Waiting for the database. This can take up to two minutes..
         /// </summary>
         public static string WaitingForDatabase {
