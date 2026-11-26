@@ -9,7 +9,8 @@ namespace FantasyInformator.State.Tests.Store.Spinners;
 [TestClass]
 public class SpinnerEndHandlerTests
 {
-    private const string Message = "Connecting to database";
+    private const string DatabaseMessage = "Connecting to database";
+    private const string TestMessage = "This is a test";
 
     private ServiceProvider _serviceProvider = null!;
     private ISender<ClientPipeline> _sender = null!;
@@ -30,23 +31,27 @@ public class SpinnerEndHandlerTests
         await _serviceProvider.DisposeAsync();
 
     [TestMethod]
-    public async Task Handle_ShouldHideTheSpinner_WhenTheSpinnerWasShownAsync()
+    public async Task Handle_ShouldHideTheSpinner_WhenTheOnlyActiveSpinnerEndsAsync()
     {
-        await _sender.Send(new SpinnerStartAction(Message), TestContext.CancellationToken);
+        var spinnerId = Guid.NewGuid();
+        await _sender.Send(new SpinnerStartAction(spinnerId, DatabaseMessage), TestContext.CancellationToken);
 
-        await _sender.Send(new SpinnerEndAction(), TestContext.CancellationToken);
+        await _sender.Send(new SpinnerEndAction(spinnerId), TestContext.CancellationToken);
 
         Assert.IsFalse(_store.GetState<SpinnerState>().IsSpinnerShown);
     }
 
     [TestMethod]
-    public async Task Handle_ShouldClearTheMessage_WhenTheSpinnerHadAMessageAsync()
+    public async Task Handle_ShouldShowTheOtherMessage_WhenOneOfTwoActiveSpinnersEndsAsync()
     {
-        await _sender.Send(new SpinnerStartAction(Message), TestContext.CancellationToken);
+        var databaseSpinnerId = Guid.NewGuid();
+        var testSpinnerId = Guid.NewGuid();
+        await _sender.Send(new SpinnerStartAction(databaseSpinnerId, DatabaseMessage), TestContext.CancellationToken);
+        await _sender.Send(new SpinnerStartAction(testSpinnerId, TestMessage), TestContext.CancellationToken);
 
-        await _sender.Send(new SpinnerEndAction(), TestContext.CancellationToken);
+        await _sender.Send(new SpinnerEndAction(databaseSpinnerId), TestContext.CancellationToken);
 
-        Assert.IsNull(_store.GetState<SpinnerState>().SpinnerMessage);
+        Assert.AreEqual(TestMessage, _store.GetState<SpinnerState>().ShownSpinner?.Message);
     }
 
     private static ServiceProvider CreateServices()

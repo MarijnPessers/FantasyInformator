@@ -20,12 +20,12 @@
     <value>Connecting to database</value>
     <comment>Spinner text while the wake-up call at startup runs. The spinner adds the moving dots. --- MainLayout.razor.cs</comment>
   </data>
+  <data name="DefaultSpinnerMessage" xml:space="preserve">
+    <value>Loading</value>
+    <comment>Spinner text when the action that started the spinner gives no text. The spinner adds the moving dots. --- Spinner.razor.cs</comment>
+  </data>
   <data name="SpinnerImageDescription" xml:space="preserve">
     <value>Loading</value>
     <comment>Alt text of the spinning image shown over the whole app while something loads. --- Spinner.razor</comment>
-  </data>
-  <data name="WaitingForDatabase" xml:space="preserve">
-    <value>Waiting for the database. This can take up to two minutes.</value>
-    <comment>Loading screen shown while the wake-up call at startup runs. --- MainLayout.razor</comment>
   </data>
 </root>

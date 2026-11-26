@@ -81,18 +81,18 @@ namespace FantasyInformator.App.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Loading.
         /// </summary>
-        public static string SpinnerImageDescription {
+        public static string DefaultSpinnerMessage {
             get {
-                return ResourceManager.GetString("SpinnerImageDescription", resourceCulture);
+                return ResourceManager.GetString("DefaultSpinnerMessage", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Waiting for the database. This can take up to two minutes..
+        ///   Looks up a localized string similar to Loading.
         /// </summary>
-        public static string WaitingForDatabase {
+        public static string SpinnerImageDescription {
             get {
-                return ResourceManager.GetString("WaitingForDatabase", resourceCulture);
+                return ResourceManager.GetString("SpinnerImageDescription", resourceCulture);
             }
         }
     }

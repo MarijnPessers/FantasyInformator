@@ -1,4 +1,5 @@
 using FantasyInformator.Logic.Services.Players;
+using FantasyInformator.State.Abstractions;
 using TimeWarp.Mediator;
 using TimeWarp.State;
 
@@ -6,7 +7,7 @@ namespace FantasyInformator.State.Store;
 
 public partial class PlayerState
 {
-    public record FetchAllPlayersAction : IAction;
+    public record FetchAllPlayersAction : ISpinnerAction;
 
     public class FetchAllPlayersHandler(IStore store, IPlayerLogic playerLogic) : ActionHandler<FetchAllPlayersAction>
     {

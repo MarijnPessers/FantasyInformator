@@ -1,4 +1,5 @@
 using FantasyInformator.Logic.Services.FantasyTeams;
+using FantasyInformator.State.Abstractions;
 using FantasyInformator.State.Settings;
 using Microsoft.Extensions.Options;
 using TimeWarp.Mediator;
@@ -8,7 +9,7 @@ namespace FantasyInformator.State.Store;
 
 public partial class OwnerState
 {
-    public record LoadAllOwnersAction : IAction;
+    public record LoadAllOwnersAction : ISpinnerAction;
 
     public class LoadAllOwnersHandler(IStore store, IOwnerLogic ownerLogic, IOptions<StateSettings> settings)
         : ActionHandler<LoadAllOwnersAction>

@@ -8,6 +8,8 @@
     align-items: center;
     justify-content: center;
     background-color: rgb(0 0 0 / 50%);
+    visibility: hidden;
+    animation: spinner-appear 0s 0.25s forwards;
 }
 
 .spinner-image {
@@ -26,6 +28,12 @@
     width: 3ch;
     text-align: left;
     animation: spinner-dots 1.5s steps(1, end) infinite;
+}
+
+@keyframes spinner-appear {
+    to {
+        visibility: visible;
+    }
 }
 
 @keyframes spinner-spin {

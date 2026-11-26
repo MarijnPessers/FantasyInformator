@@ -1,3 +1,4 @@
+using FantasyInformator.App.Resources;
 using FantasyInformator.State.Store;
 using TimeWarp.State;
 
@@ -7,9 +8,7 @@ public partial class Spinner : TimeWarpStateComponent
 {
     private bool IsSpinnerShown => SpinnerState.IsSpinnerShown;
 
-    private bool HasSpinnerMessage => !string.IsNullOrEmpty(SpinnerMessage);
-
-    private string? SpinnerMessage => SpinnerState.SpinnerMessage;
+    private string SpinnerMessage => SpinnerState.ShownSpinner?.Message ?? Texts.DefaultSpinnerMessage;
 
     private SpinnerState SpinnerState => GetState<SpinnerState>();
 }

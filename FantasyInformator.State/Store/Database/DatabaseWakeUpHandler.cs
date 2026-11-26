@@ -1,4 +1,5 @@
 using FantasyInformator.Logic.Services.Databases;
+using FantasyInformator.State.Abstractions;
 using FantasyInformator.State.Enums;
 using TimeWarp.Mediator;
 using TimeWarp.State;
@@ -7,7 +8,7 @@ namespace FantasyInformator.State.Store;
 
 public partial class DatabaseState
 {
-    public record DatabaseWakeUpAction : IAction;
+    public record DatabaseWakeUpAction(string? SpinnerMessage = null) : ISpinnerAction;
 
     public class DatabaseWakeUpHandler(IStore store, IDatabaseWakeUpLogic databaseWakeUpLogic)
         : ActionHandler<DatabaseWakeUpAction>

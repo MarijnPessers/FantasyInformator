@@ -14,22 +14,9 @@ public partial class MainLayout(ISender<ClientPipeline> sender, IStore store)
 
     private DatabaseState DatabaseState => store.GetState<DatabaseState>();
 
-    protected override async Task OnInitializedAsync()
-    {
+    protected override async Task OnInitializedAsync() =>
         await DatabaseWakeUpAsync();
 
-        if (IsDatabaseAwake)
-        {
-            await LoadAllOwnersAsync();
-        }
-    }
-
-    private async Task DatabaseWakeUpAsync()
-    {
-        await sender.Send(new SpinnerState.SpinnerStartAction(Texts.ConnectingToDatabase), CancellationToken.None);
-        await sender.Send(new DatabaseState.DatabaseWakeUpAction(), CancellationToken.None);
-    }
-
-    private async Task LoadAllOwnersAsync() =>
-        await sender.Send(new OwnerState.LoadAllOwnersAction(), CancellationToken.None);
+    private async Task DatabaseWakeUpAsync() =>
+        await sender.Send(new DatabaseState.DatabaseWakeUpAction(Texts.ConnectingToDatabase), CancellationToken.None);
 }

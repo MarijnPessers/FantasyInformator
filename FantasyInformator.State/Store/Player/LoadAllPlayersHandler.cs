@@ -1,4 +1,5 @@
 using FantasyInformator.Logic.Services.Players;
+using FantasyInformator.State.Abstractions;
 using TimeWarp.Mediator;
 using TimeWarp.State;
 
@@ -7,7 +8,7 @@ namespace FantasyInformator.State.Store;
 public partial class PlayerState
 {
     /// <param name="Force">When true, the players are loaded even when the state already holds players.</param>
-    public record LoadAllPlayersAction(bool Force = false) : IAction;
+    public record LoadAllPlayersAction(bool Force = false) : ISpinnerAction;
 
     public class LoadAllPlayersHandler(IStore store, IPlayerLogic playerLogic) : ActionHandler<LoadAllPlayersAction>
     {

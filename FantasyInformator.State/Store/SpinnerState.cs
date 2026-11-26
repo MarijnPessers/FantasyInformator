@@ -4,14 +4,16 @@ namespace FantasyInformator.State.Store;
 
 public sealed partial class SpinnerState : State<SpinnerState>
 {
-    public bool IsSpinnerShown { get; private set; } = true;
+    /// <summary>The spinners that are started and not ended yet, oldest first.</summary>
+    public List<ActiveSpinner> ActiveSpinners { get; private set; } = [];
 
-    /// <summary>The text shown under the spinner. Null when the spinner shows no text.</summary>
-    public string? SpinnerMessage { get; private set; }
+    public bool IsSpinnerShown => ActiveSpinners.Count > 0;
 
-    public override void Initialize()
-    {
-        IsSpinnerShown = true;
-        SpinnerMessage = null;
-    }
+    /// <summary>The spinner whose message is shown: the one started first. Null when no spinner is active.</summary>
+    public ActiveSpinner? ShownSpinner => ActiveSpinners.FirstOrDefault();
+
+    public override void Initialize() =>
+        ActiveSpinners = [];
+
+    public record ActiveSpinner(Guid SpinnerId, string? Message);
 }

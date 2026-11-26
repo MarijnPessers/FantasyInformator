@@ -5,7 +5,7 @@ namespace FantasyInformator.State.Store;
 
 public partial class SpinnerState
 {
-    public record SpinnerEndAction : IAction;
+    public record SpinnerEndAction(Guid SpinnerId) : IAction;
 
     public class SpinnerEndHandler(IStore store) : ActionHandler<SpinnerEndAction>
     {
@@ -13,8 +13,7 @@ public partial class SpinnerState
 
         public override ValueTask Handle(SpinnerEndAction request, CancellationToken cancellationToken)
         {
-            SpinnerState.IsSpinnerShown = false;
-            SpinnerState.SpinnerMessage = null;
+            _ = SpinnerState.ActiveSpinners.RemoveAll(activeSpinner => activeSpinner.SpinnerId == request.SpinnerId);
 
             return ValueTask.CompletedTask;
         }

@@ -9,7 +9,8 @@ namespace FantasyInformator.State.Tests.Store.Spinners;
 [TestClass]
 public class SpinnerStartHandlerTests
 {
-    private const string Message = "Connecting to database";
+    private const string DatabaseMessage = "Connecting to database";
+    private const string TestMessage = "This is a test";
 
     private ServiceProvider _serviceProvider = null!;
     private ISender<ClientPipeline> _sender = null!;
@@ -30,21 +31,21 @@ public class SpinnerStartHandlerTests
         await _serviceProvider.DisposeAsync();
 
     [TestMethod]
-    public async Task Handle_ShouldShowTheSpinner_WhenTheSpinnerWasHiddenAsync()
+    public async Task Handle_ShouldShowTheSpinner_WhenNoSpinnerWasActiveAsync()
     {
-        await _sender.Send(new SpinnerEndAction(), TestContext.CancellationToken);
-
-        await _sender.Send(new SpinnerStartAction(Message), TestContext.CancellationToken);
+        await _sender.Send(new SpinnerStartAction(Guid.NewGuid(), DatabaseMessage), TestContext.CancellationToken);
 
         Assert.IsTrue(_store.GetState<SpinnerState>().IsSpinnerShown);
     }
 
     [TestMethod]
-    public async Task Handle_ShouldSetTheMessage_WhenAMessageIsGivenAsync()
+    public async Task Handle_ShouldShowTheOldestMessage_WhenTwoSpinnersAreActiveAsync()
     {
-        await _sender.Send(new SpinnerStartAction(Message), TestContext.CancellationToken);
+        await _sender.Send(new SpinnerStartAction(Guid.NewGuid(), DatabaseMessage), TestContext.CancellationToken);
 
-        Assert.AreEqual(Message, _store.GetState<SpinnerState>().SpinnerMessage);
+        await _sender.Send(new SpinnerStartAction(Guid.NewGuid(), TestMessage), TestContext.CancellationToken);
+
+        Assert.AreEqual(DatabaseMessage, _store.GetState<SpinnerState>().ShownSpinner?.Message);
     }
 
     private static ServiceProvider CreateServices()
