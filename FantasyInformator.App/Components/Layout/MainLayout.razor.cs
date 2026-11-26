@@ -1,3 +1,4 @@
+using FantasyInformator.App.Resources;
 using FantasyInformator.State.Enums;
 using FantasyInformator.State.Store;
 using TimeWarp.Mediator;
@@ -23,8 +24,11 @@ public partial class MainLayout(ISender<ClientPipeline> sender, IStore store)
         }
     }
 
-    private async Task DatabaseWakeUpAsync() =>
+    private async Task DatabaseWakeUpAsync()
+    {
+        await sender.Send(new SpinnerState.SpinnerStartAction(Texts.ConnectingToDatabase), CancellationToken.None);
         await sender.Send(new DatabaseState.DatabaseWakeUpAction(), CancellationToken.None);
+    }
 
     private async Task LoadAllOwnersAsync() =>
         await sender.Send(new OwnerState.LoadAllOwnersAction(), CancellationToken.None);

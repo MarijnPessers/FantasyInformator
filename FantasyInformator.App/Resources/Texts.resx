@@ -16,6 +16,10 @@
     <value>The database isn't available.</value>
     <comment>Error shown when the wake-up call at startup failed. --- MainLayout.razor</comment>
   </data>
+  <data name="ConnectingToDatabase" xml:space="preserve">
+    <value>Connecting to database</value>
+    <comment>Spinner text while the wake-up call at startup runs. The spinner adds the moving dots. --- MainLayout.razor.cs</comment>
+  </data>
   <data name="SpinnerImageDescription" xml:space="preserve">
     <value>Loading</value>
     <comment>Alt text of the spinning image shown over the whole app while something loads. --- Spinner.razor</comment>

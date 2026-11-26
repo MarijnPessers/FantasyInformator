@@ -14,6 +14,7 @@ public partial class SpinnerState
         public override ValueTask Handle(SpinnerEndAction request, CancellationToken cancellationToken)
         {
             SpinnerState.IsSpinnerShown = false;
+            SpinnerState.SpinnerMessage = null;
 
             return ValueTask.CompletedTask;
         }

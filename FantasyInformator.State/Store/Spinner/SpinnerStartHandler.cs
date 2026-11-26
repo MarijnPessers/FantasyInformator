@@ -5,7 +5,7 @@ namespace FantasyInformator.State.Store;
 
 public partial class SpinnerState
 {
-    public record SpinnerStartAction : IAction;
+    public record SpinnerStartAction(string? Message) : IAction;
 
     public class SpinnerStartHandler(IStore store) : ActionHandler<SpinnerStartAction>
     {
@@ -14,6 +14,7 @@ public partial class SpinnerState
         public override ValueTask Handle(SpinnerStartAction request, CancellationToken cancellationToken)
         {
             SpinnerState.IsSpinnerShown = true;
+            SpinnerState.SpinnerMessage = request.Message;
 
             return ValueTask.CompletedTask;
         }

@@ -1,6 +1,7 @@
 using System.Data.Common;
 using FantasyInformator.Database.Context;
 using FantasyInformator.Database.Settings;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -28,6 +29,8 @@ internal class DatabaseWakeUpService(
         try
         {
             await using var context = await contextFactory.CreateDbContextAsync(timeoutSource.Token);
+            context.Database.SetConnectionString(CreateWakeUpConnectionString());
+            context.Database.SetCommandTimeout(settings.Value.WakeUpTimeout);
             _ = await context.Database.ExecuteSqlRawAsync("SELECT 1", timeoutSource.Token);
 
             return true;
@@ -41,4 +44,10 @@ internal class DatabaseWakeUpService(
             return false;
         }
     }
+
+    private string CreateWakeUpConnectionString() =>
+        new SqlConnectionStringBuilder(settings.Value.ConnectionStringApp)
+        {
+            ConnectTimeout = (int)settings.Value.WakeUpTimeout.TotalSeconds,
+        }.ConnectionString;
 }

@@ -61,6 +61,15 @@ namespace FantasyInformator.App.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connecting to database.
+        /// </summary>
+        public static string ConnectingToDatabase {
+            get {
+                return ResourceManager.GetString("ConnectingToDatabase", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to The database isn&apos;t available..
         /// </summary>
         public static string DatabaseUnavailable {
@@ -68,7 +77,7 @@ namespace FantasyInformator.App.Resources {
                 return ResourceManager.GetString("DatabaseUnavailable", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Loading.
         /// </summary>
