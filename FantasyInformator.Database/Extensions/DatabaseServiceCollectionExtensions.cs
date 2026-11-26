@@ -39,6 +39,7 @@ public static class DatabaseServiceCollectionExtensions
         // general serices
         _ = services.AddScoped<IDatabaseWriteService, DatabaseWriteService>();
         _ = services.AddScoped<IDatabaseReadService, DatabaseReadService>();
+        _ = services.AddScoped<IDatabaseWakeUpService, DatabaseWakeUpService>();
         // data specific services
         _ = services.AddScoped<IFantasyTeamService, FantasyTeamService>();
         _ = services.AddScoped<IOwnerService, OwnerService>();

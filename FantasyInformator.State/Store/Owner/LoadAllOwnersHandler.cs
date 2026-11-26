@@ -23,7 +23,7 @@ public partial class OwnerState
             if (owners is not null)
             {
                 OwnerState.Owners = owners;
-                OwnerState.FocusOwner = owners.Find(owner => owner.Name == settings.Value.OwnerName);
+                OwnerState.FocusOwner = owners.Find(owner => owner.Name == settings.Value.FocusOwnerName);
             }
         }
     }

@@ -7,5 +7,5 @@ public class StateSettings
     public const string SectionName = "State";
 
     [Required]
-    public string OwnerName { get; set; } = string.Empty;
+    public string FocusOwnerName { get; set; } = string.Empty;
 }

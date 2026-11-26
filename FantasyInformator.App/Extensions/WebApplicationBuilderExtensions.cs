@@ -8,6 +8,6 @@ public static class WebApplicationBuilderExtensions
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();
 
-    public static void AddState(this WebApplicationBuilder builder) =>
+    public static void AddStateServices(this WebApplicationBuilder builder) =>
         builder.Services.AddStateServices(builder.Configuration);
 }

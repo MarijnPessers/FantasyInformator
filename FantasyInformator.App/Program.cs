@@ -3,7 +3,7 @@ using FantasyInformator.App.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddBlazor();
-builder.AddState();
+builder.AddStateServices();
 
 var app = builder.Build();
 

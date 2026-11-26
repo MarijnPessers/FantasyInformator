@@ -15,7 +15,7 @@ namespace FantasyInformator.State.Tests.Store.Owners;
 [TestClass]
 public class LoadAllOwnersHandlerTests
 {
-    private const string OwnerName = "GoudaCheesewizz";
+    private const string FocusOwnerName = "GoudaCheesewizz";
 
     private Fixture _fixture = null!;
     private IOwnerLogic _ownerLogic = null!;
@@ -69,10 +69,10 @@ public class LoadAllOwnersHandlerTests
     }
 
     [TestMethod]
-    public async Task Handle_ShouldSetTheFocusOwner_WhenAnOwnerHasTheOwnerNameAsync()
+    public async Task Handle_ShouldSetTheFocusOwner_WhenAnOwnerHasTheFocusOwnerNameAsync()
     {
         var owners = CreateOwners();
-        owners[1].Name = OwnerName;
+        owners[1].Name = FocusOwnerName;
         _ = _ownerLogic.LoadAllOwnersAsync(Arg.Any<CancellationToken>()).Returns(owners);
 
         await _sender.Send(new LoadAllOwnersAction(), TestContext.CancellationToken);
@@ -81,7 +81,7 @@ public class LoadAllOwnersHandlerTests
     }
 
     [TestMethod]
-    public async Task Handle_ShouldLeaveTheFocusOwnerEmpty_WhenNoOwnerHasTheOwnerNameAsync()
+    public async Task Handle_ShouldLeaveTheFocusOwnerEmpty_WhenNoOwnerHasTheFocusOwnerNameAsync()
     {
         _ = _ownerLogic.LoadAllOwnersAsync(Arg.Any<CancellationToken>()).Returns(CreateOwners());
 
@@ -103,7 +103,7 @@ public class LoadAllOwnersHandlerTests
             x.UseStateTransactionBehavior = false;
         });
         _ = services.AddSingleton(_ownerLogic);
-        _ = services.AddSingleton(Options.Create(new StateSettings { OwnerName = OwnerName }));
+        _ = services.AddSingleton(Options.Create(new StateSettings { FocusOwnerName = FocusOwnerName }));
 
         return services.BuildServiceProvider();
     }

@@ -23,6 +23,10 @@ Only the coding decisions that the existing code, `CLAUDE.local.md`, the SonarQu
 - Mappers are pure. Sleeper and Nflverse mappers are static. Database mappers derive from `EntityMapper<TModel, TDatabaseModel>`, which derives from `Mapper<TModel, TOtherModel>` in Shared; that holds all Map methods, so each mapper only copies the fields.
 - Each project that needs configuration has its own settings class and its own section in `appsettings.json`, named after the project. Settings that belong to no single project stay outside those sections. Values specific to a person or PC go in user secrets. Settings are checked when the app starts.
 - Project settings stay in each `.csproj` (no `Directory.Build.props`). Warnings-as-errors comes on after the first clean build with 0 warnings.
+- Logic names the services of the projects it uses with an alias that starts with the project: `IDatabaseOwnerService` for the Database `IOwnerService`, `ISleeperPlayerService` for the Sleeper `IPlayerService`. Database and Sleeper both have an `IPlayerService`, so without the prefix the names clash.
+  - Each alias is a `global using` line in `FantasyInformator.Logic/GlobalUsings.cs`, so a Logic file uses the alias without adding a `using`.
+  - Only a service that Logic uses has an alias. A new service gets its alias when Logic first uses it.
+  - A service whose name already starts with its project, such as `IDatabaseWakeUpService`, gets an alias with the same name.
 
 ## State
 

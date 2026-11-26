@@ -20,4 +20,7 @@ public class DatabaseSettings
 
     /// <summary>The folder where saves that failed are queued as files.</summary>
     public string FailedSaveQueueFolder { get; set; } = string.Empty;
+
+    /// <summary>How long the wake-up call at startup may take before it counts as failed. Two minutes by default.</summary>
+    public TimeSpan WakeUpTimeout { get; set; } = TimeSpan.FromMinutes(2);
 }

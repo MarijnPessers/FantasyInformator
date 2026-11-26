@@ -14,9 +14,9 @@ public class StateSettingsTests
         _fixture = new Fixture();
 
     [TestMethod]
-    public void Validate_ShouldBeValid_WhenOwnerNameIsFilled()
+    public void Validate_ShouldBeValid_WhenFocusOwnerNameIsFilled()
     {
-        var options = new StateSettings { OwnerName = _fixture.Create<string>() };
+        var options = new StateSettings { FocusOwnerName = _fixture.Create<string>() };
 
         var results = Validate(options);
 
@@ -26,14 +26,14 @@ public class StateSettingsTests
     [TestMethod]
     [DataRow("")]
     [DataRow(" ")]
-    public void Validate_ShouldReportOwnerName_WhenOwnerNameIsBlank(string ownerName)
+    public void Validate_ShouldReportFocusOwnerName_WhenFocusOwnerNameIsBlank(string focusOwnerName)
     {
-        var options = new StateSettings { OwnerName = ownerName };
+        var options = new StateSettings { FocusOwnerName = focusOwnerName };
 
         var results = Validate(options);
 
         Assert.HasCount(1, results);
-        Assert.Contains(nameof(StateSettings.OwnerName), results[0].MemberNames.ToList());
+        Assert.Contains(nameof(StateSettings.FocusOwnerName), results[0].MemberNames.ToList());
     }
 
     private static List<ValidationResult> Validate(StateSettings options)
