@@ -23,3 +23,25 @@ Settings that belong to a person or PC come from .NET user secrets: the Sleeper 
 - The first build downloads the Tailwind program (about 110 MB) into `.tailwind/v4.3.5/`.
 - With hot reload, a new Tailwind class only shows after the next build. To see it right away, run this in the App folder: `.tailwind\v4.3.5\tailwindcss-windows-x64.exe -i .tailwind\tailwind.css -o wwwroot\css\tailwind.css --watch`.
 - To update Tailwind, change `TailwindVersion` in the project file.
+- `wwwroot/css/spinner.css` holds the spinner's own styles and is written by hand.
+
+## Spinners
+
+While something runs, the app shows a dark layer over the whole page with a spinning football and a text under it, such as "Connecting to database" with dots that count 1, 2, 3.
+
+- `Components/Layout/Spinner.razor` draws the layer. `MainLayout` holds it once, so it covers every page.
+- It reads `SpinnerState` from State and shows while at least one spinner is active.
+- When several spinners are active, it shows the text of the oldest one. A spinner without a text shows "Loading" (`DefaultSpinnerMessage` in `Texts.resx`).
+- `wwwroot/css/spinner.css` keeps the layer invisible for its first 0.25 seconds, so a call that ends quickly never shows it. It also spins the football and counts the dots.
+
+The App starts spinners in two ways. How both work, and how to add one, is in the State README, under "Spinners".
+
+- An action that implements `ISpinnerAction` starts its own spinner, for example `LoadAllOwnersAction`.
+- `sender.StartSpinnerAsync(text, cancellationToken)` starts one spinner around several calls. `MainLayout` wraps the wake-up call this way:
+
+```csharp
+await using var spinner = await sender.StartSpinnerAsync(Texts.ConnectingToDatabase, CancellationToken.None);
+await sender.Send(new DatabaseState.DatabaseWakeUpAction(), CancellationToken.None);
+```
+
+"Connecting to database" shows until the wake-up call is done. The wake-up action also starts a "Loading" spinner of its own, but that one is newer, so it stays hidden.
