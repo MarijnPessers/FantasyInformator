@@ -9,22 +9,29 @@ namespace FantasyInformator.Database.Mappers;
 /// </summary>
 internal static class BaseEntityMapper
 {
-    /// <summary>
-    /// Database model to model. The model comes from the database, so it matches the database and is Unchanged.
-    /// </summary>
-    public static TModel MapBase<TModel>(this TModel model, BaseEntityDb databaseModel)
+    extension<TModel>(TModel model)
         where TModel : BaseEntity
     {
-        model.Id = databaseModel.Id;
-        model.State = TrackingState.Unchanged;
-        return model;
+        /// <summary>
+        /// Database model to model. The model comes from the database, so it matches the database and is
+        /// Unchanged.
+        /// </summary>
+        public TModel MapBase(BaseEntityDb databaseModel)
+        {
+            model.Id = databaseModel.Id;
+            model.State = TrackingState.Unchanged;
+            return model;
+        }
     }
 
-    /// <summary>Model to database model. The database model has no state.</summary>
-    public static TDatabaseModel MapBase<TDatabaseModel>(this TDatabaseModel databaseModel, BaseEntity model)
+    extension<TDatabaseModel>(TDatabaseModel databaseModel)
         where TDatabaseModel : BaseEntityDb
     {
-        databaseModel.Id = model.Id;
-        return databaseModel;
+        /// <summary>Model to database model. The database model has no state.</summary>
+        public TDatabaseModel MapBase(BaseEntity model)
+        {
+            databaseModel.Id = model.Id;
+            return databaseModel;
+        }
     }
 }

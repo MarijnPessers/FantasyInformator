@@ -89,6 +89,7 @@ Only the coding decisions that the existing code, `CLAUDE.local.md`, the SonarQu
 - Own models: a property is `required` only when it always has a value, stubs included. Sleeper and Nflverse answer models are never `required`.
 - A mapper throws when a value for a `required` property is empty.
 - Classes don't have to be sealed.
+- Extension methods go in a C# 14 `extension(...)` block, one block per extended type, never with a `this` parameter.
 
 ## Blazor
 

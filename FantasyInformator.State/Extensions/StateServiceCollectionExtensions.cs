@@ -9,25 +9,28 @@ namespace FantasyInformator.State.Extensions;
 
 public static class StateServiceCollectionExtensions
 {
-    /// <summary>
-    /// Binds <see cref="StateSettings"/> and checks it when the application starts, so a missing owner name stops the
-    /// start instead of failing when the owners are first needed. Then registers the mediator, TimeWarp.State and the
-    /// services of Logic.
-    /// </summary>
-    public static IServiceCollection AddStateServices(this IServiceCollection services, IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        _ = services.AddGeneratedMediator<ClientPipeline>();
-        _ = services.AddTimeWarpState(x =>
+        /// <summary>
+        /// Binds <see cref="StateSettings"/> and checks it when the application starts, so a missing owner name stops
+        /// the start instead of failing when the owners are first needed. Then registers the mediator, TimeWarp.State
+        /// and the services of Logic.
+        /// </summary>
+        public IServiceCollection AddStateServices(IConfiguration configuration)
         {
-            x.Assemblies = [Assembly.GetExecutingAssembly()];
-            _ = x.UseReduxDevTools();
-        });
+            _ = services.AddGeneratedMediator<ClientPipeline>();
+            _ = services.AddTimeWarpState(x =>
+            {
+                x.Assemblies = [Assembly.GetExecutingAssembly()];
+                _ = x.UseReduxDevTools();
+            });
 
-        _ = services.AddOptions<StateSettings>()
-            .Bind(configuration.GetSection(StateSettings.SectionName))
-            .ValidateDataAnnotations()
-            .ValidateOnStart();
+            _ = services.AddOptions<StateSettings>()
+                .Bind(configuration.GetSection(StateSettings.SectionName))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
 
-        return services.AddLogicServices(configuration);
+            return services.AddLogicServices(configuration);
+        }
     }
 }

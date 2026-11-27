@@ -13,38 +13,41 @@ namespace FantasyInformator.Database.Extensions;
 
 public static class DatabaseServiceCollectionExtensions
 {
-    /// <summary>
-    /// Binds <see cref="DatabaseSettings"/> and checks it when the application starts,
-    /// so a missing connection string stops the start instead of failing at the first save.
-    /// </summary>
-    public static IServiceCollection AddDatabaseOptions(this IServiceCollection services, IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        _ = services.AddOptions<DatabaseSettings>()
-            .Bind(configuration.GetSection(DatabaseSettings.SectionName))
-            .ValidateDataAnnotations()
-            .ValidateOnStart();
+        /// <summary>
+        /// Binds <see cref="DatabaseSettings"/> and checks it when the application starts,
+        /// so a missing connection string stops the start instead of failing at the first save.
+        /// </summary>
+        public IServiceCollection AddDatabaseOptions(IConfiguration configuration)
+        {
+            _ = services.AddOptions<DatabaseSettings>()
+                .Bind(configuration.GetSection(DatabaseSettings.SectionName))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
 
-        return services;
-    }
+            return services;
+        }
 
-    /// <summary>
-    /// Registers the context factory, the save service and the read services. A factory is used instead of one
-    /// shared context, because a Blazor Server circuit lives long and a context must not.
-    /// </summary>
-    public static IServiceCollection AddDatabaseServices(this IServiceCollection services)
-    {
-        _ = services.AddDbContextFactory<FantasyInformatorDbContext>((serviceProvider, builder) =>
-            builder.UseSqlServer(
-                serviceProvider.GetRequiredService<IOptions<DatabaseSettings>>().Value.ConnectionStringApp));
-        // general serices
-        _ = services.AddScoped<IDatabaseWriteService, DatabaseWriteService>();
-        _ = services.AddScoped<IDatabaseReadService, DatabaseReadService>();
-        _ = services.AddScoped<IDatabaseWakeUpService, DatabaseWakeUpService>();
-        // data specific services
-        _ = services.AddScoped<IFantasyTeamService, FantasyTeamService>();
-        _ = services.AddScoped<IOwnerService, OwnerService>();
-        _ = services.AddScoped<IPlayerService, PlayerService>();
+        /// <summary>
+        /// Registers the context factory, the save service and the read services. A factory is used instead of one
+        /// shared context, because a Blazor Server circuit lives long and a context must not.
+        /// </summary>
+        public IServiceCollection AddDatabaseServices()
+        {
+            _ = services.AddDbContextFactory<FantasyInformatorDbContext>((serviceProvider, builder) =>
+                builder.UseSqlServer(
+                    serviceProvider.GetRequiredService<IOptions<DatabaseSettings>>().Value.ConnectionStringApp));
+            // general serices
+            _ = services.AddScoped<IDatabaseWriteService, DatabaseWriteService>();
+            _ = services.AddScoped<IDatabaseReadService, DatabaseReadService>();
+            _ = services.AddScoped<IDatabaseWakeUpService, DatabaseWakeUpService>();
+            // data specific services
+            _ = services.AddScoped<IFantasyTeamService, FantasyTeamService>();
+            _ = services.AddScoped<IOwnerService, OwnerService>();
+            _ = services.AddScoped<IPlayerService, PlayerService>();
 
-        return services;
+            return services;
+        }
     }
 }

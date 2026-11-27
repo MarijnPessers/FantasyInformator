@@ -4,10 +4,13 @@ namespace FantasyInformator.App.Extensions;
 
 public static class WebApplicationBuilderExtensions
 {
-    public static void AddBlazor(this WebApplicationBuilder builder) =>
-        builder.Services.AddRazorComponents()
-            .AddInteractiveServerComponents();
+    extension(WebApplicationBuilder builder)
+    {
+        public void AddBlazor() =>
+            builder.Services.AddRazorComponents()
+                .AddInteractiveServerComponents();
 
-    public static void AddStateServices(this WebApplicationBuilder builder) =>
-        builder.Services.AddStateServices(builder.Configuration);
+        public void AddStateServices() =>
+            builder.Services.AddStateServices(builder.Configuration);
+    }
 }
