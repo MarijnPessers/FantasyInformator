@@ -70,15 +70,6 @@ namespace FantasyInformator.App.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to The database isn&apos;t available..
-        /// </summary>
-        public static string DatabaseUnavailable {
-            get {
-                return ResourceManager.GetString("DatabaseUnavailable", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to Loading.
         /// </summary>
         public static string DefaultSpinnerMessage {

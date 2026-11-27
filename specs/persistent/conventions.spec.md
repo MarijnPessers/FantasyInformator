@@ -46,8 +46,8 @@ Only the coding decisions that the existing code, `CLAUDE.local.md`, the SonarQu
   - Nothing waits for that action, so a report may arrive after the call that made it has returned.
   - When State gets `null` or `false` back, it can trust that a report about it has arrived or will arrive. It decides per case whether to stop.
   - State reports by sending that action itself.
-- A progress report holds a severity (`LogLevel`), a header, a message, whether to show it to the user, and the exception, if there is one. It sets its own `CreatedUtc`, from `DateTime.UtcNow`, and its own trace ID when it's made. A test can set `CreatedUtc` itself.
-- The App shows a progress report when its severity is at or above the display level, or when it's marked to show to the user. The display level is an App setting and defaults to `Warning`.
+- A progress report holds a severity (`MessageLevel`: Debug, Information, Success, Warning, Error), a header, a message, whether to show it to the user, and the exception, if there is one. It sets its own `CreatedUtc`, from `DateTime.UtcNow`, and its own trace ID when it's made. A test can set `CreatedUtc` itself.
+- The App shows a progress report when its severity is at or above the display level, or when it's marked to show to the user. The display level is an App setting and defaults to `Success`.
 - Tracing:
   - Each action a page sends gets its own trace. The behavior `TraceBehavior` runs around every action and starts an `Activity` for it, named after the action. A test checks that the State project declares it.
   - The activity is created directly (`new Activity(...).Start()`), because `ActivitySource` only creates one when something listens.

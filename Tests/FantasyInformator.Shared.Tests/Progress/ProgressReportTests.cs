@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using AutoFixture;
 using FantasyInformator.Shared.Progress;
-using Microsoft.Extensions.Logging;
 
 namespace FantasyInformator.Shared.Tests.Progress;
 
@@ -68,7 +67,7 @@ public class ProgressReportTests
 
     private ProgressReport CreateReport() =>
         new(
-            _fixture.Create<LogLevel>(),
+            _fixture.Create<MessageLevel>(),
             _fixture.Create<string>(),
             _fixture.Create<string>(),
             _fixture.Create<bool>(),

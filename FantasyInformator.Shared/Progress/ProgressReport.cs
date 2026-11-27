@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using Microsoft.Extensions.Logging;
 
 namespace FantasyInformator.Shared.Progress;
 
@@ -8,7 +7,7 @@ namespace FantasyInformator.Shared.Progress;
 /// <see cref="TraceId"/>, so they can be shown together.
 /// </summary>
 public record ProgressReport(
-    LogLevel Severity,
+    MessageLevel Severity,
     string Header,
     string Message,
     bool ShowToUser,

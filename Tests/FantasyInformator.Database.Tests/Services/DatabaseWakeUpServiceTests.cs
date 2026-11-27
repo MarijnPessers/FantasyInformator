@@ -2,6 +2,7 @@ using System.Data.Common;
 using FantasyInformator.Database.Context;
 using FantasyInformator.Database.Services;
 using FantasyInformator.Database.Settings;
+using FantasyInformator.Shared.Progress;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -11,6 +12,32 @@ namespace FantasyInformator.Database.Tests.Services;
 public sealed class DatabaseWakeUpServiceTests(TestContext testContext)
 {
     private static readonly TimeSpan ShortTimeout = TimeSpan.FromMilliseconds(50);
+
+    private RecordingProgress _progress = null!;
+
+    [TestInitialize]
+    public void Initialize() =>
+        _progress = new RecordingProgress();
+
+    [TestMethod]
+    public async Task WakeUpAsync_ShouldReportTheDatabaseIsUnavailable_WhenTheDatabaseGivesAnError()
+    {
+        var service = CreateService(_ => throw new TestDbException());
+
+        _ = await service.WakeUpAsync(testContext.CancellationToken);
+
+        AssertReportedUnavailable();
+    }
+
+    [TestMethod]
+    public async Task WakeUpAsync_ShouldReportTheDatabaseIsUnavailable_WhenTheDatabaseDoesNotAnswerInTime()
+    {
+        var service = CreateService(WaitForever);
+
+        _ = await service.WakeUpAsync(testContext.CancellationToken);
+
+        AssertReportedUnavailable();
+    }
 
     [TestMethod]
     public async Task WakeUpAsync_ShouldReturnFalse_WhenTheDatabaseGivesAnError()
@@ -49,8 +76,26 @@ public sealed class DatabaseWakeUpServiceTests(TestContext testContext)
         return null!;
     }
 
-    private static DatabaseWakeUpService CreateService(Func<CancellationToken, Task<FantasyInformatorDbContext>> create) =>
-        new(new StubContextFactory(create), Options.Create(new DatabaseSettings { WakeUpTimeout = ShortTimeout }));
+    private DatabaseWakeUpService CreateService(Func<CancellationToken, Task<FantasyInformatorDbContext>> create) =>
+        new(
+            new StubContextFactory(create),
+            Options.Create(new DatabaseSettings { WakeUpTimeout = ShortTimeout }),
+            _progress);
+
+    private void AssertReportedUnavailable()
+    {
+        var report = Assert.ContainsSingle(_progress.ProgressReports);
+        Assert.AreEqual(MessageLevel.Error, report.Severity);
+        Assert.IsTrue(report.ShowToUser);
+    }
+
+    private sealed class RecordingProgress : IProgress<ProgressReport>
+    {
+        public List<ProgressReport> ProgressReports { get; } = [];
+
+        public void Report(ProgressReport value) =>
+            ProgressReports.Add(value);
+    }
 
     private sealed class StubContextFactory(Func<CancellationToken, Task<FantasyInformatorDbContext>> create)
         : IDbContextFactory<FantasyInformatorDbContext>

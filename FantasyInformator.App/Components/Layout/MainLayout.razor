@@ -1,16 +1,12 @@
-﻿@using FantasyInformator.App.Resources
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 
-@if (IsDatabaseAwake)
+@if (AppReady)
 {
     @Body
 }
-else if (IsDatabaseUnavailable)
-{
-    <p>@Texts.DatabaseUnavailable</p>
-}
 
 <Spinner />
+<Toaster />
 
 <div id="blazor-error-ui" data-nosnippet
      class="fixed bottom-0 left-0 z-1000 box-border hidden w-full bg-[lightyellow] px-5 pt-[0.6rem] pb-[0.7rem]

@@ -12,10 +12,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DatabaseUnavailable" xml:space="preserve">
-    <value>The database isn't available.</value>
-    <comment>Error shown when the wake-up call at startup failed. --- MainLayout.razor</comment>
-  </data>
   <data name="ConnectingToDatabase" xml:space="preserve">
     <value>Connecting to database</value>
     <comment>Spinner text while the wake-up call at startup runs. The spinner adds the moving dots. --- MainLayout.razor.cs</comment>

@@ -8,9 +8,7 @@ namespace FantasyInformator.App.Components.Layout;
 
 public partial class MainLayout(ISender<ClientPipeline> sender, IStore store)
 {
-    private bool IsDatabaseAwake => DatabaseState.DatabaseWakeUpStatus == DatabaseWakeUpStatus.Awake;
-
-    private bool IsDatabaseUnavailable => DatabaseState.DatabaseWakeUpStatus == DatabaseWakeUpStatus.Unavailable;
+    private bool AppReady => DatabaseState.DatabaseWakeUpStatus == DatabaseWakeUpStatus.Awake;
 
     private DatabaseState DatabaseState => store.GetState<DatabaseState>();
 

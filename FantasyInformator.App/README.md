@@ -45,3 +45,28 @@ await sender.Send(new DatabaseState.DatabaseWakeUpAction(), CancellationToken.No
 ```
 
 "Connecting to database" shows until the wake-up call is done. The wake-up action also starts a "Loading" spinner of its own, but that one is newer, so it stays hidden.
+
+## Toasts
+
+Every progress report goes to `ProgressReportState` in State. `Components/Layout/Toaster.razor`, which `MainLayout` holds once, shows some of them as toasts at the top right of the page.
+
+- A report shows as a toast when its level is at or above `DisplayLevel`, or when it's marked to show to the user (`ShowToUser`).
+- A toast disappears after 15 seconds (`ToastDuration`), or when you click it.
+- The color follows the report's level:
+
+| Level | Color |
+|---|---|
+| Debug | gray |
+| Information | light blue |
+| Success | green |
+| Warning | yellow |
+| Error | red |
+
+Both settings are in the `App` section of `appsettings.json`. `appsettings.json` sets `DisplayLevel` to `Warning`, so Debug, Information and Success reports stay hidden unless they're marked to show to the user. Without the setting, it's `Success`. To see every report while developing, set it to `Debug`:
+
+```json
+"App": {
+  "DisplayLevel": "Debug",
+  "ToastDuration": "00:00:10"
+}
+```
