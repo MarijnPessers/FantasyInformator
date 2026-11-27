@@ -6,7 +6,8 @@
 ## Build output
 bin/
 obj/
-.tailwind/v*/
+# The Tailwind program is 106 MB, too big for GitHub (100 MB limit)
+**/.tailwind/v*/
 
 ## Claude
 claudeTmp/
