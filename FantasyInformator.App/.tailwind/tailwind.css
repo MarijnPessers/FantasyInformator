@@ -1,4 +1,5 @@
 @import "tailwindcss" source("../Components");
+@import "./colors.css";
 
 @theme {
     --animate-reconnect-modal-open:

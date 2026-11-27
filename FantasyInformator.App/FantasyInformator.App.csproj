@@ -47,7 +47,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <TailwindInput Include=".tailwind\tailwind.css;Components\**\*.razor;Components\**\*.cs" />
+    <TailwindInput Include=".tailwind\*.css;Components\**\*.razor;Components\**\*.cs" />
   </ItemGroup>
 
   <Target Name="DownloadTailwind" Condition="!Exists('$(TailwindExe)')">
